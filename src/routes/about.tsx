@@ -1,0 +1,86 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { PageShell, PageHero } from "@/components/PageShell";
+import { Cross, Users, Compass } from "lucide-react";
+import { leaders } from "@/lib/data";
+import p1 from "@/assets/p1.jpg";
+import p2 from "@/assets/p2.jpg";
+import p3 from "@/assets/p3.jpg";
+import g1 from "@/assets/g1.jpg";
+
+const portraits: Record<string, string> = { p1, p2, p3 };
+
+export const Route = createFileRoute("/about")({
+  head: () => ({
+    meta: [
+      { title: "About — Peculiar Youth & Children Ministry" },
+      { name: "description", content: "Learn who we are, what we believe, and meet the leaders behind Peculiar Youth & Children Ministry." },
+    ],
+  }),
+  component: About,
+});
+
+function About() {
+  return (
+    <PageShell>
+      <PageHero eyebrow="About Us" title="A ministry built for the next generation." subtitle="We're a youth and children's church helping young people aged 10–19 find Jesus, friendship, and purpose." />
+
+      <section className="container-x py-20 grid gap-12 md:grid-cols-2 items-center">
+        <img src={g1} alt="Youth gathering" loading="lazy" width={800} height={800} className="rounded-3xl object-cover aspect-square" />
+        <div>
+          <span className="text-sm font-semibold text-brand">Who We Are</span>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">More than a youth group.</h2>
+          <p className="mt-5 text-muted-foreground leading-relaxed">
+            Peculiar Youth & Children Ministry started with a simple conviction: young people don't need to be entertained, they need to be empowered. For over a decade we've been creating spaces where teens and kids meet Jesus in a real way, build friendships that outlast the season, and discover the unique calling on their lives.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Every Sunday looks like worship, honest teaching, small group conversations, and a whole lot of laughter. You belong here.
+          </p>
+        </div>
+      </section>
+
+      <section className="bg-surface border-y border-border">
+        <div className="container-x py-20">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm font-semibold text-brand">What We Believe</span>
+            <h2 className="mt-2 text-3xl md:text-4xl font-bold">Three things we're rooted in.</h2>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {[
+              { icon: Cross, title: "Faith in Jesus", text: "We believe Jesus is the Son of God — alive, present, and personally interested in every young heart that comes through our doors." },
+              { icon: Users, title: "Real Community", text: "Faith was never meant to be lived alone. We do life together — the highs, the lows, and everything in between." },
+              { icon: Compass, title: "God-Given Purpose", text: "Every young person carries a calling. We help them discover it, develop it, and walk in it with confidence." },
+            ].map((b) => (
+              <div key={b.title} className="rounded-2xl bg-card border border-border p-8">
+                <div className="grid h-12 w-12 place-items-center rounded-xl gradient-brand text-brand-foreground">
+                  <b.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mt-5 text-xl font-semibold">{b.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{b.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="container-x py-20">
+        <div className="text-center max-w-2xl mx-auto">
+          <span className="text-sm font-semibold text-brand">Leadership</span>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">The team that loves you.</h2>
+        </div>
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+          {leaders.map((l) => (
+            <div key={l.name} className="rounded-2xl overflow-hidden border border-border bg-card">
+              <div className="aspect-square bg-surface">
+                <img src={portraits[l.img]} alt={l.name} loading="lazy" width={600} height={600} className="h-full w-full object-cover" />
+              </div>
+              <div className="p-6">
+                <h3 className="font-semibold text-lg">{l.name}</h3>
+                <p className="text-sm text-brand">{l.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </PageShell>
+  );
+}

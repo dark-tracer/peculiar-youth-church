@@ -2,12 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { Cross, Users, Compass } from "lucide-react";
 import { leaders } from "@/lib/data";
-import p1 from "@/assets/p1.jpg";
-import p2 from "@/assets/p2.jpg";
-import p3 from "@/assets/p3.jpg";
 import g1 from "@/assets/g1.jpg";
-
-const portraits: Record<string, string> = { p1, p2, p3 };
+import { UserRound } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -65,15 +61,17 @@ function About() {
       <section className="container-x py-20">
         <div className="text-center max-w-2xl mx-auto">
           <span className="text-sm font-semibold text-brand">Leadership</span>
-          <h2 className="mt-2 text-3xl md:text-4xl font-bold">The team that loves you.</h2>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">Our Youth Facilitators.</h2>
         </div>
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
           {leaders.map((l) => (
             <div key={l.name} className="rounded-2xl overflow-hidden border border-border bg-card">
-              <div className="aspect-square bg-surface">
-                <img src={portraits[l.img]} alt={l.name} loading="lazy" width={600} height={600} className="h-full w-full object-cover" />
+              <div className="aspect-square bg-surface grid place-items-center">
+                <div className="grid h-24 w-24 place-items-center rounded-full gradient-brand text-brand-foreground">
+                  <UserRound className="h-12 w-12" />
+                </div>
               </div>
-              <div className="p-6">
+              <div className="p-6 text-center">
                 <h3 className="font-semibold text-lg">{l.name}</h3>
                 <p className="text-sm text-brand">{l.title}</p>
               </div>

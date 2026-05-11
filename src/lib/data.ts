@@ -1,11 +1,5 @@
 export const sermons = [
   { id: "0", title: "Image: Knowing Who You Are & Whose You Are", date: "May 11, 2026", series: "Who Am I?", description: "Genesis 1:26-27 — You are God's tselem, His image-bearer and ambassador. Discover your inherent value, calling, and how to live from identity rather than chasing one." },
-  { id: "1", title: "Identity in Christ", date: "May 4, 2026", series: "Who Am I?", description: "Discover what it means to be peculiarly chosen and dearly loved by God." },
-  { id: "2", title: "Bold Faith in a Loud World", date: "Apr 27, 2026", series: "Who Am I?", description: "How to stand firm in your beliefs when the world is shouting otherwise." },
-  { id: "3", title: "Friendship That Builds You", date: "Apr 20, 2026", series: "Who Am I?", description: "The kind of friends every young believer needs around them." },
-  { id: "4", title: "Prayer That Moves Heaven", date: "Apr 13, 2026", series: "Foundations", description: "A practical guide to talking with God daily — even when life is busy." },
-  { id: "5", title: "Purpose Beyond the Hype", date: "Apr 6, 2026", series: "Foundations", description: "Why God created you for more than likes, follows, and trends." },
-  { id: "6", title: "Jesus, My Best Friend", date: "Mar 30, 2026", series: "Foundations", description: "Walking with Jesus as the most real relationship of your life." },
 ];
 
 export const events = [

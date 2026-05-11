@@ -22,7 +22,9 @@ export const posts = [
 ];
 
 export const leaders = [
-  { name: "Pastor David Adeyemi", title: "Youth Pastor", img: "p1" },
-  { name: "Sarah Okafor", title: "Worship & Discipleship Lead", img: "p2" },
-  { name: "Michael Bello", title: "Children's Ministry Director", img: "p3" },
+  { name: "Nana Kwesi Osei-Asemani", title: "Youth Facilitator" },
+  { name: "Bernie Amponsah", title: "Youth Facilitator" },
+  { name: "Enyonam Agu", title: "Youth Facilitator" },
+  { name: "Isabella Narh", title: "Youth Facilitator" },
+  { name: "Nora", title: "Youth Facilitator" },
 ];

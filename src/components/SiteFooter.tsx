@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Mail, Phone, MapPin, Instagram, Facebook, Youtube } from "lucide-react";
+import { Sparkles, Mail, Phone, MapPin, Instagram } from "lucide-react";
 
 export function SiteFooter() {
   return (
@@ -16,9 +16,7 @@ export function SiteFooter() {
             A place where the next generation discovers Jesus, builds real friendships, and lives out their God-given purpose.
           </p>
           <div className="mt-5 flex gap-3 text-muted-foreground">
-            <a href="#" aria-label="Instagram" className="hover:text-brand"><Instagram className="h-5 w-5" /></a>
-            <a href="#" aria-label="Facebook" className="hover:text-brand"><Facebook className="h-5 w-5" /></a>
-            <a href="#" aria-label="YouTube" className="hover:text-brand"><Youtube className="h-5 w-5" /></a>
+            <a href="https://www.instagram.com/pis_youth_church?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-brand"><Instagram className="h-5 w-5" /></a>
           </div>
         </div>
 
@@ -28,17 +26,17 @@ export function SiteFooter() {
             <li><Link to="/about" className="hover:text-brand">About</Link></li>
             <li><Link to="/sermons" className="hover:text-brand">Sermons</Link></li>
             <li><Link to="/events" className="hover:text-brand">Events</Link></li>
-            <li><Link to="/gallery" className="hover:text-brand">Gallery</Link></li>
-            <li><Link to="/blog" className="hover:text-brand">Blog</Link></li>
+            <li><Link to="/newsletter" className="hover:text-brand">Newsletter</Link></li>
+            <li><Link to="/contact" className="hover:text-brand">Contact</Link></li>
           </ul>
         </div>
 
         <div>
           <h4 className="text-sm font-semibold mb-4">Contact</h4>
           <ul className="space-y-3 text-sm text-muted-foreground">
-            <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5 text-brand" /> 123 Hope Avenue, Lagos, NG</li>
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-brand" /> +234 800 000 0000</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand" /> hello@peculiaryouth.org</li>
+            <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5 text-brand" /> C.P, Kasoa, Central Region, Ghana</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-brand" /> +233 50 367 7447</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand" /> peculiaryouthchurch.pyc@gmail.com</li>
           </ul>
         </div>
       </div>

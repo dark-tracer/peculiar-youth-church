@@ -10,10 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SermonsRouteImport } from './routes/sermons'
-import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as ContactRouteImport } from './routes/contact'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
@@ -23,9 +22,9 @@ const SermonsRoute = SermonsRouteImport.update({
   path: '/sermons',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GalleryRoute = GalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
+const NewsletterRoute = NewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsRoute = EventsRouteImport.update({
@@ -36,11 +35,6 @@ const EventsRoute = EventsRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -62,20 +56,18 @@ const EventsEventIdRoute = EventsEventIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
-  '/gallery': typeof GalleryRoute
+  '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRoute
   '/events/$eventId': typeof EventsEventIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
-  '/gallery': typeof GalleryRoute
+  '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRoute
   '/events/$eventId': typeof EventsEventIdRoute
 }
@@ -83,10 +75,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
-  '/gallery': typeof GalleryRoute
+  '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRoute
   '/events/$eventId': typeof EventsEventIdRoute
 }
@@ -95,30 +86,27 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/blog'
     | '/contact'
     | '/events'
-    | '/gallery'
+    | '/newsletter'
     | '/sermons'
     | '/events/$eventId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/blog'
     | '/contact'
     | '/events'
-    | '/gallery'
+    | '/newsletter'
     | '/sermons'
     | '/events/$eventId'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/blog'
     | '/contact'
     | '/events'
-    | '/gallery'
+    | '/newsletter'
     | '/sermons'
     | '/events/$eventId'
   fileRoutesById: FileRoutesById
@@ -126,10 +114,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BlogRoute: typeof BlogRoute
   ContactRoute: typeof ContactRoute
   EventsRoute: typeof EventsRouteWithChildren
-  GalleryRoute: typeof GalleryRoute
+  NewsletterRoute: typeof NewsletterRoute
   SermonsRoute: typeof SermonsRoute
 }
 
@@ -142,11 +129,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SermonsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/gallery': {
-      id: '/gallery'
-      path: '/gallery'
-      fullPath: '/gallery'
-      preLoaderRoute: typeof GalleryRouteImport
+    '/newsletter': {
+      id: '/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof NewsletterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/events': {
@@ -161,13 +148,6 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -208,10 +188,9 @@ const EventsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BlogRoute: BlogRoute,
   ContactRoute: ContactRoute,
   EventsRoute: EventsRouteWithChildren,
-  GalleryRoute: GalleryRoute,
+  NewsletterRoute: NewsletterRoute,
   SermonsRoute: SermonsRoute,
 }
 export const routeTree = rootRouteImport

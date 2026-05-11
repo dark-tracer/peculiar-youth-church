@@ -60,9 +60,9 @@ function Contact() {
 
         <div className="lg:col-span-2 space-y-4">
           {[
-            { icon: MapPin, title: "Visit", value: "123 Hope Avenue, Lagos, Nigeria" },
-            { icon: Phone, title: "Call", value: "+234 800 000 0000" },
-            { icon: Mail, title: "Email", value: "hello@peculiaryouth.org" },
+            { icon: MapPin, title: "Visit", value: "C.P, Kasoa, Central Region, Ghana" },
+            { icon: Phone, title: "Call", value: "+233 50 367 7447" },
+            { icon: Mail, title: "Email", value: "peculiaryouthchurch.pyc@gmail.com" },
             { icon: Clock, title: "Service Times", value: "Sundays · 9:00 AM & 11:00 AM\nFridays Youth Night · 6:30 PM" },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5 flex gap-4">
@@ -82,7 +82,7 @@ function Contact() {
         <div className="rounded-2xl overflow-hidden border border-border aspect-[16/7] bg-surface">
           <iframe
             title="Church location"
-            src="https://www.google.com/maps?q=Lagos&output=embed"
+            src="https://www.google.com/maps?q=Kasoa+CP,+Central+Region,+Ghana&output=embed"
             className="w-full h-full border-0"
             loading="lazy"
           />

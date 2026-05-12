@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import churchLogo from "@/assets/church-logo.png";
 
 const links = [
   { to: "/", label: "Home" },
@@ -17,8 +18,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-lg">
       <div className="container-x flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group" onClick={() => setOpen(false)}>
-          <span className="grid h-9 w-9 place-items-center rounded-lg gradient-brand text-brand-foreground">
-            <Sparkles className="h-4 w-4" />
+          <span className="grid h-10 w-10 place-items-center rounded-lg gradient-brand text-brand-foreground overflow-hidden">
+            <img src={churchLogo} alt="Peculiar Youth & Children Ministry logo" className="h-9 w-9 object-contain" />
           </span>
           <span className="font-display text-base font-bold leading-tight">
             Peculiar <span className="text-brand">Youth</span>

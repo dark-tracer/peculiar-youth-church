@@ -1,5 +1,5 @@
 export const sermons = [
-  { id: "0", title: "Image: Knowing Who You Are & Whose You Are", date: "May 11, 2026", series: "Who Am I?", description: "Genesis 1:26-27 — You are God's tselem, His image-bearer and ambassador. Discover your inherent value, calling, and how to live from identity rather than chasing one." },
+  { id: "0", title: "Image: Knowing Who You Are & Whose You Are", date: "May 11, 2026", series: "Who Am I?", description: "Genesis 1:26-27 — You are God's tselem, His image-bearer and ambassador. Discover your inherent value, calling, and how to live from identity rather than chasing one.", pdfUrl: "/sermons/image-knowing-who-you-are.pdf" },
 ];
 
 export const events = [

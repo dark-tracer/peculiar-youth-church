@@ -41,7 +41,7 @@ function Sermons() {
               <div className="p-6">
                 <p className="text-xs text-muted-foreground">{s.date}</p>
                 <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.description}</p>
-                <a href="#" className="mt-5 inline-flex items-center gap-2 rounded-full bg-foreground/5 px-4 py-2 text-sm font-semibold hover:bg-brand hover:text-brand-foreground transition">
+                <a href={s.pdfUrl} download target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-2 rounded-full bg-foreground/5 px-4 py-2 text-sm font-semibold hover:bg-brand hover:text-brand-foreground transition">
                   <Download className="h-4 w-4" /> Download PDF
                 </a>
               </div>

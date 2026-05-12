@@ -91,7 +91,7 @@ function Home() {
             <p className="mt-4 text-muted-foreground">{latest.description}</p>
             <p className="mt-3 text-sm text-muted-foreground">Preached on {latest.date}</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="#" className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground hover:opacity-90">
+              <a href={latest.pdfUrl} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground hover:opacity-90">
                 <Download className="h-4 w-4" /> Download Sermon PDF
               </a>
               <Link to="/sermons" className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface">

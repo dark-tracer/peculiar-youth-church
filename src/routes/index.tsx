@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
-import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin } from "lucide-react";
+import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import sermonImg from "@/assets/sermon.jpg";
-import { events, sermons } from "@/lib/data";
+import { events, sermons, instagramUrl } from "@/lib/data";
 
 export const Route = createFileRoute("/")({
   head: () => ({

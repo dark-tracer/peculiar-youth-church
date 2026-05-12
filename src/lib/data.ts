@@ -2,12 +2,9 @@ export const sermons = [
   { id: "0", title: "Image: Knowing Who You Are & Whose You Are", date: "May 11, 2026", series: "Who Am I?", description: "Genesis 1:26-27 — You are God's tselem, His image-bearer and ambassador. Discover your inherent value, calling, and how to live from identity rather than chasing one.", pdfUrl: "/sermons/image-knowing-who-you-are.pdf" },
 ];
 
-export const events = [
-  { id: "summer-camp", title: "Summer Youth Camp", date: "Jun 14, 2026", time: "9:00 AM", location: "Hillview Retreat Center", description: "Three days of worship, games, and life-changing teaching with hundreds of other teens. Buses leave the church at 8:30 AM." },
-  { id: "game-night", title: "Friday Game Night", date: "May 22, 2026", time: "6:30 PM", location: "Peculiar Youth Hall", description: "Pizza, board games, console tournaments, and worship to close. Bring a friend — first timers get a free t-shirt." },
-  { id: "kids-fest", title: "Kids Fest 2026", date: "Jun 1, 2026", time: "10:00 AM", location: "Main Auditorium", description: "An action-packed morning for ages 6–12 with dance, drama, snacks, and a powerful Bible message." },
-  { id: "outreach", title: "Community Outreach Day", date: "Jun 28, 2026", time: "8:00 AM", location: "Hope Avenue", description: "Serving our neighborhood with food packs, clean-up, and prayer. Lunch provided for all volunteers." },
-];
+export const events: { id: string; title: string; date: string; time: string; location: string; description: string }[] = [];
+
+export const instagramUrl = "https://www.instagram.com/pis_youth_church?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
 
 export const posts = [
   { id: "1", title: "5 Verses Every Teen Should Memorize", date: "May 1, 2026", excerpt: "Hide these in your heart — they'll meet you in the moments that matter most." },

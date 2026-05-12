@@ -113,22 +113,41 @@ function Home() {
             See all <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {events.slice(0, 3).map((e) => (
-            <article key={e.id} className="group rounded-2xl border border-border bg-card p-7 hover:border-brand/40 hover:shadow-lg transition">
-              <div className="flex items-center gap-2 text-xs font-semibold text-brand">
-                <Calendar className="h-4 w-4" /> {e.date} · {e.time}
-              </div>
-              <h3 className="mt-3 text-xl font-semibold">{e.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5" /> {e.location}
-              </p>
-              <Link to="/events/$eventId" params={{ eventId: e.id }} className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand">
-                Details <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition" />
+        {events.length === 0 ? (
+          <div className="rounded-3xl border border-border bg-card p-10 md:p-14 text-center">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-brand-soft text-brand">
+              <Calendar className="h-7 w-7" />
+            </div>
+            <p className="mt-6 text-lg md:text-xl text-foreground max-w-xl mx-auto">
+              No upcoming events right now. Follow us on Instagram to be the first to know when something is coming.
+            </p>
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground hover:opacity-90">
+                <Instagram className="h-4 w-4" /> Follow on Instagram
+              </a>
+              <Link to="/contact" className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold hover:bg-surface">
+                Get in touch
               </Link>
-            </article>
-          ))}
-        </div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-3">
+            {events.slice(0, 3).map((e) => (
+              <article key={e.id} className="group rounded-2xl border border-border bg-card p-7 hover:border-brand/40 hover:shadow-lg transition">
+                <div className="flex items-center gap-2 text-xs font-semibold text-brand">
+                  <Calendar className="h-4 w-4" /> {e.date} · {e.time}
+                </div>
+                <h3 className="mt-3 text-xl font-semibold">{e.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground flex items-center gap-1">
+                  <MapPin className="h-3.5 w-3.5" /> {e.location}
+                </p>
+                <Link to="/events/$eventId" params={{ eventId: e.id }} className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+                  Details <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition" />
+                </Link>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* MISSION BANNER */}

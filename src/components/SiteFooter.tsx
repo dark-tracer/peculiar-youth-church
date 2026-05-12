@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Mail, Phone, MapPin, Instagram } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram } from "lucide-react";
+import churchLogo from "@/assets/church-logo.png";
 
 export function SiteFooter() {
   return (
@@ -7,8 +8,8 @@ export function SiteFooter() {
       <div className="container-x py-14 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <Link to="/" className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-lg gradient-brand text-brand-foreground">
-              <Sparkles className="h-4 w-4" />
+            <span className="grid h-10 w-10 place-items-center rounded-lg gradient-brand text-brand-foreground overflow-hidden">
+              <img src={churchLogo} alt="Peculiar Youth & Children Ministry logo" className="h-9 w-9 object-contain" />
             </span>
             <span className="font-display font-bold">Peculiar Youth & Children Ministry</span>
           </Link>

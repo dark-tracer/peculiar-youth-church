@@ -63,7 +63,7 @@ function Contact() {
             { icon: MapPin, title: "Visit", value: "C.P, Kasoa, Central Region, Ghana" },
             { icon: Phone, title: "Call", value: "+233 50 367 7447" },
             { icon: Mail, title: "Email", value: "peculiaryouthchurch.pyc@gmail.com" },
-            { icon: Clock, title: "Service Times", value: "Sundays · 9:00 AM & 11:00 AM\nFridays Youth Night · 6:30 PM" },
+            { icon: Clock, title: "Service Times", value: "Sunday Service · 11:00 AM\nBible Study · Sundays · 6:00 PM\nWorship Sunday · First Sunday of every month" },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5 flex gap-4">
               <div className="grid h-10 w-10 place-items-center rounded-lg bg-brand-soft text-brand flex-shrink-0">

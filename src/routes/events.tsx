@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { Calendar, Clock, MapPin, ArrowRight } from "lucide-react";
-import { events } from "@/lib/data";
+import { Calendar, Clock, MapPin, ArrowRight, Instagram } from "lucide-react";
+import { events, instagramUrl } from "@/lib/data";
 
 export const Route = createFileRoute("/events")({
   head: () => ({

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SermonsRouteImport } from './routes/sermons'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
+import { Route as GiveRouteImport } from './routes/give'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
@@ -25,6 +26,11 @@ const SermonsRoute = SermonsRouteImport.update({
 const NewsletterRoute = NewsletterRouteImport.update({
   id: '/newsletter',
   path: '/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GiveRoute = GiveRouteImport.update({
+  id: '/give',
+  path: '/give',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsRoute = EventsRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
+  '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRoute
   '/events/$eventId': typeof EventsEventIdRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
+  '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRoute
   '/events/$eventId': typeof EventsEventIdRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
+  '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRoute
   '/events/$eventId': typeof EventsEventIdRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/events'
+    | '/give'
     | '/newsletter'
     | '/sermons'
     | '/events/$eventId'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/events'
+    | '/give'
     | '/newsletter'
     | '/sermons'
     | '/events/$eventId'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/events'
+    | '/give'
     | '/newsletter'
     | '/sermons'
     | '/events/$eventId'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   EventsRoute: typeof EventsRouteWithChildren
+  GiveRoute: typeof GiveRoute
   NewsletterRoute: typeof NewsletterRoute
   SermonsRoute: typeof SermonsRoute
 }
@@ -134,6 +147,13 @@ declare module '@tanstack/react-router' {
       path: '/newsletter'
       fullPath: '/newsletter'
       preLoaderRoute: typeof NewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/give': {
+      id: '/give'
+      path: '/give'
+      fullPath: '/give'
+      preLoaderRoute: typeof GiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/events': {
@@ -190,6 +210,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   EventsRoute: EventsRouteWithChildren,
+  GiveRoute: GiveRoute,
   NewsletterRoute: NewsletterRoute,
   SermonsRoute: SermonsRoute,
 }

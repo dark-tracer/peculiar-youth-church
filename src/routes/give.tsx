@@ -22,7 +22,7 @@ import {
 // 🔑 PAYSTACK PUBLIC KEY — replace the value below with your
 // real Paystack public key (starts with pk_live_ or pk_test_).
 // ============================================================
-const PAYSTACK_PUBLIC_KEY = "pk_live_REPLACE_WITH_YOUR_KEY";
+const PAYSTACK_PUBLIC_KEY = "pk_live_8124f45739745d82db292fcfeb5d578b430b8496";
 
 const PAYSTACK_SCRIPT_URL = "https://js.paystack.co/v1/inline.js";
 

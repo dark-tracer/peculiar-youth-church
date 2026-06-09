@@ -1,3 +1,4 @@
+import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { BibleStudyForm } from "@/components/admin/BibleStudyForm";
@@ -5,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/admin/bible-studies/new")({
   ssr: false,
-  component: NewStudy,
+  component: () => (<SuperAdminGate><NewStudy /></SuperAdminGate>),
 });
 
 function NewStudy() {

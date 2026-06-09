@@ -11,8 +11,9 @@ export const Route = createFileRoute("/admin/dashboard")({
   component: DashboardPage,
 });
 
-async function fetchStats() {
-  const tables = ["sermons", "blog_posts", "articles", "bible_studies", "artworks"] as const;
+type StatsTable = "sermons" | "blog_posts" | "articles" | "bible_studies" | "artworks";
+
+async function fetchStats(tables: readonly StatsTable[]) {
   const results = await Promise.all(
     tables.map(async (t) => {
       const [{ count: total }, { count: published }] = await Promise.all([
@@ -44,8 +45,19 @@ const tableMeta = {
 
 function DashboardPage() {
   const { fullName, user, role } = useAuth();
-  const { data: stats } = useQuery({ queryKey: ["admin-stats"], queryFn: fetchStats });
-  const { data: recent } = useQuery({ queryKey: ["admin-recent"], queryFn: fetchRecent });
+  const isEditor = role === "editor";
+  const tables: readonly StatsTable[] = isEditor
+    ? (["blog_posts", "articles", "artworks"] as const)
+    : (["sermons", "blog_posts", "articles", "bible_studies", "artworks"] as const);
+  const { data: stats } = useQuery({
+    queryKey: ["admin-stats", role],
+    queryFn: () => fetchStats(tables),
+  });
+  const { data: recent } = useQuery({
+    queryKey: ["admin-recent"],
+    queryFn: fetchRecent,
+    enabled: !isEditor,
+  });
 
   const totalPublished = stats?.reduce((s, x) => s + x.published, 0) ?? 0;
   const totalDrafts = (stats?.reduce((s, x) => s + x.total, 0) ?? 0) - totalPublished;

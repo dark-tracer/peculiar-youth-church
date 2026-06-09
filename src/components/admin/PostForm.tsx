@@ -117,7 +117,7 @@ export function PostForm({ kind, initial, onSaved }: Props) {
       }
 
       if (initial?.id) {
-        const { error } = await supabase.from(table).update(basePayload).eq("id", initial.id);
+        const { error } = await supabase.from(table).update(basePayload as never).eq("id", initial.id);
         if (error) throw error;
         toast.success("Saved");
       } else {

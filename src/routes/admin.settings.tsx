@@ -1,3 +1,4 @@
+import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -13,7 +14,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/settings")({
   ssr: false,
-  component: SettingsAdmin,
+  component: () => (<SuperAdminGate><SettingsAdmin /></SuperAdminGate>),
 });
 
 interface Settings {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { isSuperAdminEmail } from "@/lib/super-admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,29 +13,35 @@ export const Route = createFileRoute("/admin/login")({
   component: AdminLogin,
 });
 
+const UNAUTHORIZED_MSG = "This account is not authorized for the admin console.";
+const DISABLED_MSG =
+  "Your account has been disabled. Please contact your administrator.";
+
 function AdminLogin() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [allowFirstSignup, setAllowFirstSignup] = useState(false);
 
-  // Show "create first super admin" only when no roles exist yet
-  useEffect(() => {
-    supabase
-      .from("user_roles")
-      .select("id", { count: "exact", head: true })
-      .then(({ count }) => setAllowFirstSignup((count ?? 0) === 0));
-  }, []);
-
-  // If already signed in & admin, redirect to dashboard
+  // If already signed in & authorized, redirect to dashboard
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return;
-      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
-      if (roles && roles.length > 0) navigate({ to: "/admin/dashboard" });
+      const [{ data: roles }, { data: profile }] = await Promise.all([
+        supabase.from("user_roles").select("role").eq("user_id", data.user.id),
+        supabase
+          .from("profiles")
+          .select("status,email")
+          .eq("id", data.user.id)
+          .maybeSingle(),
+      ]);
+      const hasSuper = !!roles?.some((r) => r.role === "super_admin");
+      const hasEditor = !!roles?.some((r) => r.role === "editor");
+      const authorized =
+        (hasSuper && isSuperAdminEmail(profile?.email ?? data.user.email)) ||
+        (hasEditor && profile?.status === "active");
+      if (authorized) navigate({ to: "/admin/dashboard" });
     });
   }, [navigate]);
 
@@ -46,38 +53,60 @@ function AdminLogin() {
     }
     setBusy(true);
     try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin + "/admin/login" },
-        });
-        if (error) throw error;
-        toast.success("Account created — signing in…");
-        const { error: e2 } = await supabase.auth.signInWithPassword({ email, password });
-        if (e2) throw e2;
-        navigate({ to: "/admin/dashboard" });
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        // verify role
-        const { data: u } = await supabase.auth.getUser();
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", u.user!.id);
-        if (!roles || roles.length === 0) {
-          await supabase.auth.signOut();
-          throw new Error("This account is not authorized for the admin console.");
-        }
-        if (!remember) {
-          // best-effort: drop persisted session on tab close (browsers will still keep localStorage)
-        }
-        navigate({ to: "/admin/dashboard" });
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInErr) {
+        // Never reveal whether the email exists
+        toast.error(UNAUTHORIZED_MSG);
+        return;
       }
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Sign in failed";
-      toast.error(msg);
+
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) {
+        toast.error(UNAUTHORIZED_MSG);
+        return;
+      }
+
+      const [{ data: roles }, { data: profile }] = await Promise.all([
+        supabase.from("user_roles").select("role").eq("user_id", u.user.id),
+        supabase
+          .from("profiles")
+          .select("status,email")
+          .eq("id", u.user.id)
+          .maybeSingle(),
+      ]);
+
+      const hasSuper = !!roles?.some((r) => r.role === "super_admin");
+      const hasEditor = !!roles?.some((r) => r.role === "editor");
+      const acctEmail = profile?.email ?? u.user.email ?? "";
+
+      // Super admin path
+      if (hasSuper && isSuperAdminEmail(acctEmail)) {
+        if (!remember) {
+          // best-effort: nothing to do; supabase persists by default
+        }
+        navigate({ to: "/admin/dashboard" });
+        return;
+      }
+
+      // Editor path
+      if (hasEditor) {
+        if (profile?.status === "disabled") {
+          await supabase.auth.signOut();
+          toast.error(DISABLED_MSG);
+          return;
+        }
+        navigate({ to: "/admin/dashboard" });
+        return;
+      }
+
+      // Anything else: not authorized
+      await supabase.auth.signOut();
+      toast.error(UNAUTHORIZED_MSG);
+    } catch {
+      toast.error(UNAUTHORIZED_MSG);
     } finally {
       setBusy(false);
     }
@@ -117,7 +146,7 @@ function AdminLogin() {
             <Input
               id="password"
               type="password"
-              autoComplete={mode === "signup" ? "new-password" : "current-password"}
+              autoComplete="current-password"
               required
               minLength={8}
               value={password}
@@ -126,17 +155,15 @@ function AdminLogin() {
             />
           </div>
 
-          {mode === "signin" && (
-            <label className="flex items-center gap-2 text-sm text-[oklch(0.70_0.02_250)]">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-                className="accent-[oklch(0.68_0.20_40)]"
-              />
-              Remember me on this device
-            </label>
-          )}
+          <label className="flex items-center gap-2 text-sm text-[oklch(0.70_0.02_250)]">
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+              className="accent-[oklch(0.68_0.20_40)]"
+            />
+            Remember me on this device
+          </label>
 
           <Button
             type="submit"
@@ -144,33 +171,12 @@ function AdminLogin() {
             className="w-full bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
           >
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-            {mode === "signup" ? "Create Super Admin" : "Sign in"}
+            Sign in
           </Button>
 
-          {allowFirstSignup && (
-            <p className="text-xs text-center text-[oklch(0.70_0.02_250)]">
-              {mode === "signin" ? (
-                <>
-                  First time setup?{" "}
-                  <button
-                    type="button"
-                    className="text-[oklch(0.85_0.15_85)] underline"
-                    onClick={() => setMode("signup")}
-                  >
-                    Create the first Super Admin
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  className="text-[oklch(0.85_0.15_85)] underline"
-                  onClick={() => setMode("signin")}
-                >
-                  Back to sign in
-                </button>
-              )}
-            </p>
-          )}
+          <p className="text-xs text-center text-[oklch(0.70_0.02_250)]">
+            Editor accounts are invite-only. Contact your administrator for access.
+          </p>
         </form>
 
         <p className="mt-6 text-center text-xs text-[oklch(0.70_0.02_250)]">

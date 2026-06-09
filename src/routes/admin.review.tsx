@@ -1,3 +1,4 @@
+import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -9,7 +10,7 @@ import { format } from "date-fns";
 
 export const Route = createFileRoute("/admin/review")({
   ssr: false,
-  component: ReviewQueue,
+  component: () => (<SuperAdminGate><ReviewQueue /></SuperAdminGate>),
 });
 
 type Kind = "sermons" | "blog_posts" | "articles" | "bible_studies" | "artworks";

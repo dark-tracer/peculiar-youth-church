@@ -11,8 +11,9 @@ export const Route = createFileRoute("/admin/dashboard")({
   component: DashboardPage,
 });
 
-async function fetchStats() {
-  const tables = ["sermons", "blog_posts", "articles", "bible_studies", "artworks"] as const;
+type StatsTable = "sermons" | "blog_posts" | "articles" | "bible_studies" | "artworks";
+
+async function fetchStats(tables: readonly StatsTable[]) {
   const results = await Promise.all(
     tables.map(async (t) => {
       const [{ count: total }, { count: published }] = await Promise.all([
@@ -44,8 +45,19 @@ const tableMeta = {
 
 function DashboardPage() {
   const { fullName, user, role } = useAuth();
-  const { data: stats } = useQuery({ queryKey: ["admin-stats"], queryFn: fetchStats });
-  const { data: recent } = useQuery({ queryKey: ["admin-recent"], queryFn: fetchRecent });
+  const isEditor = role === "editor";
+  const tables: readonly StatsTable[] = isEditor
+    ? (["blog_posts", "articles", "artworks"] as const)
+    : (["sermons", "blog_posts", "articles", "bible_studies", "artworks"] as const);
+  const { data: stats } = useQuery({
+    queryKey: ["admin-stats", role],
+    queryFn: () => fetchStats(tables),
+  });
+  const { data: recent } = useQuery({
+    queryKey: ["admin-recent"],
+    queryFn: fetchRecent,
+    enabled: !isEditor,
+  });
 
   const totalPublished = stats?.reduce((s, x) => s + x.published, 0) ?? 0;
   const totalDrafts = (stats?.reduce((s, x) => s + x.total, 0) ?? 0) - totalPublished;
@@ -98,7 +110,7 @@ function DashboardPage() {
           <div className="text-xs uppercase tracking-wider text-muted-foreground">Drafts</div>
           <div className="mt-2 text-2xl font-display font-bold text-[oklch(0.85_0.15_85)]">{totalDrafts}</div>
         </div>
-        <Link to="/admin/review" className="rounded-xl border border-border bg-card p-4 hover:border-[oklch(0.68_0.20_40/60%)] transition">
+        <Link to="/admin/review" className={`rounded-xl border border-border bg-card p-4 hover:border-[oklch(0.68_0.20_40/60%)] transition ${isEditor ? "hidden" : ""}`}>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">Pending review</div>
           <div className="mt-2 text-2xl font-display font-bold text-[oklch(0.68_0.20_40)]">{totalDrafts}</div>
         </Link>
@@ -108,17 +120,22 @@ function DashboardPage() {
       <section className="mb-8">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Quick upload</h2>
         <div className="flex flex-wrap gap-2">
-          <Link
-            to="/admin/sermons/new"
-            className="inline-flex items-center gap-2 rounded-md bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] px-4 py-2 text-sm font-semibold hover:bg-[oklch(0.72_0.20_40)]"
-          >
-            <Plus className="h-4 w-4" /> New Sermon
-          </Link>
-          {(["blog", "articles", "bible-studies", "artworks"] as const).map((s) => (
+          {!isEditor && (
+            <Link
+              to="/admin/sermons/new"
+              className="inline-flex items-center gap-2 rounded-md bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] px-4 py-2 text-sm font-semibold hover:bg-[oklch(0.72_0.20_40)]"
+            >
+              <Plus className="h-4 w-4" /> New Sermon
+            </Link>
+          )}
+          {(isEditor
+            ? (["blog", "articles", "artworks"] as const)
+            : (["blog", "articles", "bible-studies", "artworks"] as const)
+          ).map((s) => (
             <Link
               key={s}
               to={`/admin/${s}`}
-              className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm hover:bg-muted opacity-60"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm hover:bg-muted"
             >
               <Plus className="h-4 w-4" /> {s.replace("-", " ")}
             </Link>
@@ -126,43 +143,45 @@ function DashboardPage() {
         </div>
       </section>
 
-      {/* Recent activity */}
-      <section>
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Recent sermons</h2>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border">
-          {recent && recent.length > 0 ? (
-            recent.map((r) => (
-              <Link
-                key={r.id}
-                to="/admin/sermons/$id"
-                params={{ id: r.id }}
-                className="flex items-center justify-between gap-3 p-4 hover:bg-muted transition"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  {r.status === "published" ? (
-                    <CircleCheck className="h-4 w-4 text-[oklch(0.78_0.15_150)] shrink-0" />
-                  ) : (
-                    <CircleDashed className="h-4 w-4 text-[oklch(0.85_0.15_85)] shrink-0" />
-                  )}
-                  <div className="min-w-0">
-                    <div className="font-semibold truncate">{r.title}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {format(new Date(r.created_at), "MMM d, yyyy")}
+      {/* Recent activity (super admin only) */}
+      {!isEditor && (
+        <section>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Recent sermons</h2>
+          <div className="rounded-xl border border-border bg-card divide-y divide-border">
+            {recent && recent.length > 0 ? (
+              recent.map((r) => (
+                <Link
+                  key={r.id}
+                  to="/admin/sermons/$id"
+                  params={{ id: r.id }}
+                  className="flex items-center justify-between gap-3 p-4 hover:bg-muted transition"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    {r.status === "published" ? (
+                      <CircleCheck className="h-4 w-4 text-[oklch(0.78_0.15_150)] shrink-0" />
+                    ) : (
+                      <CircleDashed className="h-4 w-4 text-[oklch(0.85_0.15_85)] shrink-0" />
+                    )}
+                    <div className="min-w-0">
+                      <div className="font-semibold truncate">{r.title}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {format(new Date(r.created_at), "MMM d, yyyy")}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground shrink-0">
-                  {r.status}
-                </span>
-              </Link>
-            ))
-          ) : (
-            <div className="p-6 text-sm text-muted-foreground text-center">
-              No content yet. Start by adding a sermon.
-            </div>
-          )}
-        </div>
-      </section>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground shrink-0">
+                    {r.status}
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <div className="p-6 text-sm text-muted-foreground text-center">
+                No content yet. Start by adding a sermon.
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </AdminShell>
   );
 }

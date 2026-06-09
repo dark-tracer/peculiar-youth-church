@@ -31,6 +31,7 @@ import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSermonsRouteImport } from './routes/admin.sermons'
 import { Route as AdminReviewRouteImport } from './routes/admin.review'
+import { Route as AdminNotAuthorizedRouteImport } from './routes/admin.not-authorized'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
@@ -160,6 +161,11 @@ const AdminReviewRoute = AdminReviewRouteImport.update({
   path: '/review',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminNotAuthorizedRoute = AdminNotAuthorizedRouteImport.update({
+  id: '/not-authorized',
+  path: '/not-authorized',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMediaRoute = AdminMediaRouteImport.update({
   id: '/media',
   path: '/media',
@@ -272,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
@@ -313,6 +320,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
@@ -356,6 +364,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
@@ -400,6 +409,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
+    | '/admin/not-authorized'
     | '/admin/review'
     | '/admin/sermons'
     | '/admin/settings'
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
+    | '/admin/not-authorized'
     | '/admin/review'
     | '/admin/sermons'
     | '/admin/settings'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
+    | '/admin/not-authorized'
     | '/admin/review'
     | '/admin/sermons'
     | '/admin/settings'
@@ -674,6 +686,13 @@ declare module '@tanstack/react-router' {
       path: '/review'
       fullPath: '/admin/review'
       preLoaderRoute: typeof AdminReviewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/not-authorized': {
+      id: '/admin/not-authorized'
+      path: '/not-authorized'
+      fullPath: '/admin/not-authorized'
+      preLoaderRoute: typeof AdminNotAuthorizedRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/media': {
@@ -883,6 +902,7 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
+  AdminNotAuthorizedRoute: typeof AdminNotAuthorizedRoute
   AdminReviewRoute: typeof AdminReviewRoute
   AdminSermonsRoute: typeof AdminSermonsRouteWithChildren
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -899,6 +919,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,
+  AdminNotAuthorizedRoute: AdminNotAuthorizedRoute,
   AdminReviewRoute: AdminReviewRoute,
   AdminSermonsRoute: AdminSermonsRouteWithChildren,
   AdminSettingsRoute: AdminSettingsRoute,

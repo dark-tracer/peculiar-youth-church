@@ -1,3 +1,4 @@
+import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -20,7 +21,7 @@ import {
 
 export const Route = createFileRoute("/admin/sermons")({
   ssr: false,
-  component: SermonsAdmin,
+  component: () => (<SuperAdminGate><SermonsAdmin /></SuperAdminGate>),
 });
 
 async function fetchSermons() {

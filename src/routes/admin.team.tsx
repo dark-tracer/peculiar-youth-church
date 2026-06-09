@@ -1,12 +1,20 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { AdminShell } from "@/components/admin/AdminShell";
-import { useAuth } from "@/hooks/use-auth";
+import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
 import { supabase } from "@/integrations/supabase/client";
 import { uploadFile } from "@/lib/admin-storage";
-import { Plus, Edit, Trash2, Loader2, Upload, X } from "lucide-react";
+import {
+  inviteEditor,
+  listEditors,
+  setEditorStatus,
+  deleteEditor,
+} from "@/lib/editors.functions";
+import { Plus, Edit, Trash2, Loader2, Upload, X, UserPlus, ShieldOff, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
+import { format } from "date-fns";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,7 +27,11 @@ import {
 
 export const Route = createFileRoute("/admin/team")({
   ssr: false,
-  component: TeamAdmin,
+  component: () => (
+    <SuperAdminGate>
+      <TeamAdmin />
+    </SuperAdminGate>
+  ),
 });
 
 interface TeamValues {
@@ -36,7 +48,219 @@ interface TeamValues {
 const empty: TeamValues = { name: "", title: "", bio: "", photo_url: "", instagram: "", twitter: "", linkedin: "" };
 
 function TeamAdmin() {
-  const { role } = useAuth();
+  return (
+    <AdminShell>
+      <header className="mb-6">
+        <h1 className="text-3xl font-display font-bold">Team</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Manage editor accounts and public-facing ministry team members.
+        </p>
+      </header>
+
+      <EditorAccountsSection />
+      <div className="h-10" />
+      <MinistryTeamSection />
+    </AdminShell>
+  );
+}
+
+/* -------------------------------- Editor Accounts -------------------------------- */
+
+function EditorAccountsSection() {
+  const qc = useQueryClient();
+  const listFn = useServerFn(listEditors);
+  const inviteFn = useServerFn(inviteEditor);
+  const statusFn = useServerFn(setEditorStatus);
+  const deleteFn = useServerFn(deleteEditor);
+
+  const { data: editors, isLoading } = useQuery({
+    queryKey: ["admin-editors"],
+    queryFn: () => listFn(),
+  });
+
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [inviting, setInviting] = useState(false);
+
+  async function submitInvite(e: React.FormEvent) {
+    e.preventDefault();
+    if (!firstName.trim() || !lastName.trim() || !email.trim()) {
+      toast.error("First name, last name, and email are required");
+      return;
+    }
+    setInviting(true);
+    try {
+      await inviteFn({ data: { firstName, lastName, email } });
+      toast.success("Invite sent — the editor will receive an email to set their password.");
+      setFirstName(""); setLastName(""); setEmail("");
+      setInviteOpen(false);
+      qc.invalidateQueries({ queryKey: ["admin-editors"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send invite");
+    } finally {
+      setInviting(false);
+    }
+  }
+
+  async function toggleStatus(id: string, current: "active" | "disabled") {
+    const next = current === "active" ? "disabled" : "active";
+    try {
+      await statusFn({ data: { editorId: id, status: next } });
+      toast.success(next === "disabled" ? "Editor disabled" : "Editor re-enabled");
+      qc.invalidateQueries({ queryKey: ["admin-editors"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Update failed");
+    }
+  }
+
+  async function removeEditor(id: string) {
+    try {
+      await deleteFn({ data: { editorId: id } });
+      toast.success("Editor removed");
+      qc.invalidateQueries({ queryKey: ["admin-editors"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Remove failed");
+    }
+  }
+
+  return (
+    <section>
+      <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+        <div>
+          <h2 className="text-xl font-display font-bold">Editor Accounts</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Editors can create drafts in Blog Posts, Articles, and Digital Artworks. Only the super admin can publish or delete.
+          </p>
+        </div>
+        <Button
+          onClick={() => setInviteOpen(true)}
+          className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
+        >
+          <UserPlus className="h-4 w-4 mr-1" /> Add Editor
+        </Button>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th className="text-left px-4 py-3 font-semibold">Name</th>
+                <th className="text-left px-4 py-3 font-semibold">Email</th>
+                <th className="text-left px-4 py-3 font-semibold">Date Added</th>
+                <th className="text-left px-4 py-3 font-semibold">Status</th>
+                <th className="text-right px-4 py-3 font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading && (
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>
+              )}
+              {!isLoading && (!editors || editors.length === 0) && (
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No editor accounts yet.</td></tr>
+              )}
+              {editors?.map((e) => (
+                <tr key={e.id} className="border-t border-border">
+                  <td className="px-4 py-3 font-medium">{e.full_name ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{e.email}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{format(new Date(e.created_at), "MMM d, yyyy")}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                      e.status === "active"
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : "bg-amber-500/15 text-amber-400"
+                    }`}>
+                      {e.status === "active" ? "Active" : "Disabled"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => toggleStatus(e.id, e.status)}
+                      >
+                        {e.status === "active" ? (
+                          <><ShieldOff className="h-3.5 w-3.5 mr-1" /> Disable</>
+                        ) : (
+                          <><ShieldCheck className="h-3.5 w-3.5 mr-1" /> Enable</>
+                        )}
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button type="button" size="sm" variant="ghost" className="text-destructive hover:text-destructive">
+                            <Trash2 className="h-3.5 w-3.5 mr-1" /> Remove
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This will permanently remove this editor's access. Their content will remain.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => removeEditor(e.id)}>Remove</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Invite Editor</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={submitInvite} className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-sm">First name <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
+                <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Last name <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
+                <Input value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Email <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              They'll get an email with a link to set their password and sign in.
+            </p>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="ghost" onClick={() => setInviteOpen(false)}>Cancel</Button>
+              <Button
+                type="submit"
+                disabled={inviting}
+                className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
+              >
+                {inviting && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
+                Send Invite
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </section>
+  );
+}
+
+/* ----------------------------- Ministry Team Members ---------------------------- */
+
+function MinistryTeamSection() {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<TeamValues | null>(null);
 
@@ -59,7 +283,7 @@ function TeamAdmin() {
     qc.invalidateQueries({ queryKey: ["admin-team"] });
   }
 
-  function openEdit(m: typeof data extends (infer U)[] | undefined ? U : never) {
+  function openEdit(m: NonNullable<typeof data>[number]) {
     const social = (m.social_links as Record<string, string> | null) ?? {};
     setEditing({
       id: m.id,
@@ -74,19 +298,21 @@ function TeamAdmin() {
   }
 
   return (
-    <AdminShell>
-      <header className="mb-6 flex items-center justify-between gap-3 flex-wrap">
+    <section>
+      <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
         <div>
-          <h1 className="text-3xl font-display font-bold">Team Members</h1>
-          <p className="text-sm text-muted-foreground mt-1">Pastors, leaders, and ministry staff.</p>
+          <h2 className="text-xl font-display font-bold">Ministry Team Members</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">Pastors, leaders, and ministry staff shown on the public site.</p>
         </div>
-        <button onClick={() => setEditing({ ...empty })}
-          className="inline-flex items-center gap-2 rounded-md bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] px-4 py-2 text-sm font-semibold hover:bg-[oklch(0.72_0.20_40)]">
+        <button
+          onClick={() => setEditing({ ...empty })}
+          className="inline-flex items-center gap-2 rounded-md bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] px-4 py-2 text-sm font-semibold hover:bg-[oklch(0.72_0.20_40)]"
+        >
           <Plus className="h-4 w-4" /> Add Member
         </button>
-      </header>
+      </div>
 
-      {isLoading && <p className="text-center text-muted-foreground py-12">Loading…</p>}
+      {isLoading && <p className="text-center text-muted-foreground py-8">Loading…</p>}
       {!isLoading && (!data || data.length === 0) && (
         <div className="rounded-xl border border-dashed border-border bg-card p-12 text-center text-muted-foreground">
           No team members yet. Click "Add Member" to get started.
@@ -107,25 +333,23 @@ function TeamAdmin() {
                 <button onClick={() => openEdit(m)} className="inline-flex items-center gap-1 rounded-md bg-muted px-2.5 py-1.5 text-xs hover:bg-muted/70">
                   <Edit className="h-3 w-3" /> Edit
                 </button>
-                {role === "super_admin" && (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <button className="ml-auto p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-destructive" aria-label="Delete">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Remove team member?</AlertDialogTitle>
-                        <AlertDialogDescription>"{m.name}" will be removed from the site.</AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => onDelete(m.id)}>Remove</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="ml-auto p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-destructive" aria-label="Delete">
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Remove team member?</AlertDialogTitle>
+                      <AlertDialogDescription>"{m.name}" will be removed from the site.</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => onDelete(m.id)}>Remove</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
           </div>
@@ -137,7 +361,7 @@ function TeamAdmin() {
         onClose={() => setEditing(null)}
         onSaved={() => { setEditing(null); qc.invalidateQueries({ queryKey: ["admin-team"] }); }}
       />
-    </AdminShell>
+    </section>
   );
 }
 
@@ -265,4 +489,3 @@ function TeamForm({ initial, onClose, onSaved }: { initial: TeamValues; onClose:
     </>
   );
 }
-

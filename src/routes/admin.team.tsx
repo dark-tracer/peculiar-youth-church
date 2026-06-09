@@ -142,16 +142,25 @@ function TeamAdmin() {
 }
 
 function TeamDialog({ value, onClose, onSaved }: { value: TeamValues | null; onClose: () => void; onSaved: () => void }) {
+  return (
+    <Dialog open={!!value} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-lg">
+        {value && <TeamForm initial={value} onClose={onClose} onSaved={onSaved} />}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function TeamForm({ initial, onClose, onSaved }: { initial: TeamValues; onClose: () => void; onSaved: () => void }) {
+  const [v, setV] = useState<TeamValues>(initial);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
-  if (!value) return null;
-  const [v, setV] = useStateInit(value);
 
   async function handleUpload(file: File) {
     setUploading(true);
     try {
       const { url } = await uploadFile("team-photos", file);
-      setV({ ...v, photo_url: url });
+      setV((p) => ({ ...p, photo_url: url }));
       toast.success("Photo uploaded");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");
@@ -193,74 +202,67 @@ function TeamDialog({ value, onClose, onSaved }: { value: TeamValues | null; onC
   }
 
   return (
-    <Dialog open={!!value} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{v.id ? "Edit Team Member" : "Add Team Member"}</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={onSubmit} className="space-y-3">
-          <div className="space-y-1.5">
-            <Label className="text-sm">Photo</Label>
-            <div className="flex items-center gap-3">
-              <div className="h-20 w-20 rounded-full overflow-hidden bg-muted shrink-0">
-                {v.photo_url && <img src={v.photo_url} alt="" className="h-full w-full object-cover" />}
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted cursor-pointer">
-                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                  {uploading ? "Uploading…" : "Upload"}
-                  <input type="file" accept="image/*" className="hidden" disabled={uploading}
-                    onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }} />
-                </label>
-                {v.photo_url && (
-                  <Button type="button" size="sm" variant="ghost" onClick={() => setV({ ...v, photo_url: "" })}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
+    <>
+      <DialogHeader>
+        <DialogTitle>{v.id ? "Edit Team Member" : "Add Team Member"}</DialogTitle>
+      </DialogHeader>
+      <form onSubmit={onSubmit} className="space-y-3">
+        <div className="space-y-1.5">
+          <Label className="text-sm">Photo</Label>
+          <div className="flex items-center gap-3">
+            <div className="h-20 w-20 rounded-full overflow-hidden bg-muted shrink-0">
+              {v.photo_url && <img src={v.photo_url} alt="" className="h-full w-full object-cover" />}
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted cursor-pointer">
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                {uploading ? "Uploading…" : "Upload"}
+                <input type="file" accept="image/*" className="hidden" disabled={uploading}
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }} />
+              </label>
+              {v.photo_url && (
+                <Button type="button" size="sm" variant="ghost" onClick={() => setV((p) => ({ ...p, photo_url: "" }))}>
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-sm">Name <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
+          <Input value={v.name} onChange={(e) => setV((p) => ({ ...p, name: e.target.value }))} required />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-sm">Title / Role</Label>
+          <Input value={v.title} onChange={(e) => setV((p) => ({ ...p, title: e.target.value }))} placeholder="Lead Pastor, Youth Director" />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-sm">Short bio</Label>
+          <Textarea rows={3} value={v.bio} onChange={(e) => setV((p) => ({ ...p, bio: e.target.value }))} />
+        </div>
+        <div className="grid grid-cols-3 gap-2">
           <div className="space-y-1.5">
-            <Label className="text-sm">Name <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
-            <Input value={v.name} onChange={(e) => setV({ ...v, name: e.target.value })} required />
+            <Label className="text-xs">Instagram</Label>
+            <Input value={v.instagram} onChange={(e) => setV((p) => ({ ...p, instagram: e.target.value }))} placeholder="@handle" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-sm">Title / Role</Label>
-            <Input value={v.title} onChange={(e) => setV({ ...v, title: e.target.value })} placeholder="Lead Pastor, Youth Director" />
+            <Label className="text-xs">Twitter / X</Label>
+            <Input value={v.twitter} onChange={(e) => setV((p) => ({ ...p, twitter: e.target.value }))} placeholder="@handle" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-sm">Short bio</Label>
-            <Textarea rows={3} value={v.bio} onChange={(e) => setV({ ...v, bio: e.target.value })} />
+            <Label className="text-xs">LinkedIn</Label>
+            <Input value={v.linkedin} onChange={(e) => setV((p) => ({ ...p, linkedin: e.target.value }))} placeholder="URL" />
           </div>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="space-y-1.5">
-              <Label className="text-xs">Instagram</Label>
-              <Input value={v.instagram} onChange={(e) => setV({ ...v, instagram: e.target.value })} placeholder="@handle" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Twitter / X</Label>
-              <Input value={v.twitter} onChange={(e) => setV({ ...v, twitter: e.target.value })} placeholder="@handle" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">LinkedIn</Label>
-              <Input value={v.linkedin} onChange={(e) => setV({ ...v, linkedin: e.target.value })} placeholder="URL" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
-            <Button type="submit" disabled={busy} className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]">
-              {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-              Save
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button type="submit" disabled={busy} className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]">
+            {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+            Save
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }
 
-// Local helper: useState seeded once from the dialog's open value
-function useStateInit<T>(initial: T): [T, (v: T) => void] {
-  const [v, set] = useState<T>(initial);
-  return [v, set];
-}

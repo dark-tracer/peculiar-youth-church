@@ -294,25 +294,31 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          created_by: string | null
           email: string | null
           full_name: string | null
           id: string
+          status: string
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          created_by?: string | null
           email?: string | null
           full_name?: string | null
           id: string
+          status?: string
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          created_by?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
+          status?: string
           updated_at?: string
         }
         Relationships: []
@@ -536,7 +542,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_active_editor: { Args: { _user_id: string }; Returns: boolean }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      super_admin_email: { Args: never; Returns: string }
     }
     Enums: {
       app_role: "super_admin" | "editor"

@@ -27,7 +27,11 @@ import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BibleStudiesSlugRouteImport } from './routes/bible-studies.$slug'
 import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
+import { Route as AdminTeamRouteImport } from './routes/admin.team'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSermonsRouteImport } from './routes/admin.sermons'
+import { Route as AdminReviewRouteImport } from './routes/admin.review'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
@@ -136,9 +140,29 @@ const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ArticlesRoute,
 } as any)
+const AdminTeamRoute = AdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSermonsRoute = AdminSermonsRouteImport.update({
   id: '/sermons',
   path: '/sermons',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReviewRoute = AdminReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -247,7 +271,11 @@ export interface FileRoutesByFullPath {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/bible-studies/$slug': typeof BibleStudiesSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -284,7 +312,11 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/bible-studies/$slug': typeof BibleStudiesSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -323,7 +355,11 @@ export interface FileRoutesById {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/bible-studies/$slug': typeof BibleStudiesSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -363,7 +399,11 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/admin/media'
+    | '/admin/review'
     | '/admin/sermons'
+    | '/admin/settings'
+    | '/admin/team'
     | '/articles/$slug'
     | '/bible-studies/$slug'
     | '/blog/$slug'
@@ -400,7 +440,11 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/admin/media'
+    | '/admin/review'
     | '/admin/sermons'
+    | '/admin/settings'
+    | '/admin/team'
     | '/articles/$slug'
     | '/bible-studies/$slug'
     | '/blog/$slug'
@@ -438,7 +482,11 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/admin/media'
+    | '/admin/review'
     | '/admin/sermons'
+    | '/admin/settings'
+    | '/admin/team'
     | '/articles/$slug'
     | '/bible-studies/$slug'
     | '/blog/$slug'
@@ -600,11 +648,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesSlugRouteImport
       parentRoute: typeof ArticlesRoute
     }
+    '/admin/team': {
+      id: '/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AdminTeamRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/sermons': {
       id: '/admin/sermons'
       path: '/sermons'
       fullPath: '/admin/sermons'
       preLoaderRoute: typeof AdminSermonsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/review': {
+      id: '/admin/review'
+      path: '/review'
+      fullPath: '/admin/review'
+      preLoaderRoute: typeof AdminReviewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/login': {
@@ -806,7 +882,11 @@ interface AdminRouteChildren {
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminMediaRoute: typeof AdminMediaRoute
+  AdminReviewRoute: typeof AdminReviewRoute
   AdminSermonsRoute: typeof AdminSermonsRouteWithChildren
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminTeamRoute: typeof AdminTeamRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -818,7 +898,11 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminMediaRoute: AdminMediaRoute,
+  AdminReviewRoute: AdminReviewRoute,
   AdminSermonsRoute: AdminSermonsRouteWithChildren,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminTeamRoute: AdminTeamRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

@@ -21,8 +21,8 @@ import { toast } from "sonner";
 const navItems = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, ready: true },
   { to: "/admin/sermons", label: "Sermons", icon: Mic2, ready: true },
-  { to: "/admin/blog", label: "Blog Posts", icon: FileText, ready: false },
-  { to: "/admin/articles", label: "Articles", icon: Newspaper, ready: false },
+  { to: "/admin/blog", label: "Blog Posts", icon: FileText, ready: true },
+  { to: "/admin/articles", label: "Articles", icon: Newspaper, ready: true },
   { to: "/admin/bible-studies", label: "Bible Studies", icon: BookOpen, ready: false },
   { to: "/admin/artworks", label: "Digital Artworks", icon: Palette, ready: false },
   { to: "/admin/media", label: "Media Library", icon: ImageIcon, ready: false },

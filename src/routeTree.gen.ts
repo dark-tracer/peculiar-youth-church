@@ -14,9 +14,18 @@ import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as GiveRouteImport } from './routes/give'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as SermonsSlugRouteImport } from './routes/sermons.$slug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
+import { Route as AdminSermonsRouteImport } from './routes/admin.sermons'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminSectionRouteImport } from './routes/admin.$section'
+import { Route as AdminSermonsNewRouteImport } from './routes/admin.sermons.new'
+import { Route as AdminSermonsIdRouteImport } from './routes/admin.sermons.$id'
 
 const SermonsRoute = SermonsRouteImport.update({
   id: '/sermons',
@@ -43,6 +52,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -53,21 +67,70 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const SermonsSlugRoute = SermonsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => SermonsRoute,
+} as any)
 const EventsEventIdRoute = EventsEventIdRouteImport.update({
   id: '/$eventId',
   path: '/$eventId',
   getParentRoute: () => EventsRoute,
 } as any)
+const AdminSermonsRoute = AdminSermonsRouteImport.update({
+  id: '/sermons',
+  path: '/sermons',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSectionRoute = AdminSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSermonsNewRoute = AdminSermonsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminSermonsRoute,
+} as any)
+const AdminSermonsIdRoute = AdminSermonsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminSermonsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
   '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
-  '/sermons': typeof SermonsRoute
+  '/sermons': typeof SermonsRouteWithChildren
+  '/admin/$section': typeof AdminSectionRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/events/$eventId': typeof EventsEventIdRoute
+  '/sermons/$slug': typeof SermonsSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/sermons/$id': typeof AdminSermonsIdRoute
+  '/admin/sermons/new': typeof AdminSermonsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,31 +139,57 @@ export interface FileRoutesByTo {
   '/events': typeof EventsRouteWithChildren
   '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
-  '/sermons': typeof SermonsRoute
+  '/sermons': typeof SermonsRouteWithChildren
+  '/admin/$section': typeof AdminSectionRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/events/$eventId': typeof EventsEventIdRoute
+  '/sermons/$slug': typeof SermonsSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/sermons/$id': typeof AdminSermonsIdRoute
+  '/admin/sermons/new': typeof AdminSermonsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
   '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
-  '/sermons': typeof SermonsRoute
+  '/sermons': typeof SermonsRouteWithChildren
+  '/admin/$section': typeof AdminSectionRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/events/$eventId': typeof EventsEventIdRoute
+  '/sermons/$slug': typeof SermonsSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/sermons/$id': typeof AdminSermonsIdRoute
+  '/admin/sermons/new': typeof AdminSermonsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/contact'
     | '/events'
     | '/give'
     | '/newsletter'
     | '/sermons'
+    | '/admin/$section'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/sermons'
     | '/events/$eventId'
+    | '/sermons/$slug'
+    | '/admin/'
+    | '/admin/sermons/$id'
+    | '/admin/sermons/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,27 +199,45 @@ export interface FileRouteTypes {
     | '/give'
     | '/newsletter'
     | '/sermons'
+    | '/admin/$section'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/sermons'
     | '/events/$eventId'
+    | '/sermons/$slug'
+    | '/admin'
+    | '/admin/sermons/$id'
+    | '/admin/sermons/new'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/contact'
     | '/events'
     | '/give'
     | '/newsletter'
     | '/sermons'
+    | '/admin/$section'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/sermons'
     | '/events/$eventId'
+    | '/sermons/$slug'
+    | '/admin/'
+    | '/admin/sermons/$id'
+    | '/admin/sermons/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   ContactRoute: typeof ContactRoute
   EventsRoute: typeof EventsRouteWithChildren
   GiveRoute: typeof GiveRoute
   NewsletterRoute: typeof NewsletterRoute
-  SermonsRoute: typeof SermonsRoute
+  SermonsRoute: typeof SermonsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -170,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -184,6 +298,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/sermons/$slug': {
+      id: '/sermons/$slug'
+      path: '/$slug'
+      fullPath: '/sermons/$slug'
+      preLoaderRoute: typeof SermonsSlugRouteImport
+      parentRoute: typeof SermonsRoute
+    }
     '/events/$eventId': {
       id: '/events/$eventId'
       path: '/$eventId'
@@ -191,8 +319,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsEventIdRouteImport
       parentRoute: typeof EventsRoute
     }
+    '/admin/sermons': {
+      id: '/admin/sermons'
+      path: '/sermons'
+      fullPath: '/admin/sermons'
+      preLoaderRoute: typeof AdminSermonsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/$section': {
+      id: '/admin/$section'
+      path: '/$section'
+      fullPath: '/admin/$section'
+      preLoaderRoute: typeof AdminSectionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/sermons/new': {
+      id: '/admin/sermons/new'
+      path: '/new'
+      fullPath: '/admin/sermons/new'
+      preLoaderRoute: typeof AdminSermonsNewRouteImport
+      parentRoute: typeof AdminSermonsRoute
+    }
+    '/admin/sermons/$id': {
+      id: '/admin/sermons/$id'
+      path: '/$id'
+      fullPath: '/admin/sermons/$id'
+      preLoaderRoute: typeof AdminSermonsIdRouteImport
+      parentRoute: typeof AdminSermonsRoute
+    }
   }
 }
+
+interface AdminSermonsRouteChildren {
+  AdminSermonsIdRoute: typeof AdminSermonsIdRoute
+  AdminSermonsNewRoute: typeof AdminSermonsNewRoute
+}
+
+const AdminSermonsRouteChildren: AdminSermonsRouteChildren = {
+  AdminSermonsIdRoute: AdminSermonsIdRoute,
+  AdminSermonsNewRoute: AdminSermonsNewRoute,
+}
+
+const AdminSermonsRouteWithChildren = AdminSermonsRoute._addFileChildren(
+  AdminSermonsRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminSectionRoute: typeof AdminSectionRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminSermonsRoute: typeof AdminSermonsRouteWithChildren
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminSectionRoute: AdminSectionRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminSermonsRoute: AdminSermonsRouteWithChildren,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface EventsRouteChildren {
   EventsEventIdRoute: typeof EventsEventIdRoute
@@ -205,25 +407,27 @@ const EventsRouteChildren: EventsRouteChildren = {
 const EventsRouteWithChildren =
   EventsRoute._addFileChildren(EventsRouteChildren)
 
+interface SermonsRouteChildren {
+  SermonsSlugRoute: typeof SermonsSlugRoute
+}
+
+const SermonsRouteChildren: SermonsRouteChildren = {
+  SermonsSlugRoute: SermonsSlugRoute,
+}
+
+const SermonsRouteWithChildren =
+  SermonsRoute._addFileChildren(SermonsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   ContactRoute: ContactRoute,
   EventsRoute: EventsRouteWithChildren,
   GiveRoute: GiveRoute,
   NewsletterRoute: NewsletterRoute,
-  SermonsRoute: SermonsRoute,
+  SermonsRoute: SermonsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

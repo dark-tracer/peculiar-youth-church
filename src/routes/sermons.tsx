@@ -1,53 +1,127 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { Download, Info } from "lucide-react";
-import { sermons } from "@/lib/data";
+import { Download, Headphones, Play, Info, Star } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 export const Route = createFileRoute("/sermons")({
   head: () => ({
     meta: [
       { title: "Sermons — Peculiar Youth & Children Ministry" },
-      { name: "description", content: "Browse our latest sermons and download PDF notes to read or share." },
+      { name: "description", content: "Browse our latest sermons and download notes." },
     ],
   }),
   component: Sermons,
 });
 
+async function fetchPublishedSermons() {
+  const { data, error } = await supabase
+    .from("sermons")
+    .select("id, slug, title, preacher_name, date_preached, scripture, series_name, description, video_url, audio_url, notes_pdf_url, thumbnail_url, featured")
+    .eq("status", "published")
+    .order("date_preached", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
 function Sermons() {
+  const { data: sermons, isLoading } = useQuery({
+    queryKey: ["public-sermons"],
+    queryFn: fetchPublishedSermons,
+  });
+
+  const featured = sermons?.find((s) => s.featured) ?? sermons?.[0];
+  const rest = sermons?.filter((s) => s.id !== featured?.id) ?? [];
+
   return (
     <PageShell>
-      <PageHero eyebrow="Sermons" title="Messages that meet you where you are." subtitle="Download notes from our recent talks and dive deeper on your own." />
+      <PageHero
+        eyebrow="Sermons"
+        title="Messages that meet you where you are."
+        subtitle="Browse our latest talks, listen in, and download notes."
+      />
 
       <div className="container-x mt-8">
         <div className="flex items-start gap-3 rounded-xl border border-brand/20 bg-brand-soft px-5 py-4">
           <Info className="h-5 w-5 text-brand flex-shrink-0 mt-0.5" />
           <p className="text-sm text-brand-foreground/90">
-            <span className="font-semibold text-brand">Audio sermons coming soon.</span>{" "}
-            <span className="text-foreground/80">Stay connected — we're working on it.</span>
+            <span className="font-semibold text-brand">Fresh content weekly.</span>{" "}
+            <span className="text-foreground/80">Check back often for new messages.</span>
           </p>
         </div>
       </div>
 
-      <section className="container-x py-16">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {sermons.map((s) => (
-            <article key={s.id} className="group rounded-2xl border border-border bg-card overflow-hidden hover:border-brand/40 hover:shadow-lg transition">
-              <div className="aspect-[16/10] gradient-brand relative flex items-end p-5">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-brand-foreground/80">{s.series}</p>
-                  <h3 className="mt-1 text-xl font-bold text-brand-foreground">{s.title}</h3>
+      <section className="container-x py-12">
+        {isLoading && <p className="text-center text-muted-foreground py-16">Loading sermons…</p>}
+        {!isLoading && (!sermons || sermons.length === 0) && (
+          <p className="text-center text-muted-foreground py-16">No sermons published yet. Check back soon.</p>
+        )}
+
+        {featured && (
+          <article className="mb-12 rounded-2xl border border-brand/30 bg-card overflow-hidden shadow-lg">
+            <div className="grid md:grid-cols-2">
+              <div className="aspect-[16/10] md:aspect-auto gradient-brand relative">
+                {featured.thumbnail_url ? (
+                  <img src={featured.thumbnail_url} alt={featured.title} className="absolute inset-0 h-full w-full object-cover" />
+                ) : null}
+              </div>
+              <div className="p-8 flex flex-col">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">
+                  <Star className="h-3.5 w-3.5 fill-current" /> Featured Sermon
+                </div>
+                {featured.series_name && (
+                  <p className="mt-2 text-xs text-muted-foreground uppercase tracking-wider">{featured.series_name}</p>
+                )}
+                <h2 className="mt-2 text-2xl md:text-3xl font-bold">{featured.title}</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {featured.preacher_name} · {format(new Date(featured.date_preached), "MMM d, yyyy")}
+                  {featured.scripture && ` · ${featured.scripture}`}
+                </p>
+                {featured.description && (
+                  <div className="mt-4 prose prose-sm max-w-none text-muted-foreground" dangerouslySetInnerHTML={{ __html: featured.description }} />
+                )}
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <Link to="/sermons/$slug" params={{ slug: featured.slug }} className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90">
+                    <Play className="h-4 w-4" /> View Sermon
+                  </Link>
+                  {featured.audio_url && (
+                    <a href={featured.audio_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
+                      <Headphones className="h-4 w-4" /> Listen
+                    </a>
+                  )}
+                  {featured.notes_pdf_url && (
+                    <a href={featured.notes_pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
+                      <Download className="h-4 w-4" /> Notes
+                    </a>
+                  )}
                 </div>
               </div>
-              <div className="p-6">
-                <p className="text-xs text-muted-foreground">{s.date}</p>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.description}</p>
-                <a href={s.pdfUrl} download target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-2 rounded-full bg-foreground/5 px-4 py-2 text-sm font-semibold hover:bg-brand hover:text-brand-foreground transition">
-                  <Download className="h-4 w-4" /> Download PDF
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
+            </div>
+          </article>
+        )}
+
+        {rest.length > 0 && (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {rest.map((s) => (
+              <article key={s.id} className="group rounded-2xl border border-border bg-card overflow-hidden hover:border-brand/40 hover:shadow-lg transition">
+                <Link to="/sermons/$slug" params={{ slug: s.slug }} className="block">
+                  <div className="aspect-[16/10] gradient-brand relative">
+                    {s.thumbnail_url && <img src={s.thumbnail_url} alt={s.title} className="absolute inset-0 h-full w-full object-cover" />}
+                  </div>
+                  <div className="p-6">
+                    {s.series_name && <p className="text-xs font-semibold uppercase tracking-wider text-brand">{s.series_name}</p>}
+                    <h3 className="mt-1 text-lg font-bold">{s.title}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {s.preacher_name} · {format(new Date(s.date_preached), "MMM d, yyyy")}
+                    </p>
+                    {s.scripture && <p className="mt-2 text-xs text-muted-foreground">{s.scripture}</p>}
+                  </div>
+                </Link>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </PageShell>
   );

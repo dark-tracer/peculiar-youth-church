@@ -8,8 +8,6 @@ export const Route = createFileRoute("/admin/$section")({
 });
 
 const labels: Record<string, string> = {
-  "bible-studies": "Bible Studies",
-  artworks: "Digital Artworks",
   media: "Media Library",
   team: "Team Members",
   settings: "Settings",

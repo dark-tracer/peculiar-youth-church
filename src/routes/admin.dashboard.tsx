@@ -98,10 +98,10 @@ function DashboardPage() {
           <div className="text-xs uppercase tracking-wider text-muted-foreground">Drafts</div>
           <div className="mt-2 text-2xl font-display font-bold text-[oklch(0.85_0.15_85)]">{totalDrafts}</div>
         </div>
-        <div className="rounded-xl border border-border bg-card p-4">
+        <Link to="/admin/review" className="rounded-xl border border-border bg-card p-4 hover:border-[oklch(0.68_0.20_40/60%)] transition">
           <div className="text-xs uppercase tracking-wider text-muted-foreground">Pending review</div>
-          <div className="mt-2 text-2xl font-display font-bold text-muted-foreground">0</div>
-        </div>
+          <div className="mt-2 text-2xl font-display font-bold text-[oklch(0.68_0.20_40)]">{totalDrafts}</div>
+        </Link>
       </section>
 
       {/* Quick upload */}

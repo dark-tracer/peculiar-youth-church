@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   Users,
   Settings,
+  Inbox,
   LogOut,
   Menu,
   X,
@@ -20,14 +21,15 @@ import { toast } from "sonner";
 
 const navItems = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, ready: true },
+  { to: "/admin/review", label: "Pending Review", icon: Inbox, ready: true },
   { to: "/admin/sermons", label: "Sermons", icon: Mic2, ready: true },
   { to: "/admin/blog", label: "Blog Posts", icon: FileText, ready: true },
   { to: "/admin/articles", label: "Articles", icon: Newspaper, ready: true },
   { to: "/admin/bible-studies", label: "Bible Studies", icon: BookOpen, ready: true },
   { to: "/admin/artworks", label: "Digital Artworks", icon: Palette, ready: true },
-  { to: "/admin/media", label: "Media Library", icon: ImageIcon, ready: false },
-  { to: "/admin/team", label: "Team Members", icon: Users, ready: false },
-  { to: "/admin/settings", label: "Settings", icon: Settings, ready: false },
+  { to: "/admin/media", label: "Media Library", icon: ImageIcon, ready: true },
+  { to: "/admin/team", label: "Team Members", icon: Users, ready: true },
+  { to: "/admin/settings", label: "Settings", icon: Settings, ready: true },
 ] as const;
 
 const IDLE_TIMEOUT_MS = 30 * 60 * 1000;

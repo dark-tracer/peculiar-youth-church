@@ -422,6 +422,54 @@ export type Database = {
           },
         ]
       }
+      site_settings: {
+        Row: {
+          address: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          facebook_url: string | null
+          giving_note: string | null
+          id: number
+          instagram_url: string | null
+          site_title: string
+          tagline: string | null
+          tiktok_url: string | null
+          twitter_url: string | null
+          updated_at: string
+          youtube_url: string | null
+        }
+        Insert: {
+          address?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          facebook_url?: string | null
+          giving_note?: string | null
+          id?: number
+          instagram_url?: string | null
+          site_title?: string
+          tagline?: string | null
+          tiktok_url?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          address?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          facebook_url?: string | null
+          giving_note?: string | null
+          id?: number
+          instagram_url?: string | null
+          site_title?: string
+          tagline?: string | null
+          tiktok_url?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           bio: string | null

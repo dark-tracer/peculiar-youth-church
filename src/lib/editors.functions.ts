@@ -73,6 +73,22 @@ export const listEditors = createServerFn({ method: "GET" })
     return out;
   });
 
+function generatePassword(): string {
+  // 14-char random password: upper + lower + digit + symbol
+  const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const lower = "abcdefghijkmnopqrstuvwxyz";
+  const digit = "23456789";
+  const symbol = "!@#$%&*?";
+  const all = upper + lower + digit + symbol;
+  const pick = (set: string) => set[Math.floor(Math.random() * set.length)];
+  let out = pick(upper) + pick(lower) + pick(digit) + pick(symbol);
+  for (let i = 0; i < 10; i++) out += pick(all);
+  return out
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
+}
+
 export const inviteEditor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
@@ -85,24 +101,27 @@ export const inviteEditor = createServerFn({ method: "POST" })
       return d;
     },
   )
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data, context }): Promise<{ ok: true; email: string; password: string }> => {
     const admin = await ensureSuperAdmin(context.userId);
     const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`.trim();
+    const password = generatePassword();
 
-    const { data: invited, error } = await admin.auth.admin.inviteUserByEmail(data.email, {
-      data: { full_name: fullName },
+    const { data: created, error } = await admin.auth.admin.createUser({
+      email: data.email,
+      password,
+      email_confirm: true,
+      user_metadata: { full_name: fullName },
     });
     if (error) throw new Error(error.message);
 
-    if (invited.user) {
-      // The handle_new_user trigger created the profile + editor role.
-      // Stamp full_name + created_by here (trigger has no invitation context).
+    if (created.user) {
+      // handle_new_user trigger created the profile + editor role.
       await admin
         .from("profiles")
         .update({ full_name: fullName, created_by: context.userId })
-        .eq("id", invited.user.id);
+        .eq("id", created.user.id);
     }
-    return { ok: true };
+    return { ok: true, email: data.email, password };
   });
 
 export const setEditorStatus = createServerFn({ method: "POST" })

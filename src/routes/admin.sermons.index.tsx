@@ -19,7 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export const Route = createFileRoute("/admin/sermons")({
+export const Route = createFileRoute("/admin/sermons/")({
   ssr: false,
   component: () => (<SuperAdminGate><SermonsAdmin /></SuperAdminGate>),
 });

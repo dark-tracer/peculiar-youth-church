@@ -11,20 +11,20 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export const Route = createFileRoute("/admin/articles")({
+export const Route = createFileRoute("/admin/blog/")({
   ssr: false,
-  component: ArticlesAdmin,
+  component: BlogAdmin,
 });
 
-function ArticlesAdmin() {
+function BlogAdmin() {
   const { role } = useAuth();
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-articles"],
+    queryKey: ["admin-blog"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("articles")
-        .select("id, slug, title, author_name, publish_date, column_name, edition_label, status")
+        .from("blog_posts")
+        .select("id, slug, title, author_name, publish_date, category, status")
         .order("publish_date", { ascending: false });
       if (error) throw error;
       return data;
@@ -32,10 +32,10 @@ function ArticlesAdmin() {
   });
 
   async function onDelete(id: string) {
-    const { error } = await supabase.from("articles").delete().eq("id", id);
+    const { error } = await supabase.from("blog_posts").delete().eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Article deleted");
-    qc.invalidateQueries({ queryKey: ["admin-articles"] });
+    toast.success("Post deleted");
+    qc.invalidateQueries({ queryKey: ["admin-blog"] });
     qc.invalidateQueries({ queryKey: ["admin-stats"] });
   }
 
@@ -43,14 +43,14 @@ function ArticlesAdmin() {
     <AdminShell>
       <header className="mb-6 flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-3xl font-display font-bold">Articles</h1>
-          <p className="text-sm text-muted-foreground mt-1">Long-form columns and editions.</p>
+          <h1 className="text-3xl font-display font-bold">Blog Posts</h1>
+          <p className="text-sm text-muted-foreground mt-1">Stories, devotionals, and announcements.</p>
         </div>
         <Link
-          to="/admin/articles/new"
+          to="/admin/blog/new"
           className="inline-flex items-center gap-2 rounded-md bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] px-4 py-2 text-sm font-semibold hover:bg-[oklch(0.72_0.20_40)]"
         >
-          <Plus className="h-4 w-4" /> New Article
+          <Plus className="h-4 w-4" /> New Post
         </Link>
       </header>
 
@@ -62,7 +62,7 @@ function ArticlesAdmin() {
                 <th className="px-4 py-3 font-semibold">Title</th>
                 <th className="px-4 py-3 font-semibold hidden md:table-cell">Author</th>
                 <th className="px-4 py-3 font-semibold hidden lg:table-cell">Date</th>
-                <th className="px-4 py-3 font-semibold hidden lg:table-cell">Column</th>
+                <th className="px-4 py-3 font-semibold hidden lg:table-cell">Category</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold text-right">Actions</th>
               </tr>
@@ -71,7 +71,7 @@ function ArticlesAdmin() {
               {isLoading && <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>}
               {!isLoading && (!data || data.length === 0) && (
                 <tr><td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">
-                  No articles yet. <Link to="/admin/articles/new" className="text-[oklch(0.68_0.20_40)] underline">Add the first one</Link>.
+                  No posts yet. <Link to="/admin/blog/new" className="text-[oklch(0.68_0.20_40)] underline">Write the first one</Link>.
                 </td></tr>
               )}
               {data?.map((p) => (
@@ -81,7 +81,7 @@ function ArticlesAdmin() {
                   <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground">
                     {p.publish_date ? format(new Date(p.publish_date), "MMM d, yyyy") : "—"}
                   </td>
-                  <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground">{p.column_name ?? "—"}</td>
+                  <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground">{p.category ?? "—"}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold ${
                       p.status === "published"
@@ -92,12 +92,12 @@ function ArticlesAdmin() {
                   <td className="px-4 py-3 text-right">
                     <div className="inline-flex items-center gap-1">
                       {p.status === "published" && (
-                        <a href={`/articles/${p.slug}`} target="_blank" rel="noopener noreferrer"
+                        <a href={`/blog/${p.slug}`} target="_blank" rel="noopener noreferrer"
                           className="p-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" aria-label="Preview">
                           <Eye className="h-4 w-4" />
                         </a>
                       )}
-                      <Link to="/admin/articles/$id" params={{ id: p.id }}
+                      <Link to="/admin/blog/$id" params={{ id: p.id }}
                         className="p-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" aria-label="Edit">
                         <Edit className="h-4 w-4" />
                       </Link>
@@ -110,7 +110,7 @@ function ArticlesAdmin() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete article?</AlertDialogTitle>
+                              <AlertDialogTitle>Delete post?</AlertDialogTitle>
                               <AlertDialogDescription>
                                 This will permanently remove "{p.title}". This cannot be undone.
                               </AlertDialogDescription>

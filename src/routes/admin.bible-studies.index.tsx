@@ -11,7 +11,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export const Route = createFileRoute("/admin/bible-studies")({
+export const Route = createFileRoute("/admin/bible-studies/")({
   ssr: false,
   component: () => (<SuperAdminGate><BibleStudiesAdmin /></SuperAdminGate>),
 });

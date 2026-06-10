@@ -29,11 +29,13 @@ import { Route as BibleStudiesSlugRouteImport } from './routes/bible-studies.$sl
 import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminSermonsRouteImport } from './routes/admin.sermons'
 import { Route as AdminReviewRouteImport } from './routes/admin.review'
 import { Route as AdminNotAuthorizedRouteImport } from './routes/admin.not-authorized'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminBibleStudiesRouteImport } from './routes/admin.bible-studies'
 import { Route as AdminSectionRouteImport } from './routes/admin.$section'
 import { Route as AdminSermonsIndexRouteImport } from './routes/admin.sermons.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin.blog.index'
@@ -151,6 +153,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSermonsRoute = AdminSermonsRouteImport.update({
+  id: '/sermons',
+  path: '/sermons',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminReviewRoute = AdminReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -176,15 +183,20 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBibleStudiesRoute = AdminBibleStudiesRouteImport.update({
+  id: '/bible-studies',
+  path: '/bible-studies',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSectionRoute = AdminSectionRouteImport.update({
   id: '/$section',
   path: '/$section',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSermonsIndexRoute = AdminSermonsIndexRouteImport.update({
-  id: '/sermons/',
-  path: '/sermons/',
-  getParentRoute: () => AdminRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminSermonsRoute,
 } as any)
 const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
   id: '/blog/',
@@ -192,9 +204,9 @@ const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBibleStudiesIndexRoute = AdminBibleStudiesIndexRouteImport.update({
-  id: '/bible-studies/',
-  path: '/bible-studies/',
-  getParentRoute: () => AdminRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminBibleStudiesRoute,
 } as any)
 const AdminArtworksIndexRoute = AdminArtworksIndexRouteImport.update({
   id: '/artworks/',
@@ -207,14 +219,14 @@ const AdminArticlesIndexRoute = AdminArticlesIndexRouteImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSermonsNewRoute = AdminSermonsNewRouteImport.update({
-  id: '/sermons/new',
-  path: '/sermons/new',
-  getParentRoute: () => AdminRoute,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminSermonsRoute,
 } as any)
 const AdminSermonsIdRoute = AdminSermonsIdRouteImport.update({
-  id: '/sermons/$id',
-  path: '/sermons/$id',
-  getParentRoute: () => AdminRoute,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminSermonsRoute,
 } as any)
 const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
   id: '/blog/new',
@@ -227,14 +239,14 @@ const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBibleStudiesNewRoute = AdminBibleStudiesNewRouteImport.update({
-  id: '/bible-studies/new',
-  path: '/bible-studies/new',
-  getParentRoute: () => AdminRoute,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminBibleStudiesRoute,
 } as any)
 const AdminBibleStudiesIdRoute = AdminBibleStudiesIdRouteImport.update({
-  id: '/bible-studies/$id',
-  path: '/bible-studies/$id',
-  getParentRoute: () => AdminRoute,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminBibleStudiesRoute,
 } as any)
 const AdminArtworksNewRoute = AdminArtworksNewRouteImport.update({
   id: '/artworks/new',
@@ -271,11 +283,13 @@ export interface FileRoutesByFullPath {
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRouteWithChildren
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/review': typeof AdminReviewRoute
+  '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -357,11 +371,13 @@ export interface FileRoutesById {
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRouteWithChildren
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/review': typeof AdminReviewRoute
+  '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -402,11 +418,13 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/sermons'
     | '/admin/$section'
+    | '/admin/bible-studies'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/review'
+    | '/admin/sermons'
     | '/admin/settings'
     | '/admin/team'
     | '/articles/$slug'
@@ -487,11 +505,13 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/sermons'
     | '/admin/$section'
+    | '/admin/bible-studies'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/review'
+    | '/admin/sermons'
     | '/admin/settings'
     | '/admin/team'
     | '/articles/$slug'
@@ -674,6 +694,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/sermons': {
+      id: '/admin/sermons'
+      path: '/sermons'
+      fullPath: '/admin/sermons'
+      preLoaderRoute: typeof AdminSermonsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/review': {
       id: '/admin/review'
       path: '/review'
@@ -709,6 +736,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/bible-studies': {
+      id: '/admin/bible-studies'
+      path: '/bible-studies'
+      fullPath: '/admin/bible-studies'
+      preLoaderRoute: typeof AdminBibleStudiesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/$section': {
       id: '/admin/$section'
       path: '/$section'
@@ -718,10 +752,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/sermons/': {
       id: '/admin/sermons/'
-      path: '/sermons'
+      path: '/'
       fullPath: '/admin/sermons/'
       preLoaderRoute: typeof AdminSermonsIndexRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminSermonsRoute
     }
     '/admin/blog/': {
       id: '/admin/blog/'
@@ -732,10 +766,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/bible-studies/': {
       id: '/admin/bible-studies/'
-      path: '/bible-studies'
+      path: '/'
       fullPath: '/admin/bible-studies/'
       preLoaderRoute: typeof AdminBibleStudiesIndexRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminBibleStudiesRoute
     }
     '/admin/artworks/': {
       id: '/admin/artworks/'
@@ -753,17 +787,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/sermons/new': {
       id: '/admin/sermons/new'
-      path: '/sermons/new'
+      path: '/new'
       fullPath: '/admin/sermons/new'
       preLoaderRoute: typeof AdminSermonsNewRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminSermonsRoute
     }
     '/admin/sermons/$id': {
       id: '/admin/sermons/$id'
-      path: '/sermons/$id'
+      path: '/$id'
       fullPath: '/admin/sermons/$id'
       preLoaderRoute: typeof AdminSermonsIdRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminSermonsRoute
     }
     '/admin/blog/new': {
       id: '/admin/blog/new'
@@ -781,17 +815,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/bible-studies/new': {
       id: '/admin/bible-studies/new'
-      path: '/bible-studies/new'
+      path: '/new'
       fullPath: '/admin/bible-studies/new'
       preLoaderRoute: typeof AdminBibleStudiesNewRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminBibleStudiesRoute
     }
     '/admin/bible-studies/$id': {
       id: '/admin/bible-studies/$id'
-      path: '/bible-studies/$id'
+      path: '/$id'
       fullPath: '/admin/bible-studies/$id'
       preLoaderRoute: typeof AdminBibleStudiesIdRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminBibleStudiesRoute
     }
     '/admin/artworks/new': {
       id: '/admin/artworks/new'
@@ -824,13 +858,46 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminBibleStudiesRouteChildren {
+  AdminBibleStudiesIdRoute: typeof AdminBibleStudiesIdRoute
+  AdminBibleStudiesNewRoute: typeof AdminBibleStudiesNewRoute
+  AdminBibleStudiesIndexRoute: typeof AdminBibleStudiesIndexRoute
+}
+
+const AdminBibleStudiesRouteChildren: AdminBibleStudiesRouteChildren = {
+  AdminBibleStudiesIdRoute: AdminBibleStudiesIdRoute,
+  AdminBibleStudiesNewRoute: AdminBibleStudiesNewRoute,
+  AdminBibleStudiesIndexRoute: AdminBibleStudiesIndexRoute,
+}
+
+const AdminBibleStudiesRouteWithChildren =
+  AdminBibleStudiesRoute._addFileChildren(AdminBibleStudiesRouteChildren)
+
+interface AdminSermonsRouteChildren {
+  AdminSermonsIdRoute: typeof AdminSermonsIdRoute
+  AdminSermonsNewRoute: typeof AdminSermonsNewRoute
+  AdminSermonsIndexRoute: typeof AdminSermonsIndexRoute
+}
+
+const AdminSermonsRouteChildren: AdminSermonsRouteChildren = {
+  AdminSermonsIdRoute: AdminSermonsIdRoute,
+  AdminSermonsNewRoute: AdminSermonsNewRoute,
+  AdminSermonsIndexRoute: AdminSermonsIndexRoute,
+}
+
+const AdminSermonsRouteWithChildren = AdminSermonsRoute._addFileChildren(
+  AdminSermonsRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminSectionRoute: typeof AdminSectionRoute
+  AdminBibleStudiesRoute: typeof AdminBibleStudiesRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
   AdminNotAuthorizedRoute: typeof AdminNotAuthorizedRoute
   AdminReviewRoute: typeof AdminReviewRoute
+  AdminSermonsRoute: typeof AdminSermonsRouteWithChildren
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminTeamRoute: typeof AdminTeamRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -838,26 +905,22 @@ interface AdminRouteChildren {
   AdminArticlesNewRoute: typeof AdminArticlesNewRoute
   AdminArtworksIdRoute: typeof AdminArtworksIdRoute
   AdminArtworksNewRoute: typeof AdminArtworksNewRoute
-  AdminBibleStudiesIdRoute: typeof AdminBibleStudiesIdRoute
-  AdminBibleStudiesNewRoute: typeof AdminBibleStudiesNewRoute
   AdminBlogIdRoute: typeof AdminBlogIdRoute
   AdminBlogNewRoute: typeof AdminBlogNewRoute
-  AdminSermonsIdRoute: typeof AdminSermonsIdRoute
-  AdminSermonsNewRoute: typeof AdminSermonsNewRoute
   AdminArticlesIndexRoute: typeof AdminArticlesIndexRoute
   AdminArtworksIndexRoute: typeof AdminArtworksIndexRoute
-  AdminBibleStudiesIndexRoute: typeof AdminBibleStudiesIndexRoute
   AdminBlogIndexRoute: typeof AdminBlogIndexRoute
-  AdminSermonsIndexRoute: typeof AdminSermonsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminSectionRoute: AdminSectionRoute,
+  AdminBibleStudiesRoute: AdminBibleStudiesRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,
   AdminNotAuthorizedRoute: AdminNotAuthorizedRoute,
   AdminReviewRoute: AdminReviewRoute,
+  AdminSermonsRoute: AdminSermonsRouteWithChildren,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminTeamRoute: AdminTeamRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -865,17 +928,11 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminArticlesNewRoute: AdminArticlesNewRoute,
   AdminArtworksIdRoute: AdminArtworksIdRoute,
   AdminArtworksNewRoute: AdminArtworksNewRoute,
-  AdminBibleStudiesIdRoute: AdminBibleStudiesIdRoute,
-  AdminBibleStudiesNewRoute: AdminBibleStudiesNewRoute,
   AdminBlogIdRoute: AdminBlogIdRoute,
   AdminBlogNewRoute: AdminBlogNewRoute,
-  AdminSermonsIdRoute: AdminSermonsIdRoute,
-  AdminSermonsNewRoute: AdminSermonsNewRoute,
   AdminArticlesIndexRoute: AdminArticlesIndexRoute,
   AdminArtworksIndexRoute: AdminArtworksIndexRoute,
-  AdminBibleStudiesIndexRoute: AdminBibleStudiesIndexRoute,
   AdminBlogIndexRoute: AdminBlogIndexRoute,
-  AdminSermonsIndexRoute: AdminSermonsIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

@@ -35,6 +35,7 @@ import { Route as AdminNotAuthorizedRouteImport } from './routes/admin.not-autho
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminBibleStudiesRouteImport } from './routes/admin.bible-studies'
 import { Route as AdminSectionRouteImport } from './routes/admin.$section'
 import { Route as AdminSermonsIndexRouteImport } from './routes/admin.sermons.index'
@@ -183,6 +184,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBibleStudiesRoute = AdminBibleStudiesRouteImport.update({
   id: '/bible-studies',
   path: '/bible-studies',
@@ -199,9 +205,9 @@ const AdminSermonsIndexRoute = AdminSermonsIndexRouteImport.update({
   getParentRoute: () => AdminSermonsRoute,
 } as any)
 const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => AdminRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminBlogRoute,
 } as any)
 const AdminBibleStudiesIndexRoute = AdminBibleStudiesIndexRouteImport.update({
   id: '/',
@@ -229,14 +235,14 @@ const AdminSermonsIdRoute = AdminSermonsIdRouteImport.update({
   getParentRoute: () => AdminSermonsRoute,
 } as any)
 const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
-  id: '/blog/new',
-  path: '/blog/new',
-  getParentRoute: () => AdminRoute,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminBlogRoute,
 } as any)
 const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
-  id: '/blog/$id',
-  path: '/blog/$id',
-  getParentRoute: () => AdminRoute,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminBlogRoute,
 } as any)
 const AdminBibleStudiesNewRoute = AdminBibleStudiesNewRouteImport.update({
   id: '/new',
@@ -284,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/sermons': typeof SermonsRouteWithChildren
   '/admin/$section': typeof AdminSectionRoute
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
+  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -372,6 +379,7 @@ export interface FileRoutesById {
   '/sermons': typeof SermonsRouteWithChildren
   '/admin/$section': typeof AdminSectionRoute
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
+  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -419,6 +427,7 @@ export interface FileRouteTypes {
     | '/sermons'
     | '/admin/$section'
     | '/admin/bible-studies'
+    | '/admin/blog'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
@@ -506,6 +515,7 @@ export interface FileRouteTypes {
     | '/sermons'
     | '/admin/$section'
     | '/admin/bible-studies'
+    | '/admin/blog'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
@@ -736,6 +746,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/bible-studies': {
       id: '/admin/bible-studies'
       path: '/bible-studies'
@@ -759,10 +776,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/blog/': {
       id: '/admin/blog/'
-      path: '/blog'
+      path: '/'
       fullPath: '/admin/blog/'
       preLoaderRoute: typeof AdminBlogIndexRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminBlogRoute
     }
     '/admin/bible-studies/': {
       id: '/admin/bible-studies/'
@@ -801,17 +818,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/blog/new': {
       id: '/admin/blog/new'
-      path: '/blog/new'
+      path: '/new'
       fullPath: '/admin/blog/new'
       preLoaderRoute: typeof AdminBlogNewRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminBlogRoute
     }
     '/admin/blog/$id': {
       id: '/admin/blog/$id'
-      path: '/blog/$id'
+      path: '/$id'
       fullPath: '/admin/blog/$id'
       preLoaderRoute: typeof AdminBlogIdRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminBlogRoute
     }
     '/admin/bible-studies/new': {
       id: '/admin/bible-studies/new'
@@ -873,6 +890,22 @@ const AdminBibleStudiesRouteChildren: AdminBibleStudiesRouteChildren = {
 const AdminBibleStudiesRouteWithChildren =
   AdminBibleStudiesRoute._addFileChildren(AdminBibleStudiesRouteChildren)
 
+interface AdminBlogRouteChildren {
+  AdminBlogIdRoute: typeof AdminBlogIdRoute
+  AdminBlogNewRoute: typeof AdminBlogNewRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
+}
+
+const AdminBlogRouteChildren: AdminBlogRouteChildren = {
+  AdminBlogIdRoute: AdminBlogIdRoute,
+  AdminBlogNewRoute: AdminBlogNewRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
+}
+
+const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
+  AdminBlogRouteChildren,
+)
+
 interface AdminSermonsRouteChildren {
   AdminSermonsIdRoute: typeof AdminSermonsIdRoute
   AdminSermonsNewRoute: typeof AdminSermonsNewRoute
@@ -892,6 +925,7 @@ const AdminSermonsRouteWithChildren = AdminSermonsRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminSectionRoute: typeof AdminSectionRoute
   AdminBibleStudiesRoute: typeof AdminBibleStudiesRouteWithChildren
+  AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
@@ -905,16 +939,14 @@ interface AdminRouteChildren {
   AdminArticlesNewRoute: typeof AdminArticlesNewRoute
   AdminArtworksIdRoute: typeof AdminArtworksIdRoute
   AdminArtworksNewRoute: typeof AdminArtworksNewRoute
-  AdminBlogIdRoute: typeof AdminBlogIdRoute
-  AdminBlogNewRoute: typeof AdminBlogNewRoute
   AdminArticlesIndexRoute: typeof AdminArticlesIndexRoute
   AdminArtworksIndexRoute: typeof AdminArtworksIndexRoute
-  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminSectionRoute: AdminSectionRoute,
   AdminBibleStudiesRoute: AdminBibleStudiesRouteWithChildren,
+  AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,
@@ -928,11 +960,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminArticlesNewRoute: AdminArticlesNewRoute,
   AdminArtworksIdRoute: AdminArtworksIdRoute,
   AdminArtworksNewRoute: AdminArtworksNewRoute,
-  AdminBlogIdRoute: AdminBlogIdRoute,
-  AdminBlogNewRoute: AdminBlogNewRoute,
   AdminArticlesIndexRoute: AdminArticlesIndexRoute,
   AdminArtworksIndexRoute: AdminArtworksIndexRoute,
-  AdminBlogIndexRoute: AdminBlogIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

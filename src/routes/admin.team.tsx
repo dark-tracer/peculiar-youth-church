@@ -83,6 +83,7 @@ function EditorAccountsSection() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [inviting, setInviting] = useState(false);
+  const [createdCreds, setCreatedCreds] = useState<{ email: string; password: string } | null>(null);
 
   async function submitInvite(e: React.FormEvent) {
     e.preventDefault();
@@ -92,13 +93,14 @@ function EditorAccountsSection() {
     }
     setInviting(true);
     try {
-      await inviteFn({ data: { firstName, lastName, email } });
-      toast.success("Invite sent — the editor will receive an email to set their password.");
+      const res = await inviteFn({ data: { firstName, lastName, email } });
+      setCreatedCreds({ email: res.email, password: res.password });
+      toast.success("Editor account created. Share the login details below.");
       setFirstName(""); setLastName(""); setEmail("");
       setInviteOpen(false);
       qc.invalidateQueries({ queryKey: ["admin-editors"] });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not send invite");
+      toast.error(err instanceof Error ? err.message : "Could not create editor");
     } finally {
       setInviting(false);
     }

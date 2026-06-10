@@ -222,7 +222,7 @@ function EditorAccountsSection() {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Invite Editor</DialogTitle>
+            <DialogTitle>Add Editor</DialogTitle>
           </DialogHeader>
           <form onSubmit={submitInvite} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -240,7 +240,7 @@ function EditorAccountsSection() {
               <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <p className="text-xs text-muted-foreground">
-              They'll get an email with a link to set their password and sign in.
+              A login email and a random password will be generated. You'll see the credentials on the next screen — share them privately with the editor.
             </p>
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="ghost" onClick={() => setInviteOpen(false)}>Cancel</Button>
@@ -250,12 +250,73 @@ function EditorAccountsSection() {
                 className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
               >
                 {inviting && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
-                Send Invite
+                Create Editor
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!createdCreds} onOpenChange={(o) => !o && setCreatedCreds(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Editor login details</DialogTitle>
+          </DialogHeader>
+          <p className="text-xs text-muted-foreground">
+            Copy these now — the password won't be shown again. Share it with the editor through a secure channel.
+          </p>
+          <div className="space-y-2">
+            <div className="space-y-1">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground">Email</Label>
+              <div className="flex items-center gap-2">
+                <Input readOnly value={createdCreds?.email ?? ""} className="font-mono text-sm" />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    if (createdCreds) {
+                      navigator.clipboard.writeText(createdCreds.email);
+                      toast.success("Email copied");
+                    }
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground">Password</Label>
+              <div className="flex items-center gap-2">
+                <Input readOnly value={createdCreds?.password ?? ""} className="font-mono text-sm" />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    if (createdCreds) {
+                      navigator.clipboard.writeText(createdCreds.password);
+                      toast.success("Password copied");
+                    }
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end pt-2">
+            <Button
+              type="button"
+              onClick={() => setCreatedCreds(null)}
+              className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
+            >
+              Done
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </section>
   );
 }

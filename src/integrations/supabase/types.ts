@@ -251,6 +251,60 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          contact_info: string | null
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          end_at: string | null
+          featured: boolean
+          id: string
+          location: string | null
+          registration_url: string | null
+          slug: string
+          start_at: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          contact_info?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_at?: string | null
+          featured?: boolean
+          id?: string
+          location?: string | null
+          registration_url?: string | null
+          slug: string
+          start_at: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          contact_info?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_at?: string | null
+          featured?: boolean
+          id?: string
+          location?: string | null
+          registration_url?: string | null
+          slug?: string
+          start_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       media: {
         Row: {
           bucket: string

@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Field, TAG_PRESETS } from "@/components/admin/FormField";
+import { TagSelector } from "@/components/admin/TagSelector";
 import { uploadFile, slugify } from "@/lib/admin-storage";
 import { toast } from "sonner";
 import { Loader2, Upload, X } from "lucide-react";
@@ -45,7 +47,6 @@ export function ArtworkForm({ initial }: { initial?: Partial<ArtworkValues> & { 
   const { user, role } = useAuth();
   const navigate = useNavigate();
   const [v, setV] = useState<ArtworkValues>({ ...empty, ...initial });
-  const [tagInput, setTagInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -69,12 +70,6 @@ export function ArtworkForm({ initial }: { initial?: Partial<ArtworkValues> & { 
     }
   }
 
-  function addTag() {
-    const t = tagInput.trim();
-    if (!t || v.tags.includes(t)) return;
-    set("tags", [...v.tags, t]);
-    setTagInput("");
-  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -121,13 +116,6 @@ export function ArtworkForm({ initial }: { initial?: Partial<ArtworkValues> & { 
     }
   }
 
-  const Field = ({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) => (
-    <div className="space-y-1.5">
-      <Label className="text-sm">{label}{required && <span className="text-[oklch(0.68_0.20_40)] ml-1">*</span>}</Label>
-      {children}
-    </div>
-  );
-
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -151,25 +139,11 @@ export function ArtworkForm({ initial }: { initial?: Partial<ArtworkValues> & { 
               <Textarea value={v.description} onChange={(e) => set("description", e.target.value)} rows={4} placeholder="Story or inspiration behind the artwork." />
             </Field>
             <Field label="Tags">
-              <div className="flex gap-2">
-                <Input
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag(); } }}
-                  placeholder="Worship, Identity, Hope"
-                />
-                <Button type="button" variant="secondary" onClick={addTag}>Add</Button>
-              </div>
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {v.tags.map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs">
-                    {t}
-                    <button type="button" onClick={() => set("tags", v.tags.filter((x) => x !== t))}>
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
+              <TagSelector
+                options={TAG_PRESETS.artwork}
+                value={v.tags}
+                onChange={(next) => set("tags", next)}
+              />
             </Field>
           </div>
         </div>

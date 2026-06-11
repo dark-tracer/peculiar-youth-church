@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { Download, Headphones, Play, Info, Star } from "lucide-react";
+import { Download, Headphones, Play, Info, Star, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 
@@ -18,7 +20,7 @@ export const Route = createFileRoute("/sermons")({
 async function fetchPublishedSermons() {
   const { data, error } = await supabase
     .from("sermons")
-    .select("id, slug, title, preacher_name, date_preached, scripture, series_name, description, video_url, audio_url, notes_pdf_url, thumbnail_url, featured")
+    .select("id, slug, title, preacher_name, date_preached, scripture, series_name, description, video_url, audio_url, notes_pdf_url, thumbnail_url, featured, tags")
     .eq("status", "published")
     .order("date_preached", { ascending: false });
   if (error) throw error;
@@ -31,8 +33,20 @@ function Sermons() {
     queryFn: fetchPublishedSermons,
   });
 
-  const featured = sermons?.find((s) => s.featured) ?? sermons?.[0];
-  const rest = sermons?.filter((s) => s.id !== featured?.id) ?? [];
+  const [q, setQ] = useState("");
+  const filtered = useMemo(() => {
+    if (!sermons) return [];
+    const s = q.trim().toLowerCase();
+    if (!s) return sermons;
+    return sermons.filter((x) =>
+      [x.title, x.preacher_name, x.series_name, x.scripture, ...(x.tags ?? [])]
+        .filter(Boolean)
+        .some((f) => String(f).toLowerCase().includes(s))
+    );
+  }, [sermons, q]);
+
+  const featured = filtered.find((s) => s.featured) ?? filtered[0];
+  const rest = filtered.filter((s) => s.id !== featured?.id);
 
   return (
     <PageShell>
@@ -42,7 +56,7 @@ function Sermons() {
         subtitle="Browse our latest talks, listen in, and download notes."
       />
 
-      <div className="container-x mt-8">
+      <div className="container-x mt-8 space-y-4">
         <div className="flex items-start gap-3 rounded-xl border border-brand/20 bg-brand-soft px-5 py-4">
           <Info className="h-5 w-5 text-brand flex-shrink-0 mt-0.5" />
           <p className="text-sm text-brand-foreground/90">
@@ -50,12 +64,23 @@ function Sermons() {
             <span className="text-foreground/80">Check back often for new messages.</span>
           </p>
         </div>
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search by title, preacher, scripture…"
+            className="pl-9"
+          />
+        </div>
       </div>
 
       <section className="container-x py-12">
         {isLoading && <p className="text-center text-muted-foreground py-16">Loading sermons…</p>}
-        {!isLoading && (!sermons || sermons.length === 0) && (
-          <p className="text-center text-muted-foreground py-16">No sermons published yet. Check back soon.</p>
+        {!isLoading && filtered.length === 0 && (
+          <p className="text-center text-muted-foreground py-16">
+            {q ? "No sermons match your search." : "No sermons published yet. Check back soon."}
+          </p>
         )}
 
         {featured && (
@@ -86,13 +111,13 @@ function Sermons() {
                     <Play className="h-4 w-4" /> View Sermon
                   </Link>
                   {featured.audio_url && (
-                    <a href={featured.audio_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
-                      <Headphones className="h-4 w-4" /> Listen
+                    <a href={featured.audio_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
+                      <Headphones className="h-4 w-4" /> Download Audio
                     </a>
                   )}
                   {featured.notes_pdf_url && (
-                    <a href={featured.notes_pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
-                      <Download className="h-4 w-4" /> Notes
+                    <a href={featured.notes_pdf_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
+                      <Download className="h-4 w-4" /> Notes (PDF)
                     </a>
                   )}
                 </div>
@@ -118,6 +143,20 @@ function Sermons() {
                     {s.scripture && <p className="mt-2 text-xs text-muted-foreground">{s.scripture}</p>}
                   </div>
                 </Link>
+                {(s.audio_url || s.notes_pdf_url) && (
+                  <div className="px-6 pb-5 flex flex-wrap gap-2 text-xs">
+                    {s.audio_url && (
+                      <a href={s.audio_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 font-semibold hover:bg-muted/70">
+                        <Headphones className="h-3 w-3" /> Audio
+                      </a>
+                    )}
+                    {s.notes_pdf_url && (
+                      <a href={s.notes_pdf_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 font-semibold hover:bg-muted/70">
+                        <Download className="h-3 w-3" /> PDF
+                      </a>
+                    )}
+                  </div>
+                )}
               </article>
             ))}
           </div>

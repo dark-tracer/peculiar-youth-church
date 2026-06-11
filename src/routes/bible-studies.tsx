@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { supabase } from "@/integrations/supabase/client";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/bible-studies")({
   head: () => ({
@@ -30,6 +32,18 @@ function StudiesList() {
     },
   });
 
+  const [q, setQ] = useState("");
+  const filtered = useMemo(() => {
+    if (!studies) return [];
+    const s = q.trim().toLowerCase();
+    if (!s) return studies;
+    return studies.filter((x) =>
+      [x.title, x.series_name, x.scripture, x.objective]
+        .filter(Boolean)
+        .some((f) => String(f).toLowerCase().includes(s))
+    );
+  }, [studies, q]);
+
   return (
     <PageShell>
       <PageHero
@@ -37,13 +51,26 @@ function StudiesList() {
         title="Grow deeper in the Word."
         subtitle="Lesson notes, discussion guides, and study resources for personal or group use."
       />
+      <div className="container-x mt-8">
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search by title, scripture, series…"
+            className="pl-9"
+          />
+        </div>
+      </div>
       <section className="container-x py-12">
         {isLoading && <p className="text-center text-muted-foreground py-16">Loading…</p>}
-        {!isLoading && (!studies || studies.length === 0) && (
-          <p className="text-center text-muted-foreground py-16">No studies published yet. Check back soon.</p>
+        {!isLoading && filtered.length === 0 && (
+          <p className="text-center text-muted-foreground py-16">
+            {q ? "No studies match your search." : "No studies published yet. Check back soon."}
+          </p>
         )}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {studies?.map((s) => (
+          {filtered.map((s) => (
             <Link key={s.id} to="/bible-studies/$slug" params={{ slug: s.slug }}
               className="group rounded-2xl border border-border bg-card p-6 hover:border-brand/40 hover:shadow-lg transition">
               <div className="inline-grid h-10 w-10 place-items-center rounded-lg bg-brand/10 text-brand mb-4">

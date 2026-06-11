@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
-import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram } from "lucide-react";
+import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram, Headphones, Play } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import sermonImg from "@/assets/sermon.jpg";
-import { events, sermons, instagramUrl } from "@/lib/data";
+import { events, instagramUrl } from "@/lib/data";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,7 +21,21 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const latest = sermons[0];
+  const { data: latest } = useQuery({
+    queryKey: ["home-latest-sermon"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("sermons")
+        .select("id, slug, title, preacher_name, date_preached, scripture, series_name, description, video_url, audio_url, notes_pdf_url, thumbnail_url")
+        .eq("status", "published")
+        .order("date_preached", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <PageShell>
       {/* HERO */}
@@ -75,32 +92,75 @@ function Home() {
         </div>
       </section>
 
-      {/* SERMON SERIES */}
-      <section className="bg-surface border-y border-border">
-        <div className="container-x py-20 md:py-24 grid gap-10 md:grid-cols-2 items-center">
-          <div className="rounded-3xl overflow-hidden aspect-[4/3] relative">
-            <img src={sermonImg} alt="Sermon series" loading="lazy" width={1200} height={800} className="h-full w-full object-cover" />
-            <div className="absolute bottom-5 left-5 right-5 rounded-xl bg-background/90 backdrop-blur p-4">
-              <p className="text-xs font-semibold text-brand uppercase tracking-wider">Current Series</p>
-              <p className="font-display font-bold text-lg">{latest.series}</p>
+      {/* LATEST SERMON */}
+      {latest && (
+        <section className="bg-surface border-y border-border">
+          <div className="container-x py-20 md:py-24 grid gap-10 md:grid-cols-2 items-center">
+            <div className="rounded-3xl overflow-hidden aspect-[4/3] relative">
+              <img
+                src={latest.thumbnail_url || sermonImg}
+                alt={latest.title}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+              {latest.series_name && (
+                <div className="absolute bottom-5 left-5 right-5 rounded-xl bg-background/90 backdrop-blur p-4">
+                  <p className="text-xs font-semibold text-brand uppercase tracking-wider">Current Series</p>
+                  <p className="font-display font-bold text-lg">{latest.series_name}</p>
+                </div>
+              )}
+            </div>
+            <div>
+              <span className="text-sm font-semibold text-brand">Latest Sermon</span>
+              <h2 className="mt-2 text-3xl md:text-4xl font-bold">{latest.title}</h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                {latest.preacher_name} · Preached on {format(new Date(latest.date_preached), "MMMM d, yyyy")}
+                {latest.scripture && ` · ${latest.scripture}`}
+              </p>
+              {latest.description && (
+                <div
+                  className="mt-4 prose prose-sm max-w-none text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: latest.description }}
+                />
+              )}
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  to="/sermons/$slug"
+                  params={{ slug: latest.slug }}
+                  className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground hover:opacity-90"
+                >
+                  <Play className="h-4 w-4" /> Watch Sermon
+                </Link>
+                {latest.audio_url && (
+                  <a
+                    href={latest.audio_url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface"
+                  >
+                    <Headphones className="h-4 w-4" /> Download Audio
+                  </a>
+                )}
+                {latest.notes_pdf_url && (
+                  <a
+                    href={latest.notes_pdf_url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface"
+                  >
+                    <Download className="h-4 w-4" /> Sermon Notes (PDF)
+                  </a>
+                )}
+                <Link to="/sermons" className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface">
+                  All Sermons
+                </Link>
+              </div>
             </div>
           </div>
-          <div>
-            <span className="text-sm font-semibold text-brand">Latest Sermon</span>
-            <h2 className="mt-2 text-3xl md:text-4xl font-bold">{latest.title}</h2>
-            <p className="mt-4 text-muted-foreground">{latest.description}</p>
-            <p className="mt-3 text-sm text-muted-foreground">Preached on {latest.date}</p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <a href={latest.pdfUrl} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground hover:opacity-90">
-                <Download className="h-4 w-4" /> Download Sermon PDF
-              </a>
-              <Link to="/sermons" className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface">
-                All Sermons
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* EVENTS PREVIEW */}
       <section className="container-x py-20 md:py-28">

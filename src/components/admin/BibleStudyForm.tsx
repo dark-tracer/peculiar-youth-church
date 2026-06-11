@@ -3,11 +3,11 @@ import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { Field } from "@/components/admin/FormField";
 import { uploadFile, slugify } from "@/lib/admin-storage";
 import { toast } from "sonner";
 import { Loader2, Upload, X } from "lucide-react";
@@ -126,13 +126,6 @@ export function BibleStudyForm({ initial }: { initial?: Partial<StudyValues> & {
       setBusy(false);
     }
   }
-
-  const Field = ({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) => (
-    <div className="space-y-1.5">
-      <Label className="text-sm">{label}{required && <span className="text-[oklch(0.68_0.20_40)] ml-1">*</span>}</Label>
-      {children}
-    </div>
-  );
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">

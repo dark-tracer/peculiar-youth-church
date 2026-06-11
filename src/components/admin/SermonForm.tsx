@@ -4,11 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { Field, TAG_PRESETS } from "@/components/admin/FormField";
+import { TagSelector } from "@/components/admin/TagSelector";
 import { uploadFile, slugify } from "@/lib/admin-storage";
 import { toast } from "sonner";
 import { Loader2, Upload, X } from "lucide-react";
@@ -55,7 +56,6 @@ export function SermonForm({ initial, onSaved }: Props) {
   const { user, role } = useAuth();
   const navigate = useNavigate();
   const [v, setV] = useState<SermonFormValues>({ ...empty, ...initial });
-  const [tagInput, setTagInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
 
@@ -79,12 +79,6 @@ export function SermonForm({ initial, onSaved }: Props) {
     }
   }
 
-  function addTag() {
-    const t = tagInput.trim();
-    if (!t || v.tags.includes(t)) return;
-    set("tags", [...v.tags, t]);
-    setTagInput("");
-  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -146,13 +140,6 @@ export function SermonForm({ initial, onSaved }: Props) {
       setBusy(false);
     }
   }
-
-  const Field = ({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) => (
-    <div className="space-y-1.5">
-      <Label className="text-sm">{label}{required && <span className="text-[oklch(0.68_0.20_40)] ml-1">*</span>}</Label>
-      {children}
-    </div>
-  );
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -218,27 +205,11 @@ export function SermonForm({ initial, onSaved }: Props) {
 
           <div className="rounded-xl border border-border bg-card p-5 space-y-3">
             <Field label="Tags">
-              <div className="flex gap-2">
-                <Input
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") { e.preventDefault(); addTag(); }
-                  }}
-                  placeholder="Faith, Prayer, Holy Spirit"
-                />
-                <Button type="button" variant="secondary" onClick={addTag}>Add</Button>
-              </div>
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {v.tags.map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs">
-                    {t}
-                    <button type="button" onClick={() => set("tags", v.tags.filter((x) => x !== t))}>
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
+              <TagSelector
+                options={TAG_PRESETS.sermon}
+                value={v.tags}
+                onChange={(next) => set("tags", next)}
+              />
             </Field>
           </div>
         </div>

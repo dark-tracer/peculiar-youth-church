@@ -6,9 +6,9 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Field } from "@/components/admin/FormField";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
@@ -102,12 +102,6 @@ function SettingsAdmin() {
     }
   }
 
-  const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
-    <div className="space-y-1.5">
-      <Label className="text-sm">{label}</Label>
-      {children}
-    </div>
-  );
 
   return (
     <AdminShell>

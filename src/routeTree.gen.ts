@@ -39,6 +39,7 @@ import { Route as AdminReviewRouteImport } from './routes/admin.review'
 import { Route as AdminNotAuthorizedRouteImport } from './routes/admin.not-authorized'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminBibleStudiesRouteImport } from './routes/admin.bible-studies'
@@ -52,6 +53,7 @@ import { Route as AdminArtworksIndexRouteImport } from './routes/admin.artworks.
 import { Route as AdminArticlesIndexRouteImport } from './routes/admin.articles.index'
 import { Route as AdminSermonsNewRouteImport } from './routes/admin.sermons.new'
 import { Route as AdminSermonsIdRouteImport } from './routes/admin.sermons.$id'
+import { Route as AdminEventsNewRouteImport } from './routes/admin.events.new'
 import { Route as AdminBlogNewRouteImport } from './routes/admin.blog.new'
 import { Route as AdminBlogIdRouteImport } from './routes/admin.blog.$id'
 import { Route as AdminBibleStudiesNewRouteImport } from './routes/admin.bible-studies.new'
@@ -211,6 +213,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminEventsRoute = AdminEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -276,6 +283,11 @@ const AdminSermonsIdRoute = AdminSermonsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminSermonsRoute,
 } as any)
+const AdminEventsNewRoute = AdminEventsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminEventsRoute,
+} as any)
 const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -336,6 +348,7 @@ export interface FileRoutesByFullPath {
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
@@ -362,6 +375,7 @@ export interface FileRoutesByFullPath {
   '/admin/bible-studies/new': typeof AdminBibleStudiesNewRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
   '/admin/sermons/$id': typeof AdminSermonsIdRoute
   '/admin/sermons/new': typeof AdminSermonsNewRoute
   '/admin/articles/': typeof AdminArticlesIndexRoute
@@ -379,6 +393,7 @@ export interface FileRoutesByTo {
   '/newsletter': typeof NewsletterRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
@@ -404,6 +419,7 @@ export interface FileRoutesByTo {
   '/admin/bible-studies/new': typeof AdminBibleStudiesNewRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
   '/admin/sermons/$id': typeof AdminSermonsIdRoute
   '/admin/sermons/new': typeof AdminSermonsNewRoute
   '/admin/articles': typeof AdminArticlesIndexRoute
@@ -432,6 +448,7 @@ export interface FileRoutesById {
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
@@ -458,6 +475,7 @@ export interface FileRoutesById {
   '/admin/bible-studies/new': typeof AdminBibleStudiesNewRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
   '/admin/sermons/$id': typeof AdminSermonsIdRoute
   '/admin/sermons/new': typeof AdminSermonsNewRoute
   '/admin/articles/': typeof AdminArticlesIndexRoute
@@ -487,6 +505,7 @@ export interface FileRouteTypes {
     | '/admin/bible-studies'
     | '/admin/blog'
     | '/admin/dashboard'
+    | '/admin/events'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
@@ -513,6 +532,7 @@ export interface FileRouteTypes {
     | '/admin/bible-studies/new'
     | '/admin/blog/$id'
     | '/admin/blog/new'
+    | '/admin/events/new'
     | '/admin/sermons/$id'
     | '/admin/sermons/new'
     | '/admin/articles/'
@@ -530,6 +550,7 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/admin/$section'
     | '/admin/dashboard'
+    | '/admin/events'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
@@ -555,6 +576,7 @@ export interface FileRouteTypes {
     | '/admin/bible-studies/new'
     | '/admin/blog/$id'
     | '/admin/blog/new'
+    | '/admin/events/new'
     | '/admin/sermons/$id'
     | '/admin/sermons/new'
     | '/admin/articles'
@@ -582,6 +604,7 @@ export interface FileRouteTypes {
     | '/admin/bible-studies'
     | '/admin/blog'
     | '/admin/dashboard'
+    | '/admin/events'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
@@ -608,6 +631,7 @@ export interface FileRouteTypes {
     | '/admin/bible-studies/new'
     | '/admin/blog/$id'
     | '/admin/blog/new'
+    | '/admin/events/new'
     | '/admin/sermons/$id'
     | '/admin/sermons/new'
     | '/admin/articles/'
@@ -844,6 +868,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/events': {
+      id: '/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminEventsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/dashboard'
@@ -934,6 +965,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/sermons/$id'
       preLoaderRoute: typeof AdminSermonsIdRouteImport
       parentRoute: typeof AdminSermonsRoute
+    }
+    '/admin/events/new': {
+      id: '/admin/events/new'
+      path: '/new'
+      fullPath: '/admin/events/new'
+      preLoaderRoute: typeof AdminEventsNewRouteImport
+      parentRoute: typeof AdminEventsRoute
     }
     '/admin/blog/new': {
       id: '/admin/blog/new'
@@ -1057,6 +1095,18 @@ const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
   AdminBlogRouteChildren,
 )
 
+interface AdminEventsRouteChildren {
+  AdminEventsNewRoute: typeof AdminEventsNewRoute
+}
+
+const AdminEventsRouteChildren: AdminEventsRouteChildren = {
+  AdminEventsNewRoute: AdminEventsNewRoute,
+}
+
+const AdminEventsRouteWithChildren = AdminEventsRoute._addFileChildren(
+  AdminEventsRouteChildren,
+)
+
 interface AdminSermonsRouteChildren {
   AdminSermonsIdRoute: typeof AdminSermonsIdRoute
   AdminSermonsNewRoute: typeof AdminSermonsNewRoute
@@ -1080,6 +1130,7 @@ interface AdminRouteChildren {
   AdminBibleStudiesRoute: typeof AdminBibleStudiesRouteWithChildren
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminEventsRoute: typeof AdminEventsRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
   AdminNotAuthorizedRoute: typeof AdminNotAuthorizedRoute
@@ -1097,6 +1148,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBibleStudiesRoute: AdminBibleStudiesRouteWithChildren,
   AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminEventsRoute: AdminEventsRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,
   AdminNotAuthorizedRoute: AdminNotAuthorizedRoute,
@@ -1192,3 +1244,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

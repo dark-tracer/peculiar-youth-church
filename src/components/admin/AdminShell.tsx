@@ -14,6 +14,7 @@ import {
   LogOut,
   Menu,
   X,
+  CalendarDays,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -33,6 +34,7 @@ const allNavItems: NavItem[] = [
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },
   { to: "/admin/articles", label: "Articles", icon: Newspaper },
   { to: "/admin/bible-studies", label: "Bible Studies", icon: BookOpen, superAdminOnly: true },
+  { to: "/admin/events", label: "Events", icon: CalendarDays },
   { to: "/admin/artworks", label: "Digital Artworks", icon: Palette },
   { to: "/admin/media", label: "Media Library", icon: ImageIcon, superAdminOnly: true },
   { to: "/admin/team", label: "Team Members", icon: Users, superAdminOnly: true },

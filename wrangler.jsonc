@@ -1,7 +1,10 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "youth-connect-hub",
-  "compatibility_date": "2025-09-24",
+  "name": "peculiar-youth-church",
+  "compatibility_date": "2025-01-01",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "src/server.ts",
+  "main": ".output/server/index.mjs",
+  "assets": {
+    "directory": ".output/public",
+    "binding": "ASSETS"
+  }
 }

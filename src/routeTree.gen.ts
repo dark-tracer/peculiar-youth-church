@@ -21,6 +21,9 @@ import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BibleStudiesIndexRouteImport } from './routes/bible-studies.index'
+import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SermonsSlugRouteImport } from './routes/sermons.$slug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
@@ -115,6 +118,21 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BibleStudiesIndexRoute = BibleStudiesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BibleStudiesRoute,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArticlesRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -319,6 +337,9 @@ export interface FileRoutesByFullPath {
   '/events/$eventId': typeof EventsEventIdRoute
   '/sermons/$slug': typeof SermonsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/bible-studies/': typeof BibleStudiesIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/articles/$id': typeof AdminArticlesIdRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
   '/admin/artworks/$id': typeof AdminArtworksIdRoute
@@ -338,10 +359,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/articles': typeof ArticlesRouteWithChildren
   '/artworks': typeof ArtworksRoute
-  '/bible-studies': typeof BibleStudiesRouteWithChildren
-  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/events': typeof EventsRouteWithChildren
   '/give': typeof GiveRoute
@@ -361,6 +379,9 @@ export interface FileRoutesByTo {
   '/events/$eventId': typeof EventsEventIdRoute
   '/sermons/$slug': typeof SermonsSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/articles': typeof ArticlesIndexRoute
+  '/bible-studies': typeof BibleStudiesIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/articles/$id': typeof AdminArticlesIdRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
   '/admin/artworks/$id': typeof AdminArtworksIdRoute
@@ -410,6 +431,9 @@ export interface FileRoutesById {
   '/events/$eventId': typeof EventsEventIdRoute
   '/sermons/$slug': typeof SermonsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/bible-studies/': typeof BibleStudiesIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/articles/$id': typeof AdminArticlesIdRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
   '/admin/artworks/$id': typeof AdminArtworksIdRoute
@@ -460,6 +484,9 @@ export interface FileRouteTypes {
     | '/events/$eventId'
     | '/sermons/$slug'
     | '/admin/'
+    | '/articles/'
+    | '/bible-studies/'
+    | '/blog/'
     | '/admin/articles/$id'
     | '/admin/articles/new'
     | '/admin/artworks/$id'
@@ -479,10 +506,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/articles'
     | '/artworks'
-    | '/bible-studies'
-    | '/blog'
     | '/contact'
     | '/events'
     | '/give'
@@ -502,6 +526,9 @@ export interface FileRouteTypes {
     | '/events/$eventId'
     | '/sermons/$slug'
     | '/admin'
+    | '/articles'
+    | '/bible-studies'
+    | '/blog'
     | '/admin/articles/$id'
     | '/admin/articles/new'
     | '/admin/artworks/$id'
@@ -550,6 +577,9 @@ export interface FileRouteTypes {
     | '/events/$eventId'
     | '/sermons/$slug'
     | '/admin/'
+    | '/articles/'
+    | '/bible-studies/'
+    | '/blog/'
     | '/admin/articles/$id'
     | '/admin/articles/new'
     | '/admin/artworks/$id'
@@ -667,6 +697,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/bible-studies/': {
+      id: '/bible-studies/'
+      path: '/'
+      fullPath: '/bible-studies/'
+      preLoaderRoute: typeof BibleStudiesIndexRouteImport
+      parentRoute: typeof BibleStudiesRoute
+    }
+    '/articles/': {
+      id: '/articles/'
+      path: '/'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof ArticlesRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -1026,10 +1077,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ArticlesRouteChildren {
   ArticlesSlugRoute: typeof ArticlesSlugRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
 const ArticlesRouteChildren: ArticlesRouteChildren = {
   ArticlesSlugRoute: ArticlesSlugRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
 }
 
 const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
@@ -1038,10 +1091,12 @@ const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
 
 interface BibleStudiesRouteChildren {
   BibleStudiesSlugRoute: typeof BibleStudiesSlugRoute
+  BibleStudiesIndexRoute: typeof BibleStudiesIndexRoute
 }
 
 const BibleStudiesRouteChildren: BibleStudiesRouteChildren = {
   BibleStudiesSlugRoute: BibleStudiesSlugRoute,
+  BibleStudiesIndexRoute: BibleStudiesIndexRoute,
 }
 
 const BibleStudiesRouteWithChildren = BibleStudiesRoute._addFileChildren(
@@ -1050,10 +1105,12 @@ const BibleStudiesRouteWithChildren = BibleStudiesRoute._addFileChildren(
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)

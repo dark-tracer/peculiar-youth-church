@@ -1,4 +1,4 @@
-import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
+import { AdminGate } from "@/components/admin/AdminGate";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -10,7 +10,7 @@ import { format } from "date-fns";
 
 export const Route = createFileRoute("/admin/review")({
   ssr: false,
-  component: () => (<SuperAdminGate><ReviewQueue /></SuperAdminGate>),
+  component: () => (<AdminGate><ReviewQueue /></AdminGate>),
 });
 
 type Kind = "sermons" | "blog_posts" | "articles" | "bible_studies" | "artworks";
@@ -59,7 +59,7 @@ function ReviewQueue() {
       <header className="mb-6">
         <h1 className="text-3xl font-display font-bold">Pending Review</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Drafts waiting to be approved. {role === "super_admin" ? "Click Publish to push them live." : "Only Super Admins can publish."}
+          Drafts waiting to be approved. {role === "super_admin" || role === "admin" ? "Click Publish to push them live." : "Only Admins can publish."}
         </p>
       </header>
 
@@ -97,7 +97,7 @@ function ReviewQueue() {
                       className="inline-flex items-center gap-1 rounded-md bg-muted px-2.5 py-1.5 text-xs hover:bg-muted/70">
                       <Edit className="h-3 w-3" /> Review
                     </Link>
-                    {role === "super_admin" && (
+                    {(role === "super_admin" || role === "admin") && (
                       <button onClick={() => publish(g.kind, it.id)}
                         className="inline-flex items-center gap-1 rounded-md bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] px-2.5 py-1.5 text-xs font-semibold hover:bg-[oklch(0.72_0.20_40)]">
                         <CheckCircle2 className="h-3 w-3" /> Publish

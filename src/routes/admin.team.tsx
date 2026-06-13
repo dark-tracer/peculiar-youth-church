@@ -82,8 +82,9 @@ function EditorAccountsSection() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<"editor" | "admin">("editor");
   const [inviting, setInviting] = useState(false);
-  const [createdCreds, setCreatedCreds] = useState<{ email: string; password: string } | null>(null);
+  const [createdCreds, setCreatedCreds] = useState<{ email: string; password: string; role: "editor" | "admin" } | null>(null);
 
   async function submitInvite(e: React.FormEvent) {
     e.preventDefault();
@@ -93,14 +94,14 @@ function EditorAccountsSection() {
     }
     setInviting(true);
     try {
-      const res = await inviteFn({ data: { firstName, lastName, email } });
-      setCreatedCreds({ email: res.email, password: res.password });
-      toast.success("Editor account created. Share the login details below.");
-      setFirstName(""); setLastName(""); setEmail("");
+      const res = await inviteFn({ data: { firstName, lastName, email, role: inviteRole } });
+      setCreatedCreds({ email: res.email, password: res.password, role: res.role });
+      toast.success(`${res.role === "admin" ? "Admin" : "Editor"} account created. Share the login details below.`);
+      setFirstName(""); setLastName(""); setEmail(""); setInviteRole("editor");
       setInviteOpen(false);
       qc.invalidateQueries({ queryKey: ["admin-editors"] });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not create editor");
+      toast.error(err instanceof Error ? err.message : "Could not create account");
     } finally {
       setInviting(false);
     }
@@ -131,16 +132,17 @@ function EditorAccountsSection() {
     <section>
       <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
         <div>
-          <h2 className="text-xl font-display font-bold">Editor Accounts</h2>
+          <h2 className="text-xl font-display font-bold">Team Accounts</h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Editors can create drafts in Blog Posts, Articles, and Digital Artworks. Only the super admin can publish or delete.
+            <span className="font-semibold text-foreground">Editors</span> create drafts in Blog Posts, Articles, and Digital Artworks.{" "}
+            <span className="font-semibold text-foreground">Admins</span> can additionally approve and publish posts and manage Bible Studies. Only the super admin can manage team accounts.
           </p>
         </div>
         <Button
           onClick={() => setInviteOpen(true)}
           className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
         >
-          <UserPlus className="h-4 w-4 mr-1" /> Add Editor
+          <UserPlus className="h-4 w-4 mr-1" /> Add Team Member
         </Button>
       </div>
 
@@ -151,6 +153,7 @@ function EditorAccountsSection() {
               <tr>
                 <th className="text-left px-4 py-3 font-semibold">Name</th>
                 <th className="text-left px-4 py-3 font-semibold">Email</th>
+                <th className="text-left px-4 py-3 font-semibold">Role</th>
                 <th className="text-left px-4 py-3 font-semibold">Date Added</th>
                 <th className="text-left px-4 py-3 font-semibold">Status</th>
                 <th className="text-right px-4 py-3 font-semibold">Actions</th>
@@ -158,15 +161,24 @@ function EditorAccountsSection() {
             </thead>
             <tbody>
               {isLoading && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>
               )}
               {!isLoading && (!editors || editors.length === 0) && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No editor accounts yet.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">No team accounts yet.</td></tr>
               )}
               {editors?.map((e) => (
                 <tr key={e.id} className="border-t border-border">
                   <td className="px-4 py-3 font-medium">{e.full_name ?? "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{e.email}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                      e.role === "admin"
+                        ? "bg-[oklch(0.68_0.20_40)]/15 text-[oklch(0.78_0.18_40)]"
+                        : "bg-blue-500/15 text-blue-400"
+                    }`}>
+                      {e.role === "admin" ? "Admin" : "Editor"}
+                    </span>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{format(new Date(e.created_at), "MMM d, yyyy")}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
@@ -239,8 +251,19 @@ function EditorAccountsSection() {
               <Label className="text-sm">Email <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
               <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Role <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
+              <select
+                value={inviteRole}
+                onChange={(e) => setInviteRole(e.target.value as "editor" | "admin")}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="editor">Editor — creates drafts (Blog, Articles, Artworks)</option>
+                <option value="admin">Admin — approves &amp; publishes posts, manages Bible Studies</option>
+              </select>
+            </div>
             <p className="text-xs text-muted-foreground">
-              A login email and a random password will be generated. You'll see the credentials on the next screen — share them privately with the editor.
+              A login email and a random password will be generated. You'll see the credentials on the next screen — share them privately with the new team member.
             </p>
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="ghost" onClick={() => setInviteOpen(false)}>Cancel</Button>
@@ -250,7 +273,7 @@ function EditorAccountsSection() {
                 className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
               >
                 {inviting && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
-                Create Editor
+                Create Account
               </Button>
             </div>
           </form>
@@ -260,7 +283,7 @@ function EditorAccountsSection() {
       <Dialog open={!!createdCreds} onOpenChange={(o) => !o && setCreatedCreds(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Editor login details</DialogTitle>
+            <DialogTitle>{createdCreds?.role === "admin" ? "Admin" : "Editor"} login details</DialogTitle>
           </DialogHeader>
           <p className="text-xs text-muted-foreground">
             Copy these now — the password won't be shown again. Share it with the editor through a secure channel.

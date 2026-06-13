@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { isSuperAdminEmail } from "@/lib/super-admin";
 import type { User } from "@supabase/supabase-js";
 
-export type AdminRole = "super_admin" | "editor" | null;
+export type AdminRole = "super_admin" | "admin" | "editor" | null;
 export type AdminStatus = "active" | "disabled" | null;
 
 export interface AuthState {
@@ -44,15 +44,16 @@ export function useAuth(): AuthState {
       ]);
 
       const hasSuper = !!roles?.some((r) => r.role === "super_admin");
+      const hasAdmin = !!roles?.some((r) => (r.role as string) === "admin");
       const hasEditor = !!roles?.some((r) => r.role === "editor");
       const email = profile?.email ?? user.email ?? null;
+      const status = (profile?.status as AdminStatus) ?? "active";
 
       // Defense-in-depth: super_admin role is only honored when the email matches.
       let role: AdminRole = null;
       if (hasSuper && isSuperAdminEmail(email)) role = "super_admin";
+      else if (hasAdmin && status === "active") role = "admin";
       else if (hasEditor) role = "editor";
-
-      const status = (profile?.status as AdminStatus) ?? "active";
 
       if (mounted)
         setState({

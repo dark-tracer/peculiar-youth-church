@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { Cross, Users, Compass } from "lucide-react";
+import { Cross, Users, Compass, UserRound } from "lucide-react";
 import { leaders } from "@/lib/data";
 import g1 from "@/assets/g1.jpg";
-import { UserRound } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -63,22 +64,49 @@ function About() {
           <span className="text-sm font-semibold text-brand">Leadership</span>
           <h2 className="mt-2 text-3xl md:text-4xl font-bold">Our Youth Facilitators.</h2>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-          {leaders.map((l) => (
-            <div key={l.name} className="rounded-2xl overflow-hidden border border-border bg-card">
-              <div className="aspect-square bg-surface grid place-items-center">
-                <div className="grid h-24 w-24 place-items-center rounded-full gradient-brand text-brand-foreground">
-                  <UserRound className="h-12 w-12" />
-                </div>
-              </div>
-              <div className="p-6 text-center">
-                <h3 className="font-semibold text-lg">{l.name}</h3>
-                <p className="text-sm text-brand">{l.title}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <TeamGrid />
       </section>
     </PageShell>
+  );
+}
+
+function TeamGrid() {
+  const { data: members } = useQuery({
+    queryKey: ["about-team-members"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("team_members")
+        .select("id, name, title, bio, photo_url")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  // Fall back to static leaders if no team members have been added yet.
+  const list = members && members.length > 0
+    ? members.map((m) => ({ id: m.id, name: m.name, title: m.title ?? "", photo_url: m.photo_url ?? "" }))
+    : leaders.map((l) => ({ id: l.name, name: l.name, title: l.title, photo_url: "" }));
+
+  return (
+    <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {list.map((l) => (
+        <div key={l.id} className="rounded-2xl overflow-hidden border border-border bg-card">
+          <div className="aspect-square bg-surface grid place-items-center overflow-hidden">
+            {l.photo_url ? (
+              <img src={l.photo_url} alt={l.name} loading="lazy" className="h-full w-full object-cover" />
+            ) : (
+              <div className="grid h-24 w-24 place-items-center rounded-full gradient-brand text-brand-foreground">
+                <UserRound className="h-12 w-12" />
+              </div>
+            )}
+          </div>
+          <div className="p-6 text-center">
+            <h3 className="font-semibold text-lg">{l.name}</h3>
+            {l.title && <p className="text-sm text-brand">{l.title}</p>}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

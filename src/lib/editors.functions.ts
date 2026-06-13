@@ -28,6 +28,7 @@ export interface EditorRow {
   email: string | null;
   full_name: string | null;
   status: "active" | "disabled";
+  role: "admin" | "editor";
   created_at: string;
   last_sign_in_at: string | null;
 }
@@ -38,10 +39,16 @@ export const listEditors = createServerFn({ method: "GET" })
     const admin = await ensureSuperAdmin(context.userId);
     const { data: roleRows, error: rErr } = await admin
       .from("user_roles")
-      .select("user_id")
-      .eq("role", "editor");
+      .select("user_id, role")
+      .in("role", ["editor", "admin"] as unknown as ("editor" | "super_admin")[]);
     if (rErr) throw new Error(rErr.message);
-    const ids = (roleRows ?? []).map((r) => r.user_id);
+    const byId = new Map<string, "admin" | "editor">();
+    for (const r of roleRows ?? []) {
+      const role = r.role as unknown as "admin" | "editor";
+      // 'admin' wins over 'editor' if both somehow exist
+      if (role === "admin" || !byId.has(r.user_id)) byId.set(r.user_id, role);
+    }
+    const ids = [...byId.keys()];
     if (ids.length === 0) return [];
 
     const { data: profiles, error: pErr } = await admin
@@ -66,6 +73,7 @@ export const listEditors = createServerFn({ method: "GET" })
         email: p.email,
         full_name: p.full_name,
         status: (p.status as "active" | "disabled") ?? "active",
+        role: byId.get(p.id) ?? "editor",
         created_at: p.created_at,
         last_sign_in_at: last,
       });
@@ -92,16 +100,17 @@ function generatePassword(): string {
 export const inviteEditor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
-    (d: { email: string; firstName: string; lastName: string }) => {
+    (d: { email: string; firstName: string; lastName: string; role?: "editor" | "admin" }) => {
       if (!d.email || !/^\S+@\S+\.\S+$/.test(d.email)) throw new Error("Valid email is required");
       if (!d.firstName?.trim() || !d.lastName?.trim())
         throw new Error("First and last name are required");
       if (d.email.toLowerCase() === SUPER_ADMIN_EMAIL)
         throw new Error("That email is reserved for the super admin");
-      return d;
+      const role = d.role === "admin" ? "admin" : "editor";
+      return { ...d, role };
     },
   )
-  .handler(async ({ data, context }): Promise<{ ok: true; email: string; password: string }> => {
+  .handler(async ({ data, context }): Promise<{ ok: true; email: string; password: string; role: "editor" | "admin" }> => {
     const admin = await ensureSuperAdmin(context.userId);
     const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`.trim();
     const password = generatePassword();
@@ -120,8 +129,16 @@ export const inviteEditor = createServerFn({ method: "POST" })
         .from("profiles")
         .update({ full_name: fullName, created_by: context.userId })
         .eq("id", created.user.id);
+
+      // Promote to admin if requested: replace editor role with admin role.
+      if (data.role === "admin") {
+        await admin.from("user_roles").delete().eq("user_id", created.user.id);
+        await admin
+          .from("user_roles")
+          .insert({ user_id: created.user.id, role: "admin" as unknown as "editor" });
+      }
     }
-    return { ok: true, email: data.email, password };
+    return { ok: true, email: data.email, password, role: data.role as "editor" | "admin" };
   });
 
 export const setEditorStatus = createServerFn({ method: "POST" })

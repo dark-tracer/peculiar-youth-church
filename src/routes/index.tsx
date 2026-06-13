@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
-import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram, Headphones, Play } from "lucide-react";
+import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram, Headphones, Play, Clock } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import sermonImg from "@/assets/sermon.jpg";
-import { events, instagramUrl } from "@/lib/data";
+import { instagramUrl } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 
@@ -33,6 +33,21 @@ function Home() {
         .maybeSingle();
       if (error) throw error;
       return data;
+    },
+  });
+
+  const { data: upcomingEvents } = useQuery({
+    queryKey: ["home-upcoming-events"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("events")
+        .select("id, slug, title, start_at, location")
+        .eq("status", "published")
+        .gte("start_at", new Date().toISOString())
+        .order("start_at", { ascending: true })
+        .limit(3);
+      if (error) throw error;
+      return data ?? [];
     },
   });
 
@@ -173,7 +188,7 @@ function Home() {
             See all <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-        {events.length === 0 ? (
+        {!upcomingEvents || upcomingEvents.length === 0 ? (
           <div className="rounded-3xl border border-border bg-card p-10 md:p-14 text-center">
             <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-brand-soft text-brand">
               <Calendar className="h-7 w-7" />
@@ -192,16 +207,19 @@ function Home() {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-3">
-            {events.slice(0, 3).map((e) => (
+            {upcomingEvents.map((e) => (
               <article key={e.id} className="group rounded-2xl border border-border bg-card p-7 hover:border-brand/40 hover:shadow-lg transition">
                 <div className="flex items-center gap-2 text-xs font-semibold text-brand">
-                  <Calendar className="h-4 w-4" /> {e.date} · {e.time}
+                  <Calendar className="h-4 w-4" /> {format(new Date(e.start_at), "MMM d, yyyy")}
+                  <Clock className="h-3.5 w-3.5 ml-2" /> {format(new Date(e.start_at), "h:mm a")}
                 </div>
                 <h3 className="mt-3 text-xl font-semibold">{e.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5" /> {e.location}
-                </p>
-                <Link to="/events/$eventId" params={{ eventId: e.id }} className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+                {e.location && (
+                  <p className="mt-2 text-sm text-muted-foreground flex items-center gap-1">
+                    <MapPin className="h-3.5 w-3.5" /> {e.location}
+                  </p>
+                )}
+                <Link to="/events/$eventId" params={{ eventId: e.slug }} className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand">
                   Details <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition" />
                 </Link>
               </article>
@@ -209,6 +227,8 @@ function Home() {
           </div>
         )}
       </section>
+
+
 
       {/* MISSION BANNER */}
       <section className="container-x pb-20">

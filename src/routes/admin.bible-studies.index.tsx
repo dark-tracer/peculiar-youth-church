@@ -1,4 +1,4 @@
-import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
+import { AdminGate } from "@/components/admin/AdminGate";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -13,7 +13,7 @@ import {
 
 export const Route = createFileRoute("/admin/bible-studies/")({
   ssr: false,
-  component: () => (<SuperAdminGate><BibleStudiesAdmin /></SuperAdminGate>),
+  component: () => (<AdminGate><BibleStudiesAdmin /></AdminGate>),
 });
 
 function BibleStudiesAdmin() {

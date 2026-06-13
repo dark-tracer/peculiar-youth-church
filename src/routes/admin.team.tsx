@@ -132,16 +132,17 @@ function EditorAccountsSection() {
     <section>
       <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
         <div>
-          <h2 className="text-xl font-display font-bold">Editor Accounts</h2>
+          <h2 className="text-xl font-display font-bold">Team Accounts</h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Editors can create drafts in Blog Posts, Articles, and Digital Artworks. Only the super admin can publish or delete.
+            <span className="font-semibold text-foreground">Editors</span> create drafts in Blog Posts, Articles, and Digital Artworks.{" "}
+            <span className="font-semibold text-foreground">Admins</span> can additionally approve and publish posts and manage Bible Studies. Only the super admin can manage team accounts.
           </p>
         </div>
         <Button
           onClick={() => setInviteOpen(true)}
           className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
         >
-          <UserPlus className="h-4 w-4 mr-1" /> Add Editor
+          <UserPlus className="h-4 w-4 mr-1" /> Add Team Member
         </Button>
       </div>
 
@@ -152,6 +153,7 @@ function EditorAccountsSection() {
               <tr>
                 <th className="text-left px-4 py-3 font-semibold">Name</th>
                 <th className="text-left px-4 py-3 font-semibold">Email</th>
+                <th className="text-left px-4 py-3 font-semibold">Role</th>
                 <th className="text-left px-4 py-3 font-semibold">Date Added</th>
                 <th className="text-left px-4 py-3 font-semibold">Status</th>
                 <th className="text-right px-4 py-3 font-semibold">Actions</th>
@@ -159,15 +161,24 @@ function EditorAccountsSection() {
             </thead>
             <tbody>
               {isLoading && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>
               )}
               {!isLoading && (!editors || editors.length === 0) && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No editor accounts yet.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">No team accounts yet.</td></tr>
               )}
               {editors?.map((e) => (
                 <tr key={e.id} className="border-t border-border">
                   <td className="px-4 py-3 font-medium">{e.full_name ?? "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{e.email}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                      e.role === "admin"
+                        ? "bg-[oklch(0.68_0.20_40)]/15 text-[oklch(0.78_0.18_40)]"
+                        : "bg-blue-500/15 text-blue-400"
+                    }`}>
+                      {e.role === "admin" ? "Admin" : "Editor"}
+                    </span>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{format(new Date(e.created_at), "MMM d, yyyy")}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${

@@ -283,7 +283,7 @@ function EditorAccountsSection() {
       <Dialog open={!!createdCreds} onOpenChange={(o) => !o && setCreatedCreds(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Editor login details</DialogTitle>
+            <DialogTitle>{createdCreds?.role === "admin" ? "Admin" : "Editor"} login details</DialogTitle>
           </DialogHeader>
           <p className="text-xs text-muted-foreground">
             Copy these now — the password won't be shown again. Share it with the editor through a secure channel.

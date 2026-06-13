@@ -40,7 +40,7 @@ export const listEditors = createServerFn({ method: "GET" })
     const { data: roleRows, error: rErr } = await admin
       .from("user_roles")
       .select("user_id, role")
-      .in("role", ["editor", "admin"] as unknown as ("editor" | "admin")[]);
+      .in("role", ["editor", "admin"] as unknown as ("editor" | "super_admin")[]);
     if (rErr) throw new Error(rErr.message);
     const byId = new Map<string, "admin" | "editor">();
     for (const r of roleRows ?? []) {

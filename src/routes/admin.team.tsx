@@ -251,8 +251,19 @@ function EditorAccountsSection() {
               <Label className="text-sm">Email <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
               <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Role <span className="text-[oklch(0.68_0.20_40)]">*</span></Label>
+              <select
+                value={inviteRole}
+                onChange={(e) => setInviteRole(e.target.value as "editor" | "admin")}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="editor">Editor — creates drafts (Blog, Articles, Artworks)</option>
+                <option value="admin">Admin — approves &amp; publishes posts, manages Bible Studies</option>
+              </select>
+            </div>
             <p className="text-xs text-muted-foreground">
-              A login email and a random password will be generated. You'll see the credentials on the next screen — share them privately with the editor.
+              A login email and a random password will be generated. You'll see the credentials on the next screen — share them privately with the new team member.
             </p>
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="ghost" onClick={() => setInviteOpen(false)}>Cancel</Button>
@@ -262,7 +273,7 @@ function EditorAccountsSection() {
                 className="bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] hover:bg-[oklch(0.72_0.20_40)]"
               >
                 {inviting && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
-                Create Editor
+                Create Account
               </Button>
             </div>
           </form>

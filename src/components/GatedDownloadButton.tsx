@@ -26,7 +26,7 @@ export function GatedDownloadButton({ bucket, path, className, children, downloa
     if (loading) return;
     if (!user) {
       toast.info("Please sign in to download this resource.");
-      navigate({ to: "/auth" });
+      navigate({ to: "/admin/login" });
       return;
     }
     setBusy(true);

@@ -66,9 +66,27 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+// Cloudflare Workers deliver bindings (vars + secrets from wrangler.jsonc and
+// the dashboard) as the second `fetch` argument, NOT via `process.env`. Server
+// functions in this project read `process.env.SUPABASE_URL` etc., so we hydrate
+// `process.env` from the Worker env on every request before delegating to the
+// TanStack SSR handler. This is idempotent and safe to run per request.
+function hydrateProcessEnv(env: unknown): void {
+  if (!env || typeof env !== "object") return;
+  // `process` is provided by the nodejs_compat flag; guard defensively.
+  const proc = (globalThis as { process?: { env?: Record<string, string> } }).process;
+  if (!proc || !proc.env) return;
+  for (const [key, value] of Object.entries(env as Record<string, unknown>)) {
+    if (typeof value === "string" && proc.env[key] === undefined) {
+      proc.env[key] = value;
+    }
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      hydrateProcessEnv(env);
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

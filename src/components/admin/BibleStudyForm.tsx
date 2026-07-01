@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { Field } from "@/components/admin/FormField";
-import { uploadFile, slugify } from "@/lib/admin-storage";
+import { uploadFile, uploadGatedFile, slugify } from "@/lib/admin-storage";
 import { toast } from "sonner";
 import { Loader2, Upload, X } from "lucide-react";
 
@@ -63,8 +63,8 @@ export function BibleStudyForm({ initial }: { initial?: Partial<StudyValues> & {
   async function handlePdfUpload(file: File) {
     setUploading(true);
     try {
-      const { url } = await uploadFile("study-pdfs", file);
-      set("pdf_url", url);
+      const { path } = await uploadGatedFile("study-pdfs", file);
+      set("pdf_url", path);
       toast.success("PDF uploaded");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");
@@ -214,7 +214,7 @@ export function BibleStudyForm({ initial }: { initial?: Partial<StudyValues> & {
             <h3 className="font-semibold">Study PDF</h3>
             {v.pdf_url ? (
               <div className="text-sm space-y-2">
-                <a href={v.pdf_url} target="_blank" rel="noreferrer" className="block text-[oklch(0.68_0.20_40)] underline truncate">View PDF</a>
+                <p className="text-muted-foreground truncate">Uploaded: <code className="text-xs">{v.pdf_url}</code></p>
                 <Button type="button" size="sm" variant="ghost" onClick={() => set("pdf_url", "")}>
                   <X className="h-4 w-4 mr-1" /> Remove
                 </Button>

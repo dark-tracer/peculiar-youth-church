@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { Field, TAG_PRESETS } from "@/components/admin/FormField";
 import { TagSelector } from "@/components/admin/TagSelector";
-import { uploadFile, slugify } from "@/lib/admin-storage";
+import { uploadFile, uploadGatedFile, slugify } from "@/lib/admin-storage";
 import { toast } from "sonner";
 import { Loader2, Upload, X } from "lucide-react";
 
@@ -69,8 +69,13 @@ export function SermonForm({ initial, onSaved }: Props) {
   async function handleUpload(field: "thumbnail_url" | "audio_url" | "notes_pdf_url", bucket: string, file: File) {
     setUploading(field);
     try {
-      const { url } = await uploadFile(bucket, file);
-      set(field, url);
+      if (field === "thumbnail_url") {
+        const { url } = await uploadFile(bucket, file);
+        set(field, url);
+      } else {
+        const { path } = await uploadGatedFile(bucket as "sermon-audio" | "sermon-pdfs", file);
+        set(field, path);
+      }
       toast.success("File uploaded");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");
@@ -269,9 +274,9 @@ function FileUploadField({
           {isImage ? (
             <img src={value} alt="" className="h-12 w-12 rounded object-cover" />
           ) : (
-            <a href={value} target="_blank" rel="noopener noreferrer" className="text-xs text-[oklch(0.68_0.20_40)] underline truncate flex-1">
-              View uploaded file
-            </a>
+            <span className="text-xs text-muted-foreground truncate flex-1" title={value}>
+              Uploaded: <code>{value}</code>
+            </span>
           )}
           <Button type="button" size="sm" variant="ghost" onClick={onClear}>
             <X className="h-4 w-4" />

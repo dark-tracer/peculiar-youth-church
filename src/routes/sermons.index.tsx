@@ -6,6 +6,7 @@ import { Download, Headphones, Info, Play, Search, Star } from "lucide-react";
 import { PageHero, PageShell } from "@/components/PageShell";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 
 export const Route = createFileRoute("/sermons/")({
   component: Sermons,
@@ -90,14 +91,14 @@ function Sermons() {
                     <Play className="h-4 w-4" /> View Sermon
                   </Link>
                   {featured.audio_url && (
-                    <a href={featured.audio_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
+                    <GatedDownloadButton bucket="sermon-audio" path={featured.audio_url} download className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10 disabled:opacity-60">
                       <Headphones className="h-4 w-4" /> Download Audio
-                    </a>
+                    </GatedDownloadButton>
                   )}
                   {featured.notes_pdf_url && (
-                    <a href={featured.notes_pdf_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
+                    <GatedDownloadButton bucket="sermon-pdfs" path={featured.notes_pdf_url} download className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10 disabled:opacity-60">
                       <Download className="h-4 w-4" /> Notes (PDF)
-                    </a>
+                    </GatedDownloadButton>
                   )}
                 </div>
               </div>
@@ -124,8 +125,8 @@ function Sermons() {
                 </Link>
                 {(s.audio_url || s.notes_pdf_url) && (
                   <div className="flex flex-wrap gap-2 px-6 pb-5 text-xs">
-                    {s.audio_url && <a href={s.audio_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 font-semibold hover:bg-muted/70"><Headphones className="h-3 w-3" /> Audio</a>}
-                    {s.notes_pdf_url && <a href={s.notes_pdf_url} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 font-semibold hover:bg-muted/70"><Download className="h-3 w-3" /> PDF</a>}
+                    {s.audio_url && <GatedDownloadButton bucket="sermon-audio" path={s.audio_url} download className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 font-semibold hover:bg-muted/70 disabled:opacity-60"><Headphones className="h-3 w-3" /> Audio</GatedDownloadButton>}
+                    {s.notes_pdf_url && <GatedDownloadButton bucket="sermon-pdfs" path={s.notes_pdf_url} download className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 font-semibold hover:bg-muted/70 disabled:opacity-60"><Download className="h-3 w-3" /> PDF</GatedDownloadButton>}
                   </div>
                 )}
               </article>

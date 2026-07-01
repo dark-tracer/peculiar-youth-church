@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
+import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Download, ExternalLink } from "lucide-react";
 
@@ -74,10 +75,14 @@ function StudyDetail() {
 
         <div className="mt-10 flex flex-wrap gap-3">
           {data.pdf_url && (
-            <a href={data.pdf_url} target="_blank" rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90">
+            <GatedDownloadButton
+              bucket="study-pdfs"
+              path={data.pdf_url}
+              download
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-60"
+            >
               <Download className="h-4 w-4" /> Download PDF
-            </a>
+            </GatedDownloadButton>
           )}
           {data.resource_url && (
             <a href={data.resource_url} target="_blank" rel="noreferrer"

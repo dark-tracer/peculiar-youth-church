@@ -6,6 +6,7 @@ import heroImg from "@/assets/hero.jpg";
 import sermonImg from "@/assets/sermon.jpg";
 import { instagramUrl } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
+import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/")({
@@ -147,26 +148,24 @@ function Home() {
                   <Play className="h-4 w-4" /> Watch Sermon
                 </Link>
                 {latest.audio_url && (
-                  <a
-                    href={latest.audio_url}
+                  <GatedDownloadButton
+                    bucket="sermon-audio"
+                    path={latest.audio_url}
                     download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface"
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface disabled:opacity-60"
                   >
                     <Headphones className="h-4 w-4" /> Download Audio
-                  </a>
+                  </GatedDownloadButton>
                 )}
                 {latest.notes_pdf_url && (
-                  <a
-                    href={latest.notes_pdf_url}
+                  <GatedDownloadButton
+                    bucket="sermon-pdfs"
+                    path={latest.notes_pdf_url}
                     download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface"
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface disabled:opacity-60"
                   >
                     <Download className="h-4 w-4" /> Sermon Notes (PDF)
-                  </a>
+                  </GatedDownloadButton>
                 )}
                 <Link to="/sermons" className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-surface">
                   All Sermons

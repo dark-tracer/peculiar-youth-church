@@ -274,9 +274,9 @@ function FileUploadField({
           {isImage ? (
             <img src={value} alt="" className="h-12 w-12 rounded object-cover" />
           ) : (
-            <a href={value} target="_blank" rel="noopener noreferrer" className="text-xs text-[oklch(0.68_0.20_40)] underline truncate flex-1">
-              View uploaded file
-            </a>
+            <span className="text-xs text-muted-foreground truncate flex-1" title={value}>
+              Uploaded: <code>{value}</code>
+            </span>
           )}
           <Button type="button" size="sm" variant="ghost" onClick={onClear}>
             <X className="h-4 w-4" />

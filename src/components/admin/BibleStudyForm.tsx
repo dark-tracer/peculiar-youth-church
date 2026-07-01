@@ -214,7 +214,7 @@ export function BibleStudyForm({ initial }: { initial?: Partial<StudyValues> & {
             <h3 className="font-semibold">Study PDF</h3>
             {v.pdf_url ? (
               <div className="text-sm space-y-2">
-                <a href={v.pdf_url} target="_blank" rel="noreferrer" className="block text-[oklch(0.68_0.20_40)] underline truncate">View PDF</a>
+                <p className="text-muted-foreground truncate">Uploaded: <code className="text-xs">{v.pdf_url}</code></p>
                 <Button type="button" size="sm" variant="ghost" onClick={() => set("pdf_url", "")}>
                   <X className="h-4 w-4 mr-1" /> Remove
                 </Button>

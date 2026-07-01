@@ -63,8 +63,8 @@ export function BibleStudyForm({ initial }: { initial?: Partial<StudyValues> & {
   async function handlePdfUpload(file: File) {
     setUploading(true);
     try {
-      const { url } = await uploadFile("study-pdfs", file);
-      set("pdf_url", url);
+      const { path } = await uploadGatedFile("study-pdfs", file);
+      set("pdf_url", path);
       toast.success("PDF uploaded");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");

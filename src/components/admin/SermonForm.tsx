@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { Field, TAG_PRESETS } from "@/components/admin/FormField";
 import { TagSelector } from "@/components/admin/TagSelector";
-import { uploadFile, slugify } from "@/lib/admin-storage";
+import { uploadFile, uploadGatedFile, slugify } from "@/lib/admin-storage";
 import { toast } from "sonner";
 import { Loader2, Upload, X } from "lucide-react";
 
@@ -69,8 +69,13 @@ export function SermonForm({ initial, onSaved }: Props) {
   async function handleUpload(field: "thumbnail_url" | "audio_url" | "notes_pdf_url", bucket: string, file: File) {
     setUploading(field);
     try {
-      const { url } = await uploadFile(bucket, file);
-      set(field, url);
+      if (field === "thumbnail_url") {
+        const { url } = await uploadFile(bucket, file);
+        set(field, url);
+      } else {
+        const { path } = await uploadGatedFile(bucket as "sermon-audio" | "sermon-pdfs", file);
+        set(field, path);
+      }
       toast.success("File uploaded");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");

@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
+import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Download, Headphones } from "lucide-react";
 import { format } from "date-fns";
@@ -66,14 +67,23 @@ function SermonDetail() {
         {(data.audio_url || data.notes_pdf_url) && (
           <div className="mt-6 flex flex-wrap gap-2">
             {data.audio_url && (
-              <a href={data.audio_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10">
+              <GatedDownloadButton
+                bucket="sermon-audio"
+                path={data.audio_url}
+                className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-5 py-2.5 text-sm font-semibold hover:bg-foreground/10 disabled:opacity-60"
+              >
                 <Headphones className="h-4 w-4" /> Listen to audio
-              </a>
+              </GatedDownloadButton>
             )}
             {data.notes_pdf_url && (
-              <a href={data.notes_pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90">
+              <GatedDownloadButton
+                bucket="sermon-pdfs"
+                path={data.notes_pdf_url}
+                download
+                className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-60"
+              >
                 <Download className="h-4 w-4" /> Download notes
-              </a>
+              </GatedDownloadButton>
             )}
           </div>
         )}

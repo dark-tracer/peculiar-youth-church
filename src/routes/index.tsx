@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
-import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram, Headphones, Play, Clock } from "lucide-react";
+import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram, Headphones, Play, Clock, BookOpenText } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import sermonImg from "@/assets/sermon.jpg";
 import { instagramUrl } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
 import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { format } from "date-fns";
+import { usePageContent } from "@/lib/page-content";
 
 export const Route = createFileRoute("/")({
   head: () => ({

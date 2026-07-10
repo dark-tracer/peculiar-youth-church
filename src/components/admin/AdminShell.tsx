@@ -52,9 +52,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navItems = allNavItems.filter(
-    (item) => !item.superAdminOnly || role === "super_admin",
-  );
+  const navItems = allNavItems.filter((item) => {
+    if (item.superAdminOnly && role !== "super_admin") return false;
+    if (item.adminOrSuper && role !== "super_admin" && role !== "admin") return false;
+    return true;
+  });
 
   useEffect(() => {
     if (!user) return;

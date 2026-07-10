@@ -296,7 +296,7 @@ function Home() {
         <div className="rounded-3xl gradient-brand p-10 md:p-16 text-center text-brand-foreground">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-80">Our Mission</p>
           <p className="mt-4 text-2xl md:text-3xl font-display font-semibold leading-snug max-w-3xl mx-auto">
-            "To raise a peculiar generation that knows Jesus deeply, loves people genuinely, and lives boldly on purpose."
+            "{mission.text}"
           </p>
         </div>
       </section>

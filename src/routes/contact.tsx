@@ -16,10 +16,19 @@ export const Route = createFileRoute("/contact")({
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const c = usePageContent("contact_page", {
+    hero_title: "Let's talk.",
+    hero_subtitle: "Got a question? Planning your first visit? Drop us a message — we'd love to meet you.",
+    address: "C.P, Kasoa, Central Region, Ghana",
+    phone: "+233 50 367 7447",
+    email: "peculiaryouthchurch.pyc@gmail.com",
+    service_times: "Sunday Service · 11:00 AM\nBible Study · Sundays · 6:00 PM\nWorship Sunday · First Sunday of every month",
+  });
 
   return (
     <PageShell>
-      <PageHero eyebrow="Contact" title="Let's talk." subtitle="Got a question? Planning your first visit? Drop us a message — we'd love to meet you." />
+      <PageHero eyebrow="Contact" title={c.hero_title} subtitle={c.hero_subtitle} />
+
 
       <section className="container-x py-16 grid gap-10 lg:grid-cols-5">
         <div className="lg:col-span-3 rounded-2xl border border-border bg-card p-8">

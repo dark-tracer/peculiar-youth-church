@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
+import { usePageContent } from "@/lib/page-content";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({

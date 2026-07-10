@@ -82,7 +82,7 @@ function Contact() {
         <div className="rounded-2xl overflow-hidden border border-border aspect-[16/7] bg-surface">
           <iframe
             title="Church location"
-            src="https://www.google.com/maps?q=Kasoa+CP,+Central+Region,+Ghana&output=embed"
+            src="https://www.google.com/maps?q=Peculiar+International+School,+Kasoa,+Central+Region,+Ghana&output=embed"
             className="w-full h-full border-0"
             loading="lazy"
           />

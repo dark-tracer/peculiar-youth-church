@@ -70,23 +70,24 @@ function Contact() {
 
         <div className="lg:col-span-2 space-y-4">
           {[
-            { icon: MapPin, title: "Visit", value: "C.P, Kasoa, Central Region, Ghana" },
-            { icon: Phone, title: "Call", value: "+233 50 367 7447" },
-            { icon: Mail, title: "Email", value: "peculiaryouthchurch.pyc@gmail.com" },
-            { icon: Clock, title: "Service Times", value: "Sunday Service · 11:00 AM\nBible Study · Sundays · 6:00 PM\nWorship Sunday · First Sunday of every month" },
-          ].map((c) => (
-            <div key={c.title} className="rounded-2xl border border-border bg-card p-5 flex gap-4">
+            { icon: MapPin, title: "Visit", value: c.address },
+            { icon: Phone, title: "Call", value: c.phone },
+            { icon: Mail, title: "Email", value: c.email },
+            { icon: Clock, title: "Service Times", value: c.service_times },
+          ].map((item) => (
+            <div key={item.title} className="rounded-2xl border border-border bg-card p-5 flex gap-4">
               <div className="grid h-10 w-10 place-items-center rounded-lg bg-brand-soft text-brand flex-shrink-0">
-                <c.icon className="h-5 w-5" />
+                <item.icon className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground">{c.title}</p>
-                <p className="font-semibold whitespace-pre-line">{c.value}</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">{item.title}</p>
+                <p className="font-semibold whitespace-pre-line">{item.value}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
+
 
       <section className="container-x pb-20">
         <div className="rounded-2xl overflow-hidden border border-border aspect-[16/7] bg-surface">

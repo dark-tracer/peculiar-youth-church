@@ -23,6 +23,33 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const hero = usePageContent("home_hero", {
+    eyebrow: "Ages 10 – 19",
+    title_lead: "You were made for",
+    title_highlight: "something peculiar.",
+    subtitle: "Peculiar Youth & Children Ministry is a community of young people chasing Jesus, building real friendships, and growing into who they were created to be.",
+    primary_cta_label: "I Am New Here",
+    primary_cta_href: "/contact",
+    secondary_cta_label: "Upcoming Events",
+    secondary_cta_href: "/events",
+    background_image_url: "",
+  });
+  const about = usePageContent("home_about", {
+    eyebrow: "Who we are",
+    title: "A safe place to grow, belong, and believe.",
+    body: "We exist to help young people meet Jesus in a real way — through honest teaching, joyful worship, and lasting friendships. Whether it's your first Sunday or your hundredth, there's a seat with your name on it.",
+  });
+  const services = usePageContent("home_service_times", {
+    title: "",
+    sunday_service: "",
+    bible_study: "",
+    worship_sunday: "",
+  });
+  const verse = usePageContent("home_verse", { reference: "", text: "" });
+  const mission = usePageContent("home_mission", {
+    text: "To raise a peculiar generation that knows Jesus deeply, loves people genuinely, and lives boldly on purpose.",
+  });
+
   const { data: latest } = useQuery({
     queryKey: ["home-latest-sermon"],
     queryFn: async () => {

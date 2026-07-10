@@ -31,6 +31,7 @@ type NavItem = {
 const allNavItems: NavItem[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/admin/review", label: "Pending Review", icon: Inbox, superAdminOnly: true },
+  { to: "/admin/pages", label: "Site Content", icon: FileEdit },
   { to: "/admin/sermons", label: "Sermons", icon: Mic2, superAdminOnly: true },
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },
   { to: "/admin/articles", label: "Articles", icon: Newspaper },

@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
-import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram, Headphones, Play, Clock } from "lucide-react";
+import { Users, Heart, Sprout, Download, ArrowRight, Calendar, MapPin, Instagram, Headphones, Play, Clock, BookOpenText } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import sermonImg from "@/assets/sermon.jpg";
 import { instagramUrl } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
 import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { format } from "date-fns";
+import { usePageContent } from "@/lib/page-content";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,6 +23,33 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const hero = usePageContent("home_hero", {
+    eyebrow: "Ages 10 – 19",
+    title_lead: "You were made for",
+    title_highlight: "something peculiar.",
+    subtitle: "Peculiar Youth & Children Ministry is a community of young people chasing Jesus, building real friendships, and growing into who they were created to be.",
+    primary_cta_label: "I Am New Here",
+    primary_cta_href: "/contact",
+    secondary_cta_label: "Upcoming Events",
+    secondary_cta_href: "/events",
+    background_image_url: "",
+  });
+  const about = usePageContent("home_about", {
+    eyebrow: "Who we are",
+    title: "A safe place to grow, belong, and believe.",
+    body: "We exist to help young people meet Jesus in a real way — through honest teaching, joyful worship, and lasting friendships. Whether it's your first Sunday or your hundredth, there's a seat with your name on it.",
+  });
+  const services = usePageContent("home_service_times", {
+    title: "",
+    sunday_service: "",
+    bible_study: "",
+    worship_sunday: "",
+  });
+  const verse = usePageContent("home_verse", { reference: "", text: "" });
+  const mission = usePageContent("home_mission", {
+    text: "To raise a peculiar generation that knows Jesus deeply, loves people genuinely, and lives boldly on purpose.",
+  });
+
   const { data: latest } = useQuery({
     queryKey: ["home-latest-sermon"],
     queryFn: async () => {
@@ -57,26 +85,30 @@ function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImg} alt="Youth worship" width={1600} height={1000} className="h-full w-full object-cover" />
+          <img src={hero.background_image_url || heroImg} alt="Youth worship" width={1600} height={1000} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/30" />
         </div>
         <div className="relative container-x py-24 md:py-36 max-w-2xl">
-          <span className="inline-block rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
-            Ages 10 – 19
-          </span>
+          {hero.eyebrow && (
+            <span className="inline-block rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
+              {hero.eyebrow}
+            </span>
+          )}
           <h1 className="mt-5 text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]">
-            You were made for <span className="text-gradient">something peculiar.</span>
+            {hero.title_lead} <span className="text-gradient">{hero.title_highlight}</span>
           </h1>
-          <p className="mt-6 text-lg text-muted-foreground max-w-lg">
-            Peculiar Youth & Children Ministry is a community of young people chasing Jesus, building real friendships, and growing into who they were created to be.
-          </p>
+          <p className="mt-6 text-lg text-muted-foreground max-w-lg">{hero.subtitle}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/contact" className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-semibold text-brand-foreground hover:opacity-90">
-              I Am New Here <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/events" className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 font-semibold hover:bg-surface">
-              Upcoming Events
-            </Link>
+            {hero.primary_cta_label && (
+              <a href={hero.primary_cta_href || "/contact"} className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-semibold text-brand-foreground hover:opacity-90">
+                {hero.primary_cta_label} <ArrowRight className="h-4 w-4" />
+              </a>
+            )}
+            {hero.secondary_cta_label && (
+              <a href={hero.secondary_cta_href || "/events"} className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 font-semibold hover:bg-surface">
+                {hero.secondary_cta_label}
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -84,11 +116,9 @@ function Home() {
       {/* INTRO + HIGHLIGHTS */}
       <section className="container-x py-20 md:py-28">
         <div className="max-w-2xl">
-          <span className="text-sm font-semibold text-brand">Who we are</span>
-          <h2 className="mt-2 text-3xl md:text-4xl font-bold">A safe place to grow, belong, and believe.</h2>
-          <p className="mt-4 text-muted-foreground">
-            We exist to help young people meet Jesus in a real way — through honest teaching, joyful worship, and lasting friendships. Whether it's your first Sunday or your hundredth, there's a seat with your name on it.
-          </p>
+          <span className="text-sm font-semibold text-brand">{about.eyebrow}</span>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">{about.title}</h2>
+          <p className="mt-4 text-muted-foreground">{about.body}</p>
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -107,6 +137,38 @@ function Home() {
           ))}
         </div>
       </section>
+
+      {/* SERVICE TIMES + VERSE OF THE DAY */}
+      {(services.sunday_service || services.bible_study || services.worship_sunday || verse.text) && (
+        <section className="container-x pb-4">
+          <div className="grid gap-6 md:grid-cols-2">
+            {(services.sunday_service || services.bible_study || services.worship_sunday) && (
+              <div className="rounded-2xl border border-border bg-card p-8">
+                <div className="flex items-center gap-2 text-sm font-semibold text-brand">
+                  <Clock className="h-4 w-4" /> {services.title || "Service Times"}
+                </div>
+                <ul className="mt-4 space-y-2 text-muted-foreground">
+                  {services.sunday_service && <li>{services.sunday_service}</li>}
+                  {services.bible_study && <li>{services.bible_study}</li>}
+                  {services.worship_sunday && <li>{services.worship_sunday}</li>}
+                </ul>
+              </div>
+            )}
+            {verse.text && (
+              <div className="rounded-2xl border border-border bg-card p-8">
+                <div className="flex items-center gap-2 text-sm font-semibold text-brand">
+                  <BookOpenText className="h-4 w-4" /> Verse of the Day
+                </div>
+                <blockquote className="mt-4 text-lg italic text-foreground/90 leading-relaxed">
+                  "{verse.text}"
+                </blockquote>
+                {verse.reference && <p className="mt-3 text-sm text-brand font-semibold">— {verse.reference}</p>}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
 
       {/* LATEST SERMON */}
       {latest && (
@@ -234,7 +296,7 @@ function Home() {
         <div className="rounded-3xl gradient-brand p-10 md:p-16 text-center text-brand-foreground">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-80">Our Mission</p>
           <p className="mt-4 text-2xl md:text-3xl font-display font-semibold leading-snug max-w-3xl mx-auto">
-            "To raise a peculiar generation that knows Jesus deeply, loves people genuinely, and lives boldly on purpose."
+            "{mission.text}"
           </p>
         </div>
       </section>

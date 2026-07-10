@@ -5,6 +5,7 @@ import { Cross, Users, Compass, UserRound } from "lucide-react";
 import { leaders } from "@/lib/data";
 import g1 from "@/assets/g1.jpg";
 import { supabase } from "@/integrations/supabase/client";
+import { usePageContent } from "@/lib/page-content";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -17,23 +18,30 @@ export const Route = createFileRoute("/about")({
 });
 
 function About() {
+  const c = usePageContent("about_page", {
+    hero_eyebrow: "About Us",
+    hero_title: "A ministry built for the next generation.",
+    hero_subtitle: "We're a youth and children's church helping young people aged 10–19 find Jesus, friendship, and purpose.",
+    who_title: "More than a youth group.",
+    who_body_1: "Peculiar Youth & Children Ministry started with a simple conviction: young people don't need to be entertained, they need to be empowered. For over a decade we've been creating spaces where teens and kids meet Jesus in a real way, build friendships that outlast the season, and discover the unique calling on their lives.",
+    who_body_2: "Every Sunday looks like worship, honest teaching, small group conversations, and a whole lot of laughter. You belong here.",
+    who_image_url: "",
+  });
+
   return (
     <PageShell>
-      <PageHero eyebrow="About Us" title="A ministry built for the next generation." subtitle="We're a youth and children's church helping young people aged 10–19 find Jesus, friendship, and purpose." />
+      <PageHero eyebrow={c.hero_eyebrow} title={c.hero_title} subtitle={c.hero_subtitle} />
 
       <section className="container-x py-20 grid gap-12 md:grid-cols-2 items-center">
-        <img src={g1} alt="Youth gathering" loading="lazy" width={800} height={800} className="rounded-3xl object-cover aspect-square" />
+        <img src={c.who_image_url || g1} alt="Youth gathering" loading="lazy" width={800} height={800} className="rounded-3xl object-cover aspect-square" />
         <div>
           <span className="text-sm font-semibold text-brand">Who We Are</span>
-          <h2 className="mt-2 text-3xl md:text-4xl font-bold">More than a youth group.</h2>
-          <p className="mt-5 text-muted-foreground leading-relaxed">
-            Peculiar Youth & Children Ministry started with a simple conviction: young people don't need to be entertained, they need to be empowered. For over a decade we've been creating spaces where teens and kids meet Jesus in a real way, build friendships that outlast the season, and discover the unique calling on their lives.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Every Sunday looks like worship, honest teaching, small group conversations, and a whole lot of laughter. You belong here.
-          </p>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">{c.who_title}</h2>
+          <p className="mt-5 text-muted-foreground leading-relaxed">{c.who_body_1}</p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">{c.who_body_2}</p>
         </div>
       </section>
+
 
       <section className="bg-surface border-y border-border">
         <div className="container-x py-20">

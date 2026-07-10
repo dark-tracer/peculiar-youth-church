@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   CalendarDays,
+  FileEdit,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -25,11 +26,13 @@ type NavItem = {
   label: string;
   icon: typeof LayoutDashboard;
   superAdminOnly?: boolean;
+  adminOrSuper?: boolean;
 };
 
 const allNavItems: NavItem[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/admin/review", label: "Pending Review", icon: Inbox, superAdminOnly: true },
+  { to: "/admin/pages", label: "Site Content", icon: FileEdit, adminOrSuper: true },
   { to: "/admin/sermons", label: "Sermons", icon: Mic2, superAdminOnly: true },
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },
   { to: "/admin/articles", label: "Articles", icon: Newspaper },
@@ -49,9 +52,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navItems = allNavItems.filter(
-    (item) => !item.superAdminOnly || role === "super_admin",
-  );
+  const navItems = allNavItems.filter((item) => {
+    if (item.superAdminOnly && role !== "super_admin") return false;
+    if (item.adminOrSuper && role !== "super_admin" && role !== "admin") return false;
+    return true;
+  });
 
   useEffect(() => {
     if (!user) return;

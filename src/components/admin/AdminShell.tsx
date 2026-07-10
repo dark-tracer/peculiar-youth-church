@@ -26,6 +26,7 @@ type NavItem = {
   label: string;
   icon: typeof LayoutDashboard;
   superAdminOnly?: boolean;
+  adminOrSuper?: boolean;
 };
 
 const allNavItems: NavItem[] = [

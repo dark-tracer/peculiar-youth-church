@@ -76,11 +76,24 @@ function hydrateProcessEnv(env: unknown): void {
   // `process` is provided by the nodejs_compat flag; guard defensively.
   const proc = (globalThis as { process?: { env?: Record<string, string> } }).process;
   if (!proc || !proc.env) return;
-  for (const [key, value] of Object.entries(env as Record<string, unknown>)) {
-    if (typeof value === "string" && proc.env[key] === undefined) {
-      proc.env[key] = value;
+  const processEnv = proc.env;
+
+  const bindings = env as Record<string, unknown>;
+  const setIfBindingExists = (targetKey: string, bindingKey = targetKey) => {
+    const value = bindings[bindingKey];
+    if (typeof value === "string" && value.length > 0 && !processEnv[targetKey]) {
+      processEnv[targetKey] = value;
     }
+  };
+
+  for (const key of Object.keys(bindings)) {
+    setIfBindingExists(key);
   }
+
+  // Cloudflare builds may expose the same public values under either the
+  // server names or Vite-prefixed names. Server functions expect the former.
+  setIfBindingExists("SUPABASE_URL", "VITE_SUPABASE_URL");
+  setIfBindingExists("SUPABASE_PUBLISHABLE_KEY", "VITE_SUPABASE_PUBLISHABLE_KEY");
 }
 
 export default {

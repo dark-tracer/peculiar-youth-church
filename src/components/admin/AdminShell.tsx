@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   LayoutDashboard,
   Mic2,
@@ -46,11 +47,34 @@ const allNavItems: NavItem[] = [
 
 const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 
+type ReviewTable = "sermons" | "blog_posts" | "articles" | "bible_studies" | "artworks";
+
+async function fetchPendingReviewCount() {
+  const tables: ReviewTable[] = ["sermons", "blog_posts", "articles", "bible_studies", "artworks"];
+  const counts = await Promise.all(
+    tables.map(async (table) => {
+      const { count } = await supabase
+        .from(table)
+        .select("id", { count: "exact", head: true })
+        .eq("status", "draft");
+      return count ?? 0;
+    }),
+  );
+  return counts.reduce((total, count) => total + count, 0);
+}
+
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const { fullName, user, role, email } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { data: pendingReviewCount = 0 } = useQuery({
+    queryKey: ["admin-pending-review-count"],
+    queryFn: fetchPendingReviewCount,
+    enabled: role === "super_admin",
+    refetchInterval: 60_000,
+  });
 
   const navItems = allNavItems.filter((item) => {
     if (item.superAdminOnly && role !== "super_admin") return false;
@@ -132,6 +156,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon className="h-4 w-4" />
                   <span className="flex-1">{item.label}</span>
+                  {item.to === "/admin/review" && pendingReviewCount > 0 && (
+                    <span
+                      aria-label={`${pendingReviewCount} pending review item${pendingReviewCount === 1 ? "" : "s"}`}
+                      className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[10px] font-bold ${
+                        active
+                          ? "bg-[oklch(0.10_0.01_250)] text-[oklch(0.68_0.20_40)]"
+                          : "bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)]"
+                      }`}
+                    >
+                      {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}

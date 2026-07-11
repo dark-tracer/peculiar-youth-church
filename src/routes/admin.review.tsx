@@ -48,6 +48,7 @@ function ReviewQueue() {
     if (error) return toast.error(error.message);
     toast.success("Published");
     qc.invalidateQueries({ queryKey: ["admin-review"] });
+    qc.invalidateQueries({ queryKey: ["admin-pending-review-count"] });
     qc.invalidateQueries({ queryKey: ["admin-stats"] });
     qc.invalidateQueries({ queryKey: [`admin-${kind}`] });
   }

@@ -76,12 +76,13 @@ function hydrateProcessEnv(env: unknown): void {
   // `process` is provided by the nodejs_compat flag; guard defensively.
   const proc = (globalThis as { process?: { env?: Record<string, string> } }).process;
   if (!proc || !proc.env) return;
+  const processEnv = proc.env;
 
   const bindings = env as Record<string, unknown>;
   const setIfBindingExists = (targetKey: string, bindingKey = targetKey) => {
     const value = bindings[bindingKey];
-    if (typeof value === "string" && value.length > 0 && !proc.env[targetKey]) {
-      proc.env[targetKey] = value;
+    if (typeof value === "string" && value.length > 0 && !processEnv[targetKey]) {
+      processEnv[targetKey] = value;
     }
   };
 

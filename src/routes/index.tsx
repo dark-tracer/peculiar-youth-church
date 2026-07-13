@@ -156,17 +156,6 @@ function Home() {
           <VerseOfTheDay overrideText={verse.text} overrideReference={verse.reference} />
         </div>
       </section>
-      {/* removed old inline verse block */}
-      {false && (
-        <div style={{ display: "none" }}>
-          <div>
-            <div>
-              <div />
-              </div>
-            )}
-          </div>
-        </section>
-      )}
 
 
       {/* LATEST SERMON */}

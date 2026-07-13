@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { format } from "date-fns";
 import { usePageContent } from "@/lib/page-content";
+import { VerseOfTheDay } from "@/components/VerseOfTheDay";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -139,35 +140,23 @@ function Home() {
       </section>
 
       {/* SERVICE TIMES + VERSE OF THE DAY */}
-      {(services.sunday_service || services.bible_study || services.worship_sunday || verse.text) && (
-        <section className="container-x pb-4">
-          <div className="grid gap-6 md:grid-cols-2">
-            {(services.sunday_service || services.bible_study || services.worship_sunday) && (
-              <div className="rounded-2xl border border-border bg-card p-8">
-                <div className="flex items-center gap-2 text-sm font-semibold text-brand">
-                  <Clock className="h-4 w-4" /> {services.title || "Service Times"}
-                </div>
-                <ul className="mt-4 space-y-2 text-muted-foreground">
-                  {services.sunday_service && <li>{services.sunday_service}</li>}
-                  {services.bible_study && <li>{services.bible_study}</li>}
-                  {services.worship_sunday && <li>{services.worship_sunday}</li>}
-                </ul>
+      <section className="container-x pb-4">
+        <div className="grid gap-6 md:grid-cols-2">
+          {(services.sunday_service || services.bible_study || services.worship_sunday) && (
+            <div className="rounded-2xl border border-border bg-card p-8">
+              <div className="flex items-center gap-2 text-sm font-semibold text-brand">
+                <Clock className="h-4 w-4" /> {services.title || "Service Times"}
               </div>
-            )}
-            {verse.text && (
-              <div className="rounded-2xl border border-border bg-card p-8">
-                <div className="flex items-center gap-2 text-sm font-semibold text-brand">
-                  <BookOpenText className="h-4 w-4" /> Verse of the Day
-                </div>
-                <blockquote className="mt-4 text-lg italic text-foreground/90 leading-relaxed">
-                  "{verse.text}"
-                </blockquote>
-                {verse.reference && <p className="mt-3 text-sm text-brand font-semibold">— {verse.reference}</p>}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+              <ul className="mt-4 space-y-2 text-muted-foreground">
+                {services.sunday_service && <li>{services.sunday_service}</li>}
+                {services.bible_study && <li>{services.bible_study}</li>}
+                {services.worship_sunday && <li>{services.worship_sunday}</li>}
+              </ul>
+            </div>
+          )}
+          <VerseOfTheDay overrideText={verse.text} overrideReference={verse.reference} />
+        </div>
+      </section>
 
 
       {/* LATEST SERMON */}

@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { format } from "date-fns";
 import { usePageContent } from "@/lib/page-content";
+import { VerseOfTheDay } from "@/components/VerseOfTheDay";
 
 export const Route = createFileRoute("/")({
   head: () => ({

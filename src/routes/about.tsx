@@ -11,8 +11,13 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — Peculiar Youth & Children Ministry" },
-      { name: "description", content: "Learn who we are, what we believe, and meet the leaders behind Peculiar Youth & Children Ministry." },
+      { name: "description", content: "Learn who we are, what we believe, and meet the leaders behind Peculiar Youth & Children Ministry in Kasoa, Ghana." },
+      { property: "og:title", content: "About — Peculiar Youth & Children Ministry" },
+      { property: "og:description", content: "Our story, beliefs, and the leaders shepherding the next generation." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/about" },
     ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/about" }],
   }),
   component: About,
 });

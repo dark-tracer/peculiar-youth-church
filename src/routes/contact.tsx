@@ -8,7 +8,32 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — Peculiar Youth & Children Ministry" },
-      { name: "description", content: "Get in touch, plan your first visit, or find our service times and location." },
+      { name: "description", content: "Get in touch, plan your first visit, or find our service times and location in Kasoa, Ghana." },
+      { property: "og:title", content: "Contact — Peculiar Youth & Children Ministry" },
+      { property: "og:description", content: "Address, phone, email, service times, and directions to our Kasoa campus." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/contact" },
+    ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/contact" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "PlaceOfWorship",
+          name: "Peculiar Youth & Children Ministry",
+          url: "https://peculiar-youth-church.lovable.app/contact",
+          telephone: "+233-50-367-7447",
+          email: "peculiaryouthchurch.pyc@gmail.com",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "C.P",
+            addressLocality: "Kasoa",
+            addressRegion: "Central Region",
+            addressCountry: "GH",
+          },
+        }),
+      },
     ],
   }),
   component: Contact,

@@ -7,6 +7,17 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/bible-studies/")({
+  head: () => ({
+    meta: [
+      { title: "Bible Studies — Peculiar Youth & Children Ministry" },
+      { name: "description", content: "Discipleship lessons, scripture-based studies, and group discussion guides for youth and leaders." },
+      { property: "og:title", content: "Bible Studies — Peculiar Youth & Children Ministry" },
+      { property: "og:description", content: "Free lesson notes, discussion guides, and scripture studies for personal or group use." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/bible-studies" },
+    ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/bible-studies" }],
+  }),
   component: StudiesList,
 });
 
@@ -56,6 +67,7 @@ function StudiesList() {
             {q ? "No studies match your search." : "No studies published yet. Check back soon."}
           </p>
         )}
+        <h2 className="sr-only">Studies library</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((s) => (
             <Link key={s.id} to="/bible-studies/$slug" params={{ slug: s.slug }} className="group rounded-2xl border border-border bg-card p-6 transition hover:border-brand/40 hover:shadow-lg">

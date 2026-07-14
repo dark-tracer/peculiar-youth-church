@@ -10,10 +10,13 @@ export const Route = createFileRoute("/artworks")({
   head: () => ({
     meta: [
       { title: "Digital Artworks — Peculiar Youth & Children Ministry" },
-      { name: "description", content: "Scripture-inspired posters, wallpapers, and visual art for download." },
+      { name: "description", content: "Scripture-inspired posters, wallpapers, and digital art created to inspire faith — free to download." },
       { property: "og:title", content: "Digital Artworks — Peculiar Youth & Children Ministry" },
       { property: "og:description", content: "Scripture-inspired posters, wallpapers, and visual art for download." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/artworks" },
     ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/artworks" }],
   }),
   component: ArtworksGallery,
 });
@@ -87,8 +90,8 @@ function ArtworksGallery() {
                 {active.image_url && <img src={active.image_url} alt={active.title} className="max-h-[80vh] w-full object-contain" />}
               </div>
               <div className="p-6 space-y-4">
-                <button onClick={() => setActive(null)} className="absolute top-3 right-3 p-1.5 rounded-md bg-background/80 hover:bg-muted md:hidden">
-                  <X className="h-4 w-4" />
+                <button onClick={() => setActive(null)} aria-label="Close artwork preview" className="absolute top-3 right-3 p-1.5 rounded-md bg-background/80 hover:bg-muted md:hidden">
+                  <X className="h-4 w-4" aria-hidden="true" />
                 </button>
                 {active.category && <p className="text-xs font-semibold uppercase tracking-wider text-brand">{active.category}</p>}
                 <h2 className="text-2xl font-bold">{active.title}</h2>

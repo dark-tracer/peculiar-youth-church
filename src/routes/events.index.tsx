@@ -7,6 +7,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { instagramUrl } from "@/lib/data";
 
 export const Route = createFileRoute("/events/")({
+  head: () => ({
+    meta: [
+      { title: "Events — Peculiar Youth & Children Ministry" },
+      { name: "description", content: "Upcoming youth and children's events — camps, game nights, outreaches, and more." },
+      { property: "og:title", content: "Events — Peculiar Youth & Children Ministry" },
+      { property: "og:description", content: "See what's coming up at Peculiar Youth & Children Ministry." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/events" },
+    ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/events" }],
+  }),
   component: Events,
 });
 
@@ -64,8 +75,8 @@ function Events() {
                   </div>
                   {e.description && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{e.description}</p>}
                 </div>
-                <Link to="/events/$eventId" params={{ eventId: e.slug }} className="inline-flex items-center gap-2 justify-self-start rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 md:justify-self-end">
-                  Learn More <ArrowRight className="h-4 w-4" />
+                <Link to="/events/$eventId" params={{ eventId: e.slug }} className="inline-flex items-center gap-2 justify-self-start rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 md:justify-self-end" aria-label={`View details for ${e.title}`}>
+                  View event details <ArrowRight className="h-4 w-4" />
                 </Link>
               </article>
             ))}

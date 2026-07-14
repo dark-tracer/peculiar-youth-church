@@ -9,6 +9,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 
 export const Route = createFileRoute("/sermons/")({
+  head: () => ({
+    meta: [
+      { title: "Sermons — Watch, Listen & Read Notes — Peculiar Youth" },
+      { name: "description", content: "Browse our latest sermons. Watch video, download audio, and get PDF sermon notes each week." },
+      { property: "og:title", content: "Sermons — Peculiar Youth & Children Ministry" },
+      { property: "og:description", content: "Fresh weekly messages. Watch, listen, and download notes." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/sermons" },
+    ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/sermons" }],
+  }),
   component: Sermons,
 });
 

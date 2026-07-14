@@ -8,6 +8,17 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/blog/")({
+  head: () => ({
+    meta: [
+      { title: "Blog — Stories & Devotionals — Peculiar Youth & Children Ministry" },
+      { name: "description", content: "Stories, devotionals, and announcements from Peculiar Youth & Children Ministry." },
+      { property: "og:title", content: "Blog — Peculiar Youth & Children Ministry" },
+      { property: "og:description", content: "Fresh thinking, devotionals, and updates from our team and community." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/blog" },
+    ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/blog" }],
+  }),
   component: BlogList,
 });
 
@@ -62,6 +73,7 @@ function BlogList() {
             {q ? "No posts match your search." : "No posts published yet. Check back soon."}
           </p>
         )}
+        <h2 className="sr-only">Latest posts</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => (
             <article key={p.id} className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:border-brand/40 hover:shadow-lg">

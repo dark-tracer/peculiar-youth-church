@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SermonsRouteImport } from './routes/sermons'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as GiveRouteImport } from './routes/give'
@@ -66,6 +67,11 @@ import { Route as AdminArtworksIdRouteImport } from './routes/admin.artworks.$id
 import { Route as AdminArticlesNewRouteImport } from './routes/admin.articles.new'
 import { Route as AdminArticlesIdRouteImport } from './routes/admin.articles.$id'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SermonsRoute = SermonsRouteImport.update({
   id: '/sermons',
   path: '/sermons',
@@ -360,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
@@ -412,6 +419,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
@@ -465,6 +473,7 @@ export interface FileRoutesById {
   '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
@@ -525,6 +534,7 @@ export interface FileRouteTypes {
     | '/give'
     | '/newsletter'
     | '/sermons'
+    | '/sitemap.xml'
     | '/admin/$section'
     | '/admin/articles'
     | '/admin/artworks'
@@ -577,6 +587,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/give'
     | '/newsletter'
+    | '/sitemap.xml'
     | '/admin/$section'
     | '/admin/dashboard'
     | '/admin/login'
@@ -629,6 +640,7 @@ export interface FileRouteTypes {
     | '/give'
     | '/newsletter'
     | '/sermons'
+    | '/sitemap.xml'
     | '/admin/$section'
     | '/admin/articles'
     | '/admin/artworks'
@@ -688,10 +700,18 @@ export interface RootRouteChildren {
   GiveRoute: typeof GiveRoute
   NewsletterRoute: typeof NewsletterRoute
   SermonsRoute: typeof SermonsRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sermons': {
       id: '/sermons'
       path: '/sermons'
@@ -1301,6 +1321,7 @@ const rootRouteChildren: RootRouteChildren = {
   GiveRoute: GiveRoute,
   NewsletterRoute: NewsletterRoute,
   SermonsRoute: SermonsRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

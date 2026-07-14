@@ -15,9 +15,47 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Peculiar Youth & Children Ministry — Home" },
-      { name: "description", content: "A youth and children's church where the next generation discovers Jesus, builds friendships, and lives out their purpose." },
+      { name: "description", content: "A youth and children's church in Kasoa, Ghana where the next generation discovers Jesus, builds friendships, and lives out their purpose." },
       { property: "og:title", content: "Peculiar Youth & Children Ministry" },
-      { property: "og:description", content: "Where the next generation belongs." },
+      { property: "og:description", content: "Where the next generation belongs — sermons, events, Bible studies, and community for ages 10–19." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/" },
+    ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Peculiar Youth & Children Ministry",
+          url: "https://peculiar-youth-church.lovable.app/",
+          description:
+            "A youth and children's church in Kasoa, Ghana where the next generation discovers Jesus, builds friendships, and lives out their purpose.",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "C.P",
+            addressLocality: "Kasoa",
+            addressRegion: "Central Region",
+            addressCountry: "GH",
+          },
+          contactPoint: {
+            "@type": "ContactPoint",
+            telephone: "+233-50-367-7447",
+            email: "peculiaryouthchurch.pyc@gmail.com",
+            contactType: "customer service",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Peculiar Youth & Children Ministry",
+          url: "https://peculiar-youth-church.lovable.app/",
+        }),
+      },
     ],
   }),
   component: Home,

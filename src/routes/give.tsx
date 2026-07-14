@@ -50,6 +50,44 @@ export const Route = createFileRoute("/give")({
         property: "og:description",
         content: "Give securely via Paystack. Card, Mobile Money, Apple Pay & Bank Transfer.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peculiar-youth-church.lovable.app/give" },
+    ],
+    links: [{ rel: "canonical", href: "https://peculiar-youth-church.lovable.app/give" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "Is my payment secure?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes. All payments are processed through Paystack, a trusted and certified payment provider.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Can I give in a different currency?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Currently we accept giving in Ghana Cedis only.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Who do I contact if I have an issue with my payment?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Send an email to the church contact email and our team will assist you within 24 hours.",
+              },
+            },
+          ],
+        }),
+      },
     ],
   }),
   component: GivePage,
@@ -174,7 +212,7 @@ function GivePage() {
               <div className="grid h-12 w-12 place-items-center rounded-xl bg-brand-soft text-brand">
                 <i.icon className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 text-lg font-bold">{i.title}</h3>
+              <h2 className="mt-4 text-lg font-bold">{i.title}</h2>
               <p className="mt-2 text-sm text-muted-foreground">{i.desc}</p>
             </div>
           ))}

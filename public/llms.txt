@@ -1,0 +1,18 @@
+# Peculiar Youth & Children Ministry
+
+> A youth and children's church in Kasoa, Ghana helping young people (ages 10–19) discover Jesus, build real friendships, and live out their purpose.
+
+We publish sermons, Bible studies, articles, devotional blog posts, and scripture-inspired digital artworks, and host events for the next generation.
+
+## Pages
+- [Home](/): Overview of the ministry, latest sermon, upcoming events, verse of the day.
+- [About](/about): Who we are, what we believe, and our leadership team.
+- [Contact](/contact): Address, phone, email, service times, and location in Kasoa, Ghana.
+- [Give](/give): Support the ministry via card, mobile money, Apple Pay, or bank transfer.
+- [Events](/events): Upcoming camps, game nights, outreaches, and services.
+- [Sermons](/sermons): Weekly sermon library with video, audio, and PDF notes.
+- [Blog](/blog): Stories, devotionals, and announcements.
+- [Bible Studies](/bible-studies): Lesson notes and group discussion guides.
+- [Articles](/articles): Long-form articles and columns.
+- [Digital Artworks](/artworks): Scripture-inspired posters and wallpapers.
+- [Newsletter](/newsletter): Subscribe to our updates.

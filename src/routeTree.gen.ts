@@ -31,6 +31,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SermonsSlugRouteImport } from './routes/sermons.$slug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as BibleStudiesPdfLibraryRouteImport } from './routes/bible-studies.pdf-library'
 import { Route as BibleStudiesSlugRouteImport } from './routes/bible-studies.$slug'
 import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
@@ -176,6 +177,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => BlogRoute,
+} as any)
+const BibleStudiesPdfLibraryRoute = BibleStudiesPdfLibraryRouteImport.update({
+  id: '/pdf-library',
+  path: '/pdf-library',
+  getParentRoute: () => BibleStudiesRoute,
 } as any)
 const BibleStudiesSlugRoute = BibleStudiesSlugRouteImport.update({
   id: '/$slug',
@@ -384,6 +390,7 @@ export interface FileRoutesByFullPath {
   '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/bible-studies/$slug': typeof BibleStudiesSlugRoute
+  '/bible-studies/pdf-library': typeof BibleStudiesPdfLibraryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/sermons/$slug': typeof SermonsSlugRoute
@@ -431,6 +438,7 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/bible-studies/$slug': typeof BibleStudiesSlugRoute
+  '/bible-studies/pdf-library': typeof BibleStudiesPdfLibraryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/sermons/$slug': typeof SermonsSlugRoute
@@ -491,6 +499,7 @@ export interface FileRoutesById {
   '/admin/team': typeof AdminTeamRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/bible-studies/$slug': typeof BibleStudiesSlugRoute
+  '/bible-studies/pdf-library': typeof BibleStudiesPdfLibraryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/sermons/$slug': typeof SermonsSlugRoute
@@ -552,6 +561,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/articles/$slug'
     | '/bible-studies/$slug'
+    | '/bible-studies/pdf-library'
     | '/blog/$slug'
     | '/events/$eventId'
     | '/sermons/$slug'
@@ -599,6 +609,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/articles/$slug'
     | '/bible-studies/$slug'
+    | '/bible-studies/pdf-library'
     | '/blog/$slug'
     | '/events/$eventId'
     | '/sermons/$slug'
@@ -658,6 +669,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/articles/$slug'
     | '/bible-studies/$slug'
+    | '/bible-studies/pdf-library'
     | '/blog/$slug'
     | '/events/$eventId'
     | '/sermons/$slug'
@@ -858,6 +870,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
+    }
+    '/bible-studies/pdf-library': {
+      id: '/bible-studies/pdf-library'
+      path: '/pdf-library'
+      fullPath: '/bible-studies/pdf-library'
+      preLoaderRoute: typeof BibleStudiesPdfLibraryRouteImport
+      parentRoute: typeof BibleStudiesRoute
     }
     '/bible-studies/$slug': {
       id: '/bible-studies/$slug'
@@ -1258,11 +1277,13 @@ const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
 
 interface BibleStudiesRouteChildren {
   BibleStudiesSlugRoute: typeof BibleStudiesSlugRoute
+  BibleStudiesPdfLibraryRoute: typeof BibleStudiesPdfLibraryRoute
   BibleStudiesIndexRoute: typeof BibleStudiesIndexRoute
 }
 
 const BibleStudiesRouteChildren: BibleStudiesRouteChildren = {
   BibleStudiesSlugRoute: BibleStudiesSlugRoute,
+  BibleStudiesPdfLibraryRoute: BibleStudiesPdfLibraryRoute,
   BibleStudiesIndexRoute: BibleStudiesIndexRoute,
 }
 
@@ -1326,13 +1347,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

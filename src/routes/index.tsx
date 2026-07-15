@@ -10,6 +10,8 @@ import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { format } from "date-fns";
 import { usePageContent } from "@/lib/page-content";
 import { VerseOfTheDay } from "@/components/VerseOfTheDay";
+import { HeroCarousel, SAMPLE_HERO_IMAGES } from "@/components/HeroCarousel";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({

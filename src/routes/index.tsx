@@ -74,7 +74,28 @@ function Home() {
     secondary_cta_label: "Upcoming Events",
     secondary_cta_href: "/events",
     background_image_url: "",
+    background_image_url_1: "",
+    background_image_url_2: "",
+    background_image_url_3: "",
+    background_image_url_4: "",
+    background_image_url_5: "",
+    background_image_url_6: "",
+    background_image_url_7: "",
   });
+  const heroImages = (() => {
+    const uploaded = [
+      hero.background_image_url_1,
+      hero.background_image_url_2,
+      hero.background_image_url_3,
+      hero.background_image_url_4,
+      hero.background_image_url_5,
+      hero.background_image_url_6,
+      hero.background_image_url_7,
+      hero.background_image_url,
+    ].filter((s): s is string => !!s && s.length > 0);
+    return uploaded.length > 0 ? uploaded : SAMPLE_HERO_IMAGES;
+  })();
+
   const about = usePageContent("home_about", {
     eyebrow: "Who we are",
     title: "A safe place to grow, belong, and believe.",

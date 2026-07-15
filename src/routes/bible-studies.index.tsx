@@ -54,11 +54,17 @@ function StudiesList() {
         title="Grow deeper in the Word."
         subtitle="Lesson notes, discussion guides, and study resources for personal or group use."
       />
-      <div className="container-x mt-8">
-        <div className="relative max-w-md">
+      <div className="container-x mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative max-w-md flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by title, scripture, series…" className="pl-9" />
         </div>
+        <Link
+          to="/bible-studies/pdf-library"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90"
+        >
+          Free PDF library →
+        </Link>
       </div>
       <section className="container-x py-12">
         {isLoading && <p className="py-16 text-center text-muted-foreground">Loading…</p>}

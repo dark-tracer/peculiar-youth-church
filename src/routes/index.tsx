@@ -146,10 +146,8 @@ function Home() {
     <PageShell>
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={hero.background_image_url || heroImg} alt="Youth worship" width={1600} height={1000} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/30" />
-        </div>
+        <HeroCarousel images={heroImages} alt="Youth worship" />
+
         <div className="relative container-x py-24 md:py-36 max-w-2xl">
           {hero.eyebrow && (
             <span className="inline-block rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">

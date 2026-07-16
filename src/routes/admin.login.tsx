@@ -37,9 +37,11 @@ function AdminLogin() {
           .maybeSingle(),
       ]);
       const hasSuper = !!roles?.some((r) => r.role === "super_admin");
+      const hasAdmin = !!roles?.some((r) => (r.role as string) === "admin");
       const hasEditor = !!roles?.some((r) => r.role === "editor");
       const authorized =
         (hasSuper && isSuperAdminEmail(profile?.email ?? data.user.email)) ||
+        (hasAdmin && profile?.status === "active") ||
         (hasEditor && profile?.status === "active");
       if (authorized) navigate({ to: "/admin/dashboard" });
     });

@@ -81,6 +81,7 @@ function AdminLogin() {
       ]);
 
       const hasSuper = !!roles?.some((r) => r.role === "super_admin");
+      const hasAdmin = !!roles?.some((r) => (r.role as string) === "admin");
       const hasEditor = !!roles?.some((r) => r.role === "editor");
       const acctEmail = profile?.email ?? u.user.email ?? "";
 
@@ -93,8 +94,8 @@ function AdminLogin() {
         return;
       }
 
-      // Editor path
-      if (hasEditor) {
+      // Admin / Editor path
+      if (hasAdmin || hasEditor) {
         if (profile?.status === "disabled") {
           await supabase.auth.signOut();
           toast.error(DISABLED_MSG);

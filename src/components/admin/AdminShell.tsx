@@ -177,7 +177,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <div className="px-3 py-2 text-xs text-muted-foreground truncate">
               <div className="font-semibold text-foreground truncate">{fullName ?? email ?? user?.email}</div>
               <div className="uppercase tracking-wide text-[10px] mt-0.5">
-                {role === "super_admin" ? "Super Admin" : role === "editor" ? "Editor" : "—"}
+                {role === "super_admin" ? "Super Admin" : role === "admin" ? "Admin" : role === "editor" ? "Editor" : "—"}
               </div>
             </div>
             <button

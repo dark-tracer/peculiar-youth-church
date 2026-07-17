@@ -126,7 +126,7 @@ function SermonsAdmin() {
                       >
                         <Edit className="h-4 w-4" />
                       </Link>
-                      {role === "super_admin" && (
+                      {(role === "super_admin" || role === "admin") && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <button

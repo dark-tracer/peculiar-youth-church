@@ -88,7 +88,7 @@ function ArtworksAdmin() {
                   className="p-1.5 rounded-md hover:bg-muted text-muted-foreground" aria-label="Edit">
                   <Edit className="h-4 w-4" />
                 </Link>
-                {role === "super_admin" && (
+                {(role === "super_admin" || role === "admin") && (
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <button className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-destructive ml-auto" aria-label="Delete">

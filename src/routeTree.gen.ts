@@ -44,6 +44,7 @@ import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminChangePasswordRouteImport } from './routes/admin.change-password'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminBibleStudiesRouteImport } from './routes/admin.bible-studies'
 import { Route as AdminArtworksRouteImport } from './routes/admin.artworks'
@@ -244,6 +245,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminChangePasswordRoute = AdminChangePasswordRouteImport.update({
+  id: '/change-password',
+  path: '/change-password',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBlogRoute = AdminBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -385,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -436,6 +443,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/account': typeof AdminAccountRoute
+  '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -496,6 +504,7 @@ export interface FileRoutesById {
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -559,6 +568,7 @@ export interface FileRouteTypes {
     | '/admin/artworks'
     | '/admin/bible-studies'
     | '/admin/blog'
+    | '/admin/change-password'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -610,6 +620,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/$section'
     | '/admin/account'
+    | '/admin/change-password'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
@@ -669,6 +680,7 @@ export interface FileRouteTypes {
     | '/admin/artworks'
     | '/admin/bible-studies'
     | '/admin/blog'
+    | '/admin/change-password'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -974,6 +986,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/change-password': {
+      id: '/admin/change-password'
+      path: '/change-password'
+      fullPath: '/admin/change-password'
+      preLoaderRoute: typeof AdminChangePasswordRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/blog': {
       id: '/admin/blog'
       path: '/blog'
@@ -1247,6 +1266,7 @@ interface AdminRouteChildren {
   AdminArtworksRoute: typeof AdminArtworksRouteWithChildren
   AdminBibleStudiesRoute: typeof AdminBibleStudiesRouteWithChildren
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
+  AdminChangePasswordRoute: typeof AdminChangePasswordRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEventsRoute: typeof AdminEventsRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
@@ -1267,6 +1287,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminArtworksRoute: AdminArtworksRouteWithChildren,
   AdminBibleStudiesRoute: AdminBibleStudiesRouteWithChildren,
   AdminBlogRoute: AdminBlogRouteWithChildren,
+  AdminChangePasswordRoute: AdminChangePasswordRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEventsRoute: AdminEventsRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,

@@ -77,7 +77,7 @@ export function ArtworkForm({ initial }: { initial?: Partial<ArtworkValues> & { 
       toast.error("Title and image are required");
       return;
     }
-    if (v.status === "published" && role !== "super_admin") {
+    if (v.status === "published" && (role !== "super_admin" && role !== "admin")) {
       toast.error("Only Super Admins can publish content.");
       return;
     }
@@ -156,8 +156,8 @@ export function ArtworkForm({ initial }: { initial?: Partial<ArtworkValues> & { 
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published" disabled={role !== "super_admin"}>
-                    Published {role !== "super_admin" && "(Super Admin only)"}
+                  <SelectItem value="published" disabled={(role !== "super_admin" && role !== "admin")}>
+                    Published {(role !== "super_admin" && role !== "admin") && "(Admins only)"}
                   </SelectItem>
                 </SelectContent>
               </Select>

@@ -48,6 +48,7 @@ import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminBibleStudiesRouteImport } from './routes/admin.bible-studies'
 import { Route as AdminArtworksRouteImport } from './routes/admin.artworks'
 import { Route as AdminArticlesRouteImport } from './routes/admin.articles'
+import { Route as AdminAccountRouteImport } from './routes/admin.account'
 import { Route as AdminSectionRouteImport } from './routes/admin.$section'
 import { Route as AdminSermonsIndexRouteImport } from './routes/admin.sermons.index'
 import { Route as AdminEventsIndexRouteImport } from './routes/admin.events.index'
@@ -263,6 +264,11 @@ const AdminArticlesRoute = AdminArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAccountRoute = AdminAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSectionRoute = AdminSectionRouteImport.update({
   id: '/$section',
   path: '/$section',
@@ -374,6 +380,7 @@ export interface FileRoutesByFullPath {
   '/sermons': typeof SermonsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/account': typeof AdminAccountRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
@@ -428,6 +435,7 @@ export interface FileRoutesByTo {
   '/newsletter': typeof NewsletterRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/account': typeof AdminAccountRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -483,6 +491,7 @@ export interface FileRoutesById {
   '/sermons': typeof SermonsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/account': typeof AdminAccountRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
@@ -545,6 +554,7 @@ export interface FileRouteTypes {
     | '/sermons'
     | '/sitemap.xml'
     | '/admin/$section'
+    | '/admin/account'
     | '/admin/articles'
     | '/admin/artworks'
     | '/admin/bible-studies'
@@ -599,6 +609,7 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/sitemap.xml'
     | '/admin/$section'
+    | '/admin/account'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
@@ -653,6 +664,7 @@ export interface FileRouteTypes {
     | '/sermons'
     | '/sitemap.xml'
     | '/admin/$section'
+    | '/admin/account'
     | '/admin/articles'
     | '/admin/artworks'
     | '/admin/bible-studies'
@@ -990,6 +1002,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArticlesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/account': {
+      id: '/admin/account'
+      path: '/account'
+      fullPath: '/admin/account'
+      preLoaderRoute: typeof AdminAccountRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/$section': {
       id: '/admin/$section'
       path: '/$section'
@@ -1223,6 +1242,7 @@ const AdminSermonsRouteWithChildren = AdminSermonsRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminSectionRoute: typeof AdminSectionRoute
+  AdminAccountRoute: typeof AdminAccountRoute
   AdminArticlesRoute: typeof AdminArticlesRouteWithChildren
   AdminArtworksRoute: typeof AdminArtworksRouteWithChildren
   AdminBibleStudiesRoute: typeof AdminBibleStudiesRouteWithChildren
@@ -1242,6 +1262,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminSectionRoute: AdminSectionRoute,
+  AdminAccountRoute: AdminAccountRoute,
   AdminArticlesRoute: AdminArticlesRouteWithChildren,
   AdminArtworksRoute: AdminArtworksRouteWithChildren,
   AdminBibleStudiesRoute: AdminBibleStudiesRouteWithChildren,

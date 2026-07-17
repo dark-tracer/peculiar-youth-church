@@ -1,4 +1,4 @@
-import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
+import { AdminGate } from "@/components/admin/AdminGate";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ import {
 
 export const Route = createFileRoute("/admin/media")({
   ssr: false,
-  component: () => (<SuperAdminGate><MediaLibrary /></SuperAdminGate>),
+  component: () => (<AdminGate><MediaLibrary /></AdminGate>),
 });
 
 function formatBytes(n: number | null) {

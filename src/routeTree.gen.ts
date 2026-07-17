@@ -44,10 +44,12 @@ import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminChangePasswordRouteImport } from './routes/admin.change-password'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminBibleStudiesRouteImport } from './routes/admin.bible-studies'
 import { Route as AdminArtworksRouteImport } from './routes/admin.artworks'
 import { Route as AdminArticlesRouteImport } from './routes/admin.articles'
+import { Route as AdminAccountRouteImport } from './routes/admin.account'
 import { Route as AdminSectionRouteImport } from './routes/admin.$section'
 import { Route as AdminSermonsIndexRouteImport } from './routes/admin.sermons.index'
 import { Route as AdminEventsIndexRouteImport } from './routes/admin.events.index'
@@ -243,6 +245,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminChangePasswordRoute = AdminChangePasswordRouteImport.update({
+  id: '/change-password',
+  path: '/change-password',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBlogRoute = AdminBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -261,6 +268,11 @@ const AdminArtworksRoute = AdminArtworksRouteImport.update({
 const AdminArticlesRoute = AdminArticlesRouteImport.update({
   id: '/articles',
   path: '/articles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAccountRoute = AdminAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSectionRoute = AdminSectionRouteImport.update({
@@ -374,10 +386,12 @@ export interface FileRoutesByFullPath {
   '/sermons': typeof SermonsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/account': typeof AdminAccountRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -428,6 +442,8 @@ export interface FileRoutesByTo {
   '/newsletter': typeof NewsletterRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/account': typeof AdminAccountRoute
+  '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -483,10 +499,12 @@ export interface FileRoutesById {
   '/sermons': typeof SermonsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/account': typeof AdminAccountRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/artworks': typeof AdminArtworksRouteWithChildren
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -545,10 +563,12 @@ export interface FileRouteTypes {
     | '/sermons'
     | '/sitemap.xml'
     | '/admin/$section'
+    | '/admin/account'
     | '/admin/articles'
     | '/admin/artworks'
     | '/admin/bible-studies'
     | '/admin/blog'
+    | '/admin/change-password'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -599,6 +619,8 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/sitemap.xml'
     | '/admin/$section'
+    | '/admin/account'
+    | '/admin/change-password'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
@@ -653,10 +675,12 @@ export interface FileRouteTypes {
     | '/sermons'
     | '/sitemap.xml'
     | '/admin/$section'
+    | '/admin/account'
     | '/admin/articles'
     | '/admin/artworks'
     | '/admin/bible-studies'
     | '/admin/blog'
+    | '/admin/change-password'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -962,6 +986,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/change-password': {
+      id: '/admin/change-password'
+      path: '/change-password'
+      fullPath: '/admin/change-password'
+      preLoaderRoute: typeof AdminChangePasswordRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/blog': {
       id: '/admin/blog'
       path: '/blog'
@@ -988,6 +1019,13 @@ declare module '@tanstack/react-router' {
       path: '/articles'
       fullPath: '/admin/articles'
       preLoaderRoute: typeof AdminArticlesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/account': {
+      id: '/admin/account'
+      path: '/account'
+      fullPath: '/admin/account'
+      preLoaderRoute: typeof AdminAccountRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/$section': {
@@ -1223,10 +1261,12 @@ const AdminSermonsRouteWithChildren = AdminSermonsRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminSectionRoute: typeof AdminSectionRoute
+  AdminAccountRoute: typeof AdminAccountRoute
   AdminArticlesRoute: typeof AdminArticlesRouteWithChildren
   AdminArtworksRoute: typeof AdminArtworksRouteWithChildren
   AdminBibleStudiesRoute: typeof AdminBibleStudiesRouteWithChildren
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
+  AdminChangePasswordRoute: typeof AdminChangePasswordRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEventsRoute: typeof AdminEventsRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
@@ -1242,10 +1282,12 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminSectionRoute: AdminSectionRoute,
+  AdminAccountRoute: AdminAccountRoute,
   AdminArticlesRoute: AdminArticlesRouteWithChildren,
   AdminArtworksRoute: AdminArtworksRouteWithChildren,
   AdminBibleStudiesRoute: AdminBibleStudiesRouteWithChildren,
   AdminBlogRoute: AdminBlogRouteWithChildren,
+  AdminChangePasswordRoute: AdminChangePasswordRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEventsRoute: AdminEventsRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,

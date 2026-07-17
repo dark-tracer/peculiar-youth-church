@@ -1,4 +1,4 @@
-import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
+import { AdminGate } from "@/components/admin/AdminGate";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -21,7 +21,7 @@ import {
 
 export const Route = createFileRoute("/admin/sermons/")({
   ssr: false,
-  component: () => (<SuperAdminGate><SermonsAdmin /></SuperAdminGate>),
+  component: () => (<AdminGate><SermonsAdmin /></AdminGate>),
 });
 
 async function fetchSermons() {
@@ -126,7 +126,7 @@ function SermonsAdmin() {
                       >
                         <Edit className="h-4 w-4" />
                       </Link>
-                      {role === "super_admin" && (
+                      {(role === "super_admin" || role === "admin") && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <button

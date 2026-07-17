@@ -14,7 +14,7 @@ export const Route = createFileRoute("/admin")({
       supabase.from("user_roles").select("role").eq("user_id", data.user.id),
       supabase
         .from("profiles")
-        .select("status,email")
+        .select("status,email,must_change_password")
         .eq("id", data.user.id)
         .maybeSingle(),
     ]);
@@ -31,6 +31,15 @@ export const Route = createFileRoute("/admin")({
     if (!authorized) {
       await supabase.auth.signOut();
       throw redirect({ to: "/admin/login" });
+    }
+
+    // Force first-login password change (skip if already on the change route)
+    if (
+      (profile as { must_change_password?: boolean } | null)?.must_change_password &&
+      location.pathname !== "/admin/account" &&
+      location.pathname !== "/admin/change-password"
+    ) {
+      throw redirect({ to: "/admin/change-password" });
     }
   },
   component: () => <Outlet />,

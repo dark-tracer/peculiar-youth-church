@@ -1,11 +1,11 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
+import { AdminGate } from "@/components/admin/AdminGate";
 
 export const Route = createFileRoute("/admin/sermons")({
   ssr: false,
   component: () => (
-    <SuperAdminGate>
+    <AdminGate>
       <Outlet />
-    </SuperAdminGate>
+    </AdminGate>
   ),
 });

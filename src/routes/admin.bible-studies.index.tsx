@@ -97,7 +97,7 @@ function BibleStudiesAdmin() {
                         className="p-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" aria-label="Edit">
                         <Edit className="h-4 w-4" />
                       </Link>
-                      {role === "super_admin" && (
+                      {(role === "super_admin" || role === "admin") && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <button className="p-2 rounded-md hover:bg-muted text-muted-foreground hover:text-destructive" aria-label="Delete">

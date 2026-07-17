@@ -127,7 +127,7 @@ export const inviteEditor = createServerFn({ method: "POST" })
       // handle_new_user trigger created the profile + editor role.
       await admin
         .from("profiles")
-        .update({ full_name: fullName, created_by: context.userId })
+        .update({ full_name: fullName, created_by: context.userId, must_change_password: true })
         .eq("id", created.user.id);
 
       // Promote to admin if requested: replace editor role with admin role.

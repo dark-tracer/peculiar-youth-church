@@ -32,17 +32,18 @@ type NavItem = {
 
 const allNavItems: NavItem[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/admin/review", label: "Pending Review", icon: Inbox, superAdminOnly: true },
+  { to: "/admin/review", label: "Pending Review", icon: Inbox, adminOrSuper: true },
   { to: "/admin/pages", label: "Site Content", icon: FileEdit, adminOrSuper: true },
-  { to: "/admin/sermons", label: "Sermons", icon: Mic2, superAdminOnly: true },
+  { to: "/admin/sermons", label: "Sermons", icon: Mic2, adminOrSuper: true },
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },
   { to: "/admin/articles", label: "Articles", icon: Newspaper },
-  { to: "/admin/bible-studies", label: "Bible Studies", icon: BookOpen, superAdminOnly: true },
+  { to: "/admin/bible-studies", label: "Bible Studies", icon: BookOpen, adminOrSuper: true },
   { to: "/admin/events", label: "Events", icon: CalendarDays },
   { to: "/admin/artworks", label: "Digital Artworks", icon: Palette },
-  { to: "/admin/media", label: "Media Library", icon: ImageIcon, superAdminOnly: true },
+  { to: "/admin/media", label: "Media Library", icon: ImageIcon, adminOrSuper: true },
   { to: "/admin/team", label: "Team Members", icon: Users, superAdminOnly: true },
   { to: "/admin/settings", label: "Settings", icon: Settings, superAdminOnly: true },
+  { to: "/admin/account", label: "My Account", icon: Settings },
 ];
 
 const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
@@ -72,7 +73,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const { data: pendingReviewCount = 0 } = useQuery({
     queryKey: ["admin-pending-review-count"],
     queryFn: fetchPendingReviewCount,
-    enabled: role === "super_admin",
+    enabled: role === "super_admin" || role === "admin",
     refetchInterval: 60_000,
   });
 
@@ -176,7 +177,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <div className="px-3 py-2 text-xs text-muted-foreground truncate">
               <div className="font-semibold text-foreground truncate">{fullName ?? email ?? user?.email}</div>
               <div className="uppercase tracking-wide text-[10px] mt-0.5">
-                {role === "super_admin" ? "Super Admin" : role === "editor" ? "Editor" : "—"}
+                {role === "super_admin" ? "Super Admin" : role === "admin" ? "Admin" : role === "editor" ? "Editor" : "—"}
               </div>
             </div>
             <button

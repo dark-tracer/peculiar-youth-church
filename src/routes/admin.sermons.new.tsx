@@ -1,4 +1,4 @@
-import { SuperAdminGate } from "@/components/admin/SuperAdminGate";
+import { AdminGate } from "@/components/admin/AdminGate";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { SermonForm } from "@/components/admin/SermonForm";
@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/admin/sermons/new")({
   ssr: false,
-  component: () => (<SuperAdminGate><NewSermon /></SuperAdminGate>),
+  component: () => (<AdminGate><NewSermon /></AdminGate>),
 });
 
 function NewSermon() {

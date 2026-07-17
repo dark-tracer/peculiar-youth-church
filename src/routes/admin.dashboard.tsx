@@ -74,7 +74,9 @@ function DashboardPage() {
         <p className="text-muted-foreground mt-1 text-sm">
           {role === "super_admin"
             ? "Super Admin — you have full control over all content."
-            : "Editor — you can create and edit drafts."}
+            : role === "admin"
+              ? "Admin — you have full access to manage all content."
+              : "Editor — you can create and edit drafts."}
         </p>
       </header>
 

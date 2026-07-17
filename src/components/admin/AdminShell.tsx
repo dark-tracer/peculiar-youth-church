@@ -73,7 +73,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const { data: pendingReviewCount = 0 } = useQuery({
     queryKey: ["admin-pending-review-count"],
     queryFn: fetchPendingReviewCount,
-    enabled: role === "super_admin",
+    enabled: role === "super_admin" || role === "admin",
     refetchInterval: 60_000,
   });
 

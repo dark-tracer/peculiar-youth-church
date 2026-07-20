@@ -18,8 +18,8 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Peculiar Youth & Children Ministry — Home" },
       { name: "description", content: "A youth and children's church in Kasoa, Ghana where the next generation discovers Jesus, builds friendships, and lives out their purpose." },
-      { property: "og:title", content: "Peculiar Youth & Children Ministry" },
-      { property: "og:description", content: "Where the next generation belongs — sermons, events, Bible studies, and community for ages 10–19." },
+      { property: "og:title", content: "Peculiar Youth & Children Ministry — Home" },
+      { property: "og:description", content: "A youth and children's church in Kasoa, Ghana where the next generation discovers Jesus, builds friendships, and lives out their purpose." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://peculiar-youth-church.lovable.app/" },
     ],

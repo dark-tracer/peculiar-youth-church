@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { usePageContent } from "@/lib/page-content";
 import { VerseOfTheDay } from "@/components/VerseOfTheDay";
 import { HeroCarousel, SAMPLE_HERO_IMAGES } from "@/components/HeroCarousel";
+import { SafeHtml } from "@/components/SafeHtml";
 
 
 export const Route = createFileRoute("/")({
@@ -244,9 +245,9 @@ function Home() {
                 {latest.scripture && ` · ${latest.scripture}`}
               </p>
               {latest.description && (
-                <div
+                <SafeHtml
                   className="mt-4 prose prose-sm max-w-none text-muted-foreground"
-                  dangerouslySetInnerHTML={{ __html: latest.description }}
+                  html={latest.description}
                 />
               )}
               <div className="mt-7 flex flex-wrap gap-3">

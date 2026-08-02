@@ -7,6 +7,7 @@ import { PageHero, PageShell } from "@/components/PageShell";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { GatedDownloadButton } from "@/components/GatedDownloadButton";
+import { SafeHtml } from "@/components/SafeHtml";
 
 export const Route = createFileRoute("/sermons/")({
   head: () => ({
@@ -96,7 +97,7 @@ function Sermons() {
                   {featured.preacher_name} · {format(new Date(featured.date_preached), "MMM d, yyyy")}
                   {featured.scripture && ` · ${featured.scripture}`}
                 </p>
-                {featured.description && <div className="prose prose-sm mt-4 max-w-none text-muted-foreground" dangerouslySetInnerHTML={{ __html: featured.description }} />}
+                {featured.description && <SafeHtml className="prose prose-sm mt-4 max-w-none text-muted-foreground" html={featured.description} />}
                 <div className="mt-6 flex flex-wrap gap-2">
                   <Link to="/sermons/$slug" params={{ slug: featured.slug }} className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90">
                     <Play className="h-4 w-4" /> View Sermon

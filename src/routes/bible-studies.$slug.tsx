@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Download, ExternalLink } from "lucide-react";
+import { SafeHtml } from "@/components/SafeHtml";
 
 export const Route = createFileRoute("/bible-studies/$slug")({
   component: StudyDetail,
@@ -52,7 +53,7 @@ function StudyDetail() {
         )}
 
         {data.body && (
-          <div className="prose prose-lg max-w-none mt-10" dangerouslySetInnerHTML={{ __html: data.body }} />
+          <SafeHtml className="prose prose-lg max-w-none mt-10" html={data.body} />
         )}
 
         {data.discussion_questions && data.discussion_questions.length > 0 && (

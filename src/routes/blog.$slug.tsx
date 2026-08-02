@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
+import { SafeHtml } from "@/components/SafeHtml";
 
 export const Route = createFileRoute("/blog/$slug")({
   component: BlogDetail,
@@ -44,7 +45,7 @@ function BlogDetail() {
           <img src={data.cover_url} alt={data.title} className="mt-8 w-full rounded-2xl object-cover aspect-[16/9]" />
         )}
         {data.body && (
-          <div className="prose prose-lg max-w-none mt-10" dangerouslySetInnerHTML={{ __html: data.body }} />
+          <SafeHtml className="prose prose-lg max-w-none mt-10" html={data.body} />
         )}
         {data.tags && data.tags.length > 0 && (
           <div className="mt-10 flex flex-wrap gap-2">

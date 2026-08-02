@@ -5,6 +5,7 @@ import { GatedDownloadButton } from "@/components/GatedDownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Download, Headphones } from "lucide-react";
 import { format } from "date-fns";
+import { SafeHtml } from "@/components/SafeHtml";
 
 export const Route = createFileRoute("/sermons/$slug")({
   component: SermonDetail,
@@ -89,7 +90,7 @@ function SermonDetail() {
         )}
 
         {data.description && (
-          <div className="prose prose-lg max-w-none mt-10" dangerouslySetInnerHTML={{ __html: data.description }} />
+          <SafeHtml className="prose prose-lg max-w-none mt-10" html={data.description} />
         )}
 
         {data.tags && data.tags.length > 0 && (

@@ -44,6 +44,7 @@ import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminChatbotRouteImport } from './routes/admin.chatbot'
 import { Route as AdminChangePasswordRouteImport } from './routes/admin.change-password'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminBibleStudiesRouteImport } from './routes/admin.bible-studies'
@@ -245,6 +246,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminChatbotRoute = AdminChatbotRouteImport.update({
+  id: '/chatbot',
+  path: '/chatbot',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminChangePasswordRoute = AdminChangePasswordRouteImport.update({
   id: '/change-password',
   path: '/change-password',
@@ -392,6 +398,7 @@ export interface FileRoutesByFullPath {
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/change-password': typeof AdminChangePasswordRoute
+  '/admin/chatbot': typeof AdminChatbotRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -444,6 +451,7 @@ export interface FileRoutesByTo {
   '/admin/$section': typeof AdminSectionRoute
   '/admin/account': typeof AdminAccountRoute
   '/admin/change-password': typeof AdminChangePasswordRoute
+  '/admin/chatbot': typeof AdminChatbotRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -505,6 +513,7 @@ export interface FileRoutesById {
   '/admin/bible-studies': typeof AdminBibleStudiesRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/change-password': typeof AdminChangePasswordRoute
+  '/admin/chatbot': typeof AdminChatbotRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -569,6 +578,7 @@ export interface FileRouteTypes {
     | '/admin/bible-studies'
     | '/admin/blog'
     | '/admin/change-password'
+    | '/admin/chatbot'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -621,6 +631,7 @@ export interface FileRouteTypes {
     | '/admin/$section'
     | '/admin/account'
     | '/admin/change-password'
+    | '/admin/chatbot'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
@@ -681,6 +692,7 @@ export interface FileRouteTypes {
     | '/admin/bible-studies'
     | '/admin/blog'
     | '/admin/change-password'
+    | '/admin/chatbot'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -986,6 +998,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/chatbot': {
+      id: '/admin/chatbot'
+      path: '/chatbot'
+      fullPath: '/admin/chatbot'
+      preLoaderRoute: typeof AdminChatbotRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/change-password': {
       id: '/admin/change-password'
       path: '/change-password'
@@ -1267,6 +1286,7 @@ interface AdminRouteChildren {
   AdminBibleStudiesRoute: typeof AdminBibleStudiesRouteWithChildren
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminChangePasswordRoute: typeof AdminChangePasswordRoute
+  AdminChatbotRoute: typeof AdminChatbotRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEventsRoute: typeof AdminEventsRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
@@ -1288,6 +1308,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBibleStudiesRoute: AdminBibleStudiesRouteWithChildren,
   AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminChangePasswordRoute: AdminChangePasswordRoute,
+  AdminChatbotRoute: AdminChatbotRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEventsRoute: AdminEventsRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,

@@ -44,6 +44,7 @@ import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminCommentsRouteImport } from './routes/admin.comments'
 import { Route as AdminChatbotRouteImport } from './routes/admin.chatbot'
 import { Route as AdminChangePasswordRouteImport } from './routes/admin.change-password'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
@@ -246,6 +247,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCommentsRoute = AdminCommentsRouteImport.update({
+  id: '/comments',
+  path: '/comments',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminChatbotRoute = AdminChatbotRouteImport.update({
   id: '/chatbot',
   path: '/chatbot',
@@ -399,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/chatbot': typeof AdminChatbotRoute
+  '/admin/comments': typeof AdminCommentsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -452,6 +459,7 @@ export interface FileRoutesByTo {
   '/admin/account': typeof AdminAccountRoute
   '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/chatbot': typeof AdminChatbotRoute
+  '/admin/comments': typeof AdminCommentsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -514,6 +522,7 @@ export interface FileRoutesById {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/change-password': typeof AdminChangePasswordRoute
   '/admin/chatbot': typeof AdminChatbotRoute
+  '/admin/comments': typeof AdminCommentsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -579,6 +588,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/change-password'
     | '/admin/chatbot'
+    | '/admin/comments'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -632,6 +642,7 @@ export interface FileRouteTypes {
     | '/admin/account'
     | '/admin/change-password'
     | '/admin/chatbot'
+    | '/admin/comments'
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/media'
@@ -693,6 +704,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/change-password'
     | '/admin/chatbot'
+    | '/admin/comments'
     | '/admin/dashboard'
     | '/admin/events'
     | '/admin/login'
@@ -998,6 +1010,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/comments': {
+      id: '/admin/comments'
+      path: '/comments'
+      fullPath: '/admin/comments'
+      preLoaderRoute: typeof AdminCommentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/chatbot': {
       id: '/admin/chatbot'
       path: '/chatbot'
@@ -1287,6 +1306,7 @@ interface AdminRouteChildren {
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminChangePasswordRoute: typeof AdminChangePasswordRoute
   AdminChatbotRoute: typeof AdminChatbotRoute
+  AdminCommentsRoute: typeof AdminCommentsRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEventsRoute: typeof AdminEventsRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
@@ -1309,6 +1329,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminChangePasswordRoute: AdminChangePasswordRoute,
   AdminChatbotRoute: AdminChatbotRoute,
+  AdminCommentsRoute: AdminCommentsRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEventsRoute: AdminEventsRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,

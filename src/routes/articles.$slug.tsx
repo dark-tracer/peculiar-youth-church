@@ -45,6 +45,9 @@ function ArticleDetail() {
           {data.author_name ?? "Ministry"} · {data.publish_date ? format(new Date(data.publish_date), "MMMM d, yyyy") : ""}
           {data.edition_label && ` · ${data.edition_label}`}
         </p>
+        <div className="mt-3">
+          <ViewCount contentType="article" contentId={data.id} />
+        </div>
         {data.cover_url && (
           <img src={data.cover_url} alt={data.title} className="mt-8 w-full rounded-2xl object-cover aspect-[16/9]" />
         )}
@@ -58,7 +61,9 @@ function ArticleDetail() {
             ))}
           </div>
         )}
+        <CommentSection contentType="article" contentId={data.id} />
       </article>
+
     </PageShell>
   );
 }

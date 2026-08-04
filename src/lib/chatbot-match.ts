@@ -16,7 +16,7 @@ export type KnowledgeDoc = {
 const STOP_WORDS = new Set([
   "a", "an", "and", "are", "as", "at", "be", "by", "can", "did", "do", "does",
   "for", "from", "get", "has", "have", "how", "i", "in", "is", "it", "me",
-  "my", "of", "on", "or", "our", "please", "so", "тhe", "that", "the", "there",
+  "my", "of", "on", "or", "our", "please", "so", "that", "the", "there",
   "this", "to", "up", "we", "what", "when", "where", "which", "who", "why",
   "will", "with", "you", "your",
 ]);

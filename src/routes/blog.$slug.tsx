@@ -5,6 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import { SafeHtml } from "@/components/SafeHtml";
+import { ViewCount } from "@/components/ViewCount";
+import { CommentSection } from "@/components/CommentSection";
+
 
 export const Route = createFileRoute("/blog/$slug")({
   component: BlogDetail,

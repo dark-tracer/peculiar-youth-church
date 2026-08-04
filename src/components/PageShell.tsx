@@ -1,5 +1,6 @@
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
+import { ChatbotWidget } from "./ChatbotWidget";
 
 export function PageShell({ children }: { children: React.ReactNode }) {
   return (
@@ -7,9 +8,11 @@ export function PageShell({ children }: { children: React.ReactNode }) {
       <SiteHeader />
       <main className="flex-1">{children}</main>
       <SiteFooter />
+      <ChatbotWidget />
     </div>
   );
 }
+
 
 export function PageHero({ eyebrow, title, subtitle }: { eyebrow?: string; title: string; subtitle?: string }) {
   return (

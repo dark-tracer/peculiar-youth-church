@@ -5,6 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import { SafeHtml } from "@/components/SafeHtml";
+import { ViewCount } from "@/components/ViewCount";
+import { CommentSection } from "@/components/CommentSection";
+
 
 export const Route = createFileRoute("/blog/$slug")({
   component: BlogDetail,
@@ -41,6 +44,9 @@ function BlogDetail() {
         <p className="mt-2 text-sm text-muted-foreground">
           {data.author_name ?? "Ministry"} · {data.publish_date ? format(new Date(data.publish_date), "MMMM d, yyyy") : ""}
         </p>
+        <div className="mt-3">
+          <ViewCount contentType="blog" contentId={data.id} />
+        </div>
         {data.cover_url && (
           <img src={data.cover_url} alt={data.title} className="mt-8 w-full rounded-2xl object-cover aspect-[16/9]" />
         )}
@@ -54,7 +60,9 @@ function BlogDetail() {
             ))}
           </div>
         )}
+        <CommentSection contentType="blog" contentId={data.id} />
       </article>
     </PageShell>
   );
 }
+

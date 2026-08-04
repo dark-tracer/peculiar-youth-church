@@ -251,6 +251,117 @@ export type Database = {
         }
         Relationships: []
       }
+      chatbot_knowledge: {
+        Row: {
+          answer: string
+          category: string
+          created_at: string
+          id: string
+          keywords: string[]
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          category?: string
+          created_at?: string
+          id?: string
+          keywords?: string[]
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          category?: string
+          created_at?: string
+          id?: string
+          keywords?: string[]
+          question?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      comments: {
+        Row: {
+          comment_text: string
+          commenter_email: string
+          commenter_name: string
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          is_deleted: boolean
+          is_flagged: boolean
+        }
+        Insert: {
+          comment_text: string
+          commenter_email: string
+          commenter_name: string
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          is_deleted?: boolean
+          is_flagged?: boolean
+        }
+        Update: {
+          comment_text?: string
+          commenter_email?: string
+          commenter_name?: string
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          is_deleted?: boolean
+          is_flagged?: boolean
+        }
+        Relationships: []
+      }
+      content_view_counts: {
+        Row: {
+          content_id: string
+          content_type: string
+          last_updated: string
+          unique_view_count: number
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          last_updated?: string
+          unique_view_count?: number
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          last_updated?: string
+          unique_view_count?: number
+        }
+        Relationships: []
+      }
+      content_views: {
+        Row: {
+          content_id: string
+          content_type: string
+          id: string
+          viewed_at: string
+          visitor_hash: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          id?: string
+          viewed_at?: string
+          visitor_hash: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          id?: string
+          viewed_at?: string
+          visitor_hash?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           contact_info: string | null
@@ -302,6 +413,33 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      knowledge_documents: {
+        Row: {
+          category: string
+          extracted_text: string
+          file_name: string
+          file_url: string | null
+          id: string
+          uploaded_at: string
+        }
+        Insert: {
+          category?: string
+          extracted_text?: string
+          file_name: string
+          file_url?: string | null
+          id?: string
+          uploaded_at?: string
+        }
+        Update: {
+          category?: string
+          extracted_text?: string
+          file_name?: string
+          file_url?: string | null
+          id?: string
+          uploaded_at?: string
         }
         Relationships: []
       }
@@ -584,6 +722,27 @@ export type Database = {
           social_links?: Json | null
           title?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      unanswered_questions: {
+        Row: {
+          asked_at: string
+          id: string
+          question_text: string
+          status: string
+        }
+        Insert: {
+          asked_at?: string
+          id?: string
+          question_text: string
+          status?: string
+        }
+        Update: {
+          asked_at?: string
+          id?: string
+          question_text?: string
+          status?: string
         }
         Relationships: []
       }

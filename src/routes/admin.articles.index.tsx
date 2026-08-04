@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { useAuth } from "@/hooks/use-auth";
@@ -30,6 +31,30 @@ function ArticlesAdmin() {
       return data;
     },
   });
+
+  const { data: viewCounts } = useQuery({
+    queryKey: ["admin-view-counts", "article"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("content_view_counts")
+        .select("content_id, unique_view_count")
+        .eq("content_type", "article");
+      if (error) throw error;
+      const map: Record<string, number> = {};
+      for (const row of data ?? []) map[row.content_id] = row.unique_view_count;
+      return map;
+    },
+  });
+
+  const [viewSort, setViewSort] = useState<"none" | "desc" | "asc">("none");
+  const rows = useMemo(() => {
+    if (!data) return [];
+    if (viewSort === "none") return data;
+    const dir = viewSort === "desc" ? -1 : 1;
+    return [...data].sort(
+      (a, b) => dir * (((viewCounts?.[a.id] ?? 0) - (viewCounts?.[b.id] ?? 0))),
+    );
+  }, [data, viewCounts, viewSort]);
 
   async function onDelete(id: string) {
     const { error } = await supabase.from("articles").delete().eq("id", id);
@@ -63,18 +88,26 @@ function ArticlesAdmin() {
                 <th className="px-4 py-3 font-semibold hidden md:table-cell">Author</th>
                 <th className="px-4 py-3 font-semibold hidden lg:table-cell">Date</th>
                 <th className="px-4 py-3 font-semibold hidden lg:table-cell">Column</th>
+                <th className="px-4 py-3 font-semibold">
+                  <button
+                    onClick={() => setViewSort((v) => (v === "desc" ? "asc" : "desc"))}
+                    className="inline-flex items-center gap-1 font-semibold hover:text-foreground"
+                  >
+                    Views {viewSort === "desc" ? "\u2193" : viewSort === "asc" ? "\u2191" : ""}
+                  </button>
+                </th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {isLoading && <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>}
+              {isLoading && <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>}
               {!isLoading && (!data || data.length === 0) && (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-muted-foreground">
                   No articles yet. <Link to="/admin/articles/new" className="text-[oklch(0.68_0.20_40)] underline">Add the first one</Link>.
                 </td></tr>
               )}
-              {data?.map((p) => (
+              {rows.map((p) => (
                 <tr key={p.id} className="hover:bg-muted/30">
                   <td className="px-4 py-3 font-semibold">{p.title}</td>
                   <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{p.author_name ?? "—"}</td>
@@ -82,6 +115,7 @@ function ArticlesAdmin() {
                     {p.publish_date ? format(new Date(p.publish_date), "MMM d, yyyy") : "—"}
                   </td>
                   <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground">{p.column_name ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{viewCounts?.[p.id] ?? 0}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold ${
                       p.status === "published"

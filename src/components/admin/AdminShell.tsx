@@ -17,6 +17,8 @@ import {
   X,
   CalendarDays,
   FileEdit,
+  MessageSquare,
+  Bot,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -40,6 +42,8 @@ const allNavItems: NavItem[] = [
   { to: "/admin/bible-studies", label: "Bible Studies", icon: BookOpen, adminOrSuper: true },
   { to: "/admin/events", label: "Events", icon: CalendarDays },
   { to: "/admin/artworks", label: "Digital Artworks", icon: Palette },
+  { to: "/admin/chatbot", label: "Chatbot", icon: Bot, adminOrSuper: true },
+  { to: "/admin/comments", label: "Comments", icon: MessageSquare, adminOrSuper: true },
   { to: "/admin/media", label: "Media Library", icon: ImageIcon, adminOrSuper: true },
   { to: "/admin/team", label: "Team Members", icon: Users, superAdminOnly: true },
   { to: "/admin/settings", label: "Settings", icon: Settings, superAdminOnly: true },

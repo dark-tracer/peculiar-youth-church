@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { PageHero, PageShell } from "@/components/PageShell";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { ReadCountBadge, useReadCounts } from "@/components/ReadCountBadge";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
@@ -35,6 +36,8 @@ function BlogList() {
       return data;
     },
   });
+
+  const { data: counts } = useReadCounts("blog");
 
   const [q, setQ] = useState("");
   const filtered = useMemo(() => {

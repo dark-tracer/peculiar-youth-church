@@ -31,6 +31,8 @@ export function ViewCount({
   }, [contentId, contentType, record]);
 
   if (count === null) return null;
+  const label = count === 1 ? "read" : "reads";
+
 
   return (
     <span

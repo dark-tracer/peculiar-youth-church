@@ -31,14 +31,17 @@ export function ViewCount({
   }, [contentId, contentType, record]);
 
   if (count === null) return null;
+  const label = count === 1 ? "read" : "reads";
+
 
   return (
     <span
       className={`inline-flex items-center gap-1.5 text-xs font-medium text-brand/80 ${className}`}
-      aria-label={`${count} reads`}
+      aria-label={`${count} ${label}`}
     >
       <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-      {count.toLocaleString()} reads
+      {count.toLocaleString()} {label}
     </span>
+
   );
 }

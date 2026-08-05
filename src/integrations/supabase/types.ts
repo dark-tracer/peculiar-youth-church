@@ -772,6 +772,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      flag_public_comment: { Args: { _comment_id: string }; Returns: undefined }
+      get_public_comments: {
+        Args: { _content_id: string; _content_type: string }
+        Returns: {
+          comment_text: string
+          commenter_name: string
+          created_at: string
+          id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -782,6 +792,25 @@ export type Database = {
       is_active_editor: { Args: { _user_id: string }; Returns: boolean }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      recent_comment_count: { Args: { _visitor_hash: string }; Returns: number }
+      record_content_view: {
+        Args: {
+          _content_id: string
+          _content_type: string
+          _visitor_hash: string
+        }
+        Returns: number
+      }
+      submit_public_comment: {
+        Args: {
+          _comment: string
+          _content_id: string
+          _content_type: string
+          _email: string
+          _name: string
+        }
+        Returns: string
+      }
       super_admin_email: { Args: never; Returns: string }
     }
     Enums: {

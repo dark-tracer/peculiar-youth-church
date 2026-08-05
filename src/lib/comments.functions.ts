@@ -16,18 +16,12 @@ type SubmitInput = {
   elapsedMs?: number;
 };
 
-async function sha256(value: string): Promise<string> {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
-  return Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 /**
  * Public comment submission.
  * Spam protection without a paid/keyed captcha: honeypot field, minimum
  * time-on-form, per-visitor rate limiting, and link-count heuristics.
- * (Swap in reCAPTCHA v3 here later by verifying a token before the insert.)
+ * Writes go through SECURITY DEFINER database routines, so no service-role
+ * key is required at runtime.
  */
 export const submitComment = createServerFn({ method: "POST" })
   .inputValidator((data: SubmitInput) => {
@@ -65,42 +59,44 @@ export const submitComment = createServerFn({ method: "POST" })
     const linkCount = (data.comment.match(/https?:\/\//gi) ?? []).length;
     if (linkCount > 1) throw new Error("Comments cannot contain multiple links.");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { createPublicServerClient } = await import("@/lib/supabase-public.server");
+    const client = createPublicServerClient();
 
     const ip = getRequestIP({ xForwardedFor: true }) ?? "unknown";
     const ua = getRequestHeader("user-agent") ?? "unknown";
-    const visitorHash = await sha256(`comment::${ip}::${ua}`);
+    const buf = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(`comment::${ip}::${ua}`),
+    );
+    const visitorHash = Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 
-    // Rate limit: max 3 comments per visitor per 10 minutes (tracked in content_views)
-    const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-    const { count } = await supabaseAdmin
-      .from("content_views")
-      .select("id", { count: "exact", head: true })
-      .eq("visitor_hash", visitorHash)
-      .gte("viewed_at", since);
-    if ((count ?? 0) >= 3) {
+    // Rate limit: max 3 comments per visitor per 10 minutes.
+    const { data: recent } = await client.rpc("recent_comment_count", {
+      _visitor_hash: visitorHash,
+    });
+    if ((recent ?? 0) >= 3) {
       throw new Error("You're commenting too quickly. Please try again in a few minutes.");
     }
-    await supabaseAdmin.from("content_views").insert({
-      content_type: data.contentType,
-      content_id: data.contentId,
-      visitor_hash: visitorHash,
+
+    // Records the throttle marker (also counts as a view row for this content).
+    await client.rpc("record_content_view", {
+      _content_type: data.contentType,
+      _content_id: data.contentId,
+      _visitor_hash: visitorHash,
     });
 
-    const { data: inserted, error } = await supabaseAdmin
-      .from("comments")
-      .insert({
-        content_type: data.contentType,
-        content_id: data.contentId,
-        commenter_name: data.name,
-        commenter_email: data.email,
-        comment_text: data.comment,
-      })
-      .select("id, commenter_name, comment_text, created_at, is_flagged")
-      .single();
-
+    const { data: id, error } = await client.rpc("submit_public_comment", {
+      _content_type: data.contentType,
+      _content_id: data.contentId,
+      _name: data.name,
+      _email: data.email,
+      _comment: data.comment,
+    });
     if (error) throw new Error(error.message);
-    return { ok: true as const, skipped: false as const, comment: inserted };
+
+    return { ok: true as const, skipped: false as const, id };
   });
 
 /** Public "report this comment" action. */
@@ -110,12 +106,9 @@ export const reportComment = createServerFn({ method: "POST" })
     return { commentId: data.commentId };
   })
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin
-      .from("comments")
-      .update({ is_flagged: true })
-      .eq("id", data.commentId)
-      .eq("is_deleted", false);
+    const { createPublicServerClient } = await import("@/lib/supabase-public.server");
+    const client = createPublicServerClient();
+    const { error } = await client.rpc("flag_public_comment", { _comment_id: data.commentId });
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });

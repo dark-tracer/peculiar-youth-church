@@ -44,16 +44,14 @@ export function CommentSection({
     queryKey,
     enabled: !!contentId,
     queryFn: async (): Promise<PublicComment[]> => {
-      const { data, error } = await supabase
-        .from("comments")
-        .select("id, commenter_name, comment_text, created_at")
-        .eq("content_type", contentType)
-        .eq("content_id", contentId!)
-        .eq("is_deleted", false)
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.rpc("get_public_comments", {
+        _content_type: contentType,
+        _content_id: contentId!,
+      });
       if (error) throw error;
       return data ?? [];
     },
+
   });
 
   async function onSubmit(e: React.FormEvent) {

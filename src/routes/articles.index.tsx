@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { PageHero, PageShell } from "@/components/PageShell";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { ReadCountBadge, useReadCounts } from "@/components/ReadCountBadge";
 
 export const Route = createFileRoute("/articles/")({
   component: ArticlesList,
@@ -24,6 +25,8 @@ function ArticlesList() {
       return data;
     },
   });
+
+  const { data: counts } = useReadCounts("article");
 
   const [q, setQ] = useState("");
   const filtered = useMemo(() => {
@@ -71,6 +74,7 @@ function ArticlesList() {
                     {p.author_name ?? "Ministry"} · {p.publish_date ? format(new Date(p.publish_date), "MMM d, yyyy") : ""}
                     {p.edition_label && ` · ${p.edition_label}`}
                   </p>
+                  <div className="mt-2"><ReadCountBadge count={counts?.[p.id]} /></div>
                   {p.excerpt && <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{p.excerpt}</p>}
                 </div>
               </Link>

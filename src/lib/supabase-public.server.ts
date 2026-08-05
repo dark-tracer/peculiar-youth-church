@@ -4,11 +4,15 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
 export function createPublicServerClient() {
-  const url = process.env["SUPABASE_URL"] ?? process.env["VITE_SUPABASE_URL"];
+  const url =
+    process.env["SUPABASE_URL"] ??
+    process.env["VITE_SUPABASE_URL"] ??
+    import.meta.env.VITE_SUPABASE_URL;
   const key =
     process.env["SUPABASE_PUBLISHABLE_KEY"] ??
     process.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ??
-    process.env["SUPABASE_ANON_KEY"];
+    process.env["SUPABASE_ANON_KEY"] ??
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
   if (!url || !key) {
     throw new Error("Backend is not configured for public requests.");

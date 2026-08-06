@@ -52,17 +52,14 @@ export function ChatbotWidget() {
     setThinking(true);
 
     let entries = knowledge;
-    let documents = docs;
     if (!entries) {
-      const [qa, kd] = await Promise.all([
-        supabase.from("chatbot_knowledge").select("id, question, answer, keywords, category"),
-        supabase.from("knowledge_documents").select("id, file_name, extracted_text, category"),
-      ]);
+      const qa = await supabase
+        .from("chatbot_knowledge")
+        .select("id, question, answer, keywords, category");
       entries = qa.data ?? [];
-      documents = kd.data ?? [];
       setKnowledge(entries);
-      setDocs(documents);
     }
+    const documents = await fetchDocSnippets(question);
 
     const match = findAnswer(question, entries, documents);
     if (match.kind === "none") {

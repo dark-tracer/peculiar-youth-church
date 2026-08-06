@@ -13,22 +13,30 @@ export function ChatbotWidget() {
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const [knowledge, setKnowledge] = useState<KnowledgeEntry[] | null>(null);
-  const [docs, setDocs] = useState<KnowledgeDoc[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const nextId = useRef(1);
 
-  // Load the knowledge base the first time the window is opened.
+  // Load the Q&A knowledge base the first time the window is opened.
   useEffect(() => {
     if (!open || knowledge) return;
     (async () => {
-      const [qa, kd] = await Promise.all([
-        supabase.from("chatbot_knowledge").select("id, question, answer, keywords, category"),
-        supabase.from("knowledge_documents").select("id, file_name, extracted_text, category"),
-      ]);
+      const qa = await supabase
+        .from("chatbot_knowledge")
+        .select("id, question, answer, keywords, category");
       setKnowledge(qa.data ?? []);
-      setDocs(kd.data ?? []);
     })();
   }, [open, knowledge]);
+
+  /** Documents stay private: the server returns only the few sentences that match. */
+  async function fetchDocSnippets(question: string): Promise<KnowledgeDoc[]> {
+    const { data } = await supabase.rpc("search_knowledge_snippets", { _query: question });
+    return (data ?? []).map((row, i) => ({
+      id: String(i),
+      file_name: row.file_name,
+      extracted_text: row.snippet,
+      category: null,
+    }));
+  }
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });

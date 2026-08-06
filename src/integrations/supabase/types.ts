@@ -801,6 +801,13 @@ export type Database = {
         }
         Returns: number
       }
+      search_knowledge_snippets: {
+        Args: { _query: string }
+        Returns: {
+          file_name: string
+          snippet: string
+        }[]
+      }
       submit_public_comment: {
         Args: {
           _comment: string

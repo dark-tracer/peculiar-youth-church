@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyCommentRouteImport } from './routes/verify-comment'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SermonsRouteImport } from './routes/sermons'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
@@ -72,6 +73,11 @@ import { Route as AdminArtworksIdRouteImport } from './routes/admin.artworks.$id
 import { Route as AdminArticlesNewRouteImport } from './routes/admin.articles.new'
 import { Route as AdminArticlesIdRouteImport } from './routes/admin.articles.$id'
 
+const VerifyCommentRoute = VerifyCommentRouteImport.update({
+  id: '/verify-comment',
+  path: '/verify-comment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -397,6 +403,7 @@ export interface FileRoutesByFullPath {
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/verify-comment': typeof VerifyCommentRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/account': typeof AdminAccountRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
@@ -455,6 +462,7 @@ export interface FileRoutesByTo {
   '/give': typeof GiveRoute
   '/newsletter': typeof NewsletterRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/verify-comment': typeof VerifyCommentRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/account': typeof AdminAccountRoute
   '/admin/change-password': typeof AdminChangePasswordRoute
@@ -514,6 +522,7 @@ export interface FileRoutesById {
   '/newsletter': typeof NewsletterRoute
   '/sermons': typeof SermonsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/verify-comment': typeof VerifyCommentRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/account': typeof AdminAccountRoute
   '/admin/articles': typeof AdminArticlesRouteWithChildren
@@ -580,6 +589,7 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/sermons'
     | '/sitemap.xml'
+    | '/verify-comment'
     | '/admin/$section'
     | '/admin/account'
     | '/admin/articles'
@@ -638,6 +648,7 @@ export interface FileRouteTypes {
     | '/give'
     | '/newsletter'
     | '/sitemap.xml'
+    | '/verify-comment'
     | '/admin/$section'
     | '/admin/account'
     | '/admin/change-password'
@@ -696,6 +707,7 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/sermons'
     | '/sitemap.xml'
+    | '/verify-comment'
     | '/admin/$section'
     | '/admin/account'
     | '/admin/articles'
@@ -761,10 +773,18 @@ export interface RootRouteChildren {
   NewsletterRoute: typeof NewsletterRoute
   SermonsRoute: typeof SermonsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  VerifyCommentRoute: typeof VerifyCommentRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-comment': {
+      id: '/verify-comment'
+      path: '/verify-comment'
+      fullPath: '/verify-comment'
+      preLoaderRoute: typeof VerifyCommentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -1427,17 +1447,8 @@ const rootRouteChildren: RootRouteChildren = {
   NewsletterRoute: NewsletterRoute,
   SermonsRoute: SermonsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  VerifyCommentRoute: VerifyCommentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

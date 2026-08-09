@@ -281,6 +281,35 @@ export type Database = {
         }
         Relationships: []
       }
+      comment_likes: {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          visitor_hash: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          visitor_hash: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          visitor_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comments: {
         Row: {
           comment_text: string
@@ -292,6 +321,10 @@ export type Database = {
           id: string
           is_deleted: boolean
           is_flagged: boolean
+          is_pinned: boolean
+          like_count: number
+          parent_comment_id: string | null
+          reply_count: number
         }
         Insert: {
           comment_text: string
@@ -303,6 +336,10 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           is_flagged?: boolean
+          is_pinned?: boolean
+          like_count?: number
+          parent_comment_id?: string | null
+          reply_count?: number
         }
         Update: {
           comment_text?: string
@@ -314,8 +351,20 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           is_flagged?: boolean
+          is_pinned?: boolean
+          like_count?: number
+          parent_comment_id?: string | null
+          reply_count?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       content_view_counts: {
         Row: {
@@ -502,6 +551,53 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: []
+      }
+      pending_comments: {
+        Row: {
+          comment_text: string
+          commenter_email: string
+          commenter_name: string
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          parent_comment_id: string | null
+          token_expires_at: string
+          verification_token: string
+        }
+        Insert: {
+          comment_text: string
+          commenter_email: string
+          commenter_name: string
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          parent_comment_id?: string | null
+          token_expires_at?: string
+          verification_token?: string
+        }
+        Update: {
+          comment_text?: string
+          commenter_email?: string
+          commenter_name?: string
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          parent_comment_id?: string | null
+          token_expires_at?: string
+          verification_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pending_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -772,6 +868,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_commenter_name: {
+        Args: { _email: string; _name: string }
+        Returns: boolean
+      }
+      delete_comment_thread: {
+        Args: { _comment_id: string }
+        Returns: undefined
+      }
       flag_public_comment: { Args: { _comment_id: string }; Returns: undefined }
       get_public_comments: {
         Args: { _content_id: string; _content_type: string }
@@ -780,6 +884,10 @@ export type Database = {
           commenter_name: string
           created_at: string
           id: string
+          is_pinned: boolean
+          like_count: number
+          parent_comment_id: string
+          reply_count: number
         }[]
       }
       has_role: {
@@ -792,6 +900,20 @@ export type Database = {
       is_active_editor: { Args: { _user_id: string }; Returns: boolean }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      queue_pending_comment: {
+        Args: {
+          _comment: string
+          _content_id: string
+          _content_type: string
+          _email: string
+          _name: string
+          _parent_comment_id: string
+        }
+        Returns: {
+          id: string
+          verification_token: string
+        }[]
+      }
       recent_comment_count: { Args: { _visitor_hash: string }; Returns: number }
       record_content_view: {
         Args: {
@@ -808,6 +930,10 @@ export type Database = {
           snippet: string
         }[]
       }
+      set_pinned_comment: {
+        Args: { _comment_id: string; _pinned: boolean }
+        Returns: undefined
+      }
       submit_public_comment: {
         Args: {
           _comment: string
@@ -819,6 +945,21 @@ export type Database = {
         Returns: string
       }
       super_admin_email: { Args: never; Returns: string }
+      toggle_comment_like: {
+        Args: { _comment_id: string; _visitor_hash: string }
+        Returns: {
+          like_count: number
+          liked: boolean
+        }[]
+      }
+      verify_pending_comment: {
+        Args: { _token: string }
+        Returns: {
+          content_id: string
+          content_type: string
+          status: string
+        }[]
+      }
     }
     Enums: {
       app_role: "super_admin" | "editor" | "admin"

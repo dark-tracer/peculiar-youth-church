@@ -133,7 +133,7 @@ export const submitComment = createServerFn({ method: "POST" })
     const { data: rows, error } = await client.rpc("queue_pending_comment", {
       _content_type: data.contentType,
       _content_id: data.contentId,
-      _parent_comment_id: data.parentCommentId,
+      _parent_comment_id: data.parentCommentId as unknown as string,
       _name: data.name,
       _email: data.email,
       _comment: data.comment,

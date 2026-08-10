@@ -371,8 +371,9 @@ function CommentForm({
             className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand/50"
           />
           <p className="mt-1 text-[11px] text-muted-foreground">
-            Your email is used only for comment verification and is never displayed publicly.
+            Your email is kept private and is never displayed publicly.
           </p>
+
         </div>
       </div>
 

@@ -139,8 +139,8 @@ export function CommentSection({
       <CommentForm
         key="root"
         busyLabel="Post comment"
-        onSubmit={async (values) =>
-          send({
+        onSubmit={async (values) => {
+          const res = await send({
             data: {
               contentType,
               contentId: contentId!,
@@ -148,12 +148,15 @@ export function CommentSection({
               ...values,
               elapsedMs: Date.now() - mountedAt.current,
             },
-          })
-        }
+          });
+          qc.invalidateQueries({ queryKey });
+          return res;
+        }}
         checkName={checkName}
-        successMessage="Check your email to verify your comment before it goes live."
+        successMessage="Your comment is now live."
         disabled={!contentId}
       />
+
 
       <div className="mt-8 space-y-5">
         {isLoading && <p className="text-sm text-muted-foreground">Loading comments…</p>}
@@ -236,10 +239,12 @@ export function CommentSection({
                         },
                       });
                       setReplyTo(null);
+                      qc.invalidateQueries({ queryKey });
                       return res;
                     }}
                     checkName={checkName}
-                    successMessage="Check your email to verify your reply before it goes live."
+                    successMessage="Your reply is now live."
+
                   />
                 </div>
               )}
@@ -366,8 +371,9 @@ function CommentForm({
             className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand/50"
           />
           <p className="mt-1 text-[11px] text-muted-foreground">
-            Your email is used only for comment verification and is never displayed publicly.
+            Your email is kept private and is never displayed publicly.
           </p>
+
         </div>
       </div>
 

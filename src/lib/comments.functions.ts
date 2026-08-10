@@ -29,51 +29,8 @@ async function visitorHash(salt: string) {
     .join("");
 }
 
-function siteOrigin() {
-  const env = process.env["SITE_URL"];
-  if (env) return env.replace(/\/$/, "");
-  const origin = getRequestHeader("origin");
-  if (origin) return origin.replace(/\/$/, "");
-  return "https://peculiar-youth-church.lovable.app";
-}
 
-async function sendVerificationEmail(to: string, name: string, token: string) {
-  const apiKey = process.env["RESEND_API_KEY"];
-  const link = `${siteOrigin()}/verify-comment?token=${token}`;
-  if (!apiKey) {
-    console.warn("[comments] RESEND_API_KEY missing — verification link:", link);
-    return { sent: false as const, link };
-  }
-  const from = process.env["COMMENT_FROM_EMAIL"] ?? "Peculiar Youth <onboarding@resend.dev>";
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject: "Confirm your comment on Peculiar Youth.",
-      html: `
-        <div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;padding:24px">
-          <h2 style="margin:0 0 12px">Confirm your comment</h2>
-          <p style="font-size:15px;line-height:1.6;color:#333">
-            Hi ${name.replace(/[<>&]/g, "")}, click the button below to confirm your comment on the
-            Peculiar Youth website. This link expires in 24 hours.
-          </p>
-          <p style="margin:28px 0">
-            <a href="${link}" style="background:#e2622a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600;display:inline-block">
-              Confirm my comment
-            </a>
-          </p>
-          <p style="font-size:12px;color:#777;word-break:break-all">${link}</p>
-        </div>`,
-    }),
-  });
-  if (!res.ok) {
-    console.error("[comments] email send failed", res.status, await res.text());
-    return { sent: false as const, link };
-  }
-  return { sent: true as const, link };
-}
+
 
 /**
  * Public comment/reply submission. Stores the comment in `pending_comments`
@@ -142,10 +99,15 @@ export const submitComment = createServerFn({ method: "POST" })
     const row = Array.isArray(rows) ? rows[0] : rows;
     if (!row) throw new Error("Could not save your comment.");
 
-    const mail = await sendVerificationEmail(data.email, data.name, row.verification_token);
+    // Comments go live immediately — no email verification step.
+    const { error: publishError } = await client.rpc("verify_pending_comment", {
+      _token: row.verification_token,
+    });
+    if (publishError) throw new Error(publishError.message);
 
-    return { ok: true as const, skipped: false as const, emailed: mail.sent };
+    return { ok: true as const, skipped: false as const, published: true as const };
   });
+
 
 /** Warns when a display name was previously verified with a different email. */
 export const checkNameConflict = createServerFn({ method: "POST" })

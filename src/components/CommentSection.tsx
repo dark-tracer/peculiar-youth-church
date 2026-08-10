@@ -239,10 +239,12 @@ export function CommentSection({
                         },
                       });
                       setReplyTo(null);
+                      qc.invalidateQueries({ queryKey });
                       return res;
                     }}
                     checkName={checkName}
-                    successMessage="Check your email to verify your reply before it goes live."
+                    successMessage="Your reply is now live."
+
                   />
                 </div>
               )}

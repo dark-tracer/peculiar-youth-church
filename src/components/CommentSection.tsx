@@ -139,8 +139,8 @@ export function CommentSection({
       <CommentForm
         key="root"
         busyLabel="Post comment"
-        onSubmit={async (values) =>
-          send({
+        onSubmit={async (values) => {
+          const res = await send({
             data: {
               contentType,
               contentId: contentId!,
@@ -148,12 +148,15 @@ export function CommentSection({
               ...values,
               elapsedMs: Date.now() - mountedAt.current,
             },
-          })
-        }
+          });
+          qc.invalidateQueries({ queryKey });
+          return res;
+        }}
         checkName={checkName}
-        successMessage="Check your email to verify your comment before it goes live."
+        successMessage="Your comment is now live."
         disabled={!contentId}
       />
+
 
       <div className="mt-8 space-y-5">
         {isLoading && <p className="text-sm text-muted-foreground">Loading comments…</p>}

@@ -142,10 +142,15 @@ export const submitComment = createServerFn({ method: "POST" })
     const row = Array.isArray(rows) ? rows[0] : rows;
     if (!row) throw new Error("Could not save your comment.");
 
-    const mail = await sendVerificationEmail(data.email, data.name, row.verification_token);
+    // Comments go live immediately — no email verification step.
+    const { error: publishError } = await client.rpc("verify_pending_comment", {
+      _token: row.verification_token,
+    });
+    if (publishError) throw new Error(publishError.message);
 
-    return { ok: true as const, skipped: false as const, emailed: mail.sent };
+    return { ok: true as const, skipped: false as const, published: true as const };
   });
+
 
 /** Warns when a display name was previously verified with a different email. */
 export const checkNameConflict = createServerFn({ method: "POST" })

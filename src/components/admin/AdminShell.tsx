@@ -178,7 +178,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-          <div className="absolute bottom-0 left-0 right-0 border-t border-border p-3">
+          <div className="shrink-0 border-t border-border p-3 bg-inherit">
             <div className="px-3 py-2 text-xs text-muted-foreground truncate">
               <div className="font-semibold text-foreground truncate">{fullName ?? email ?? user?.email}</div>
               <div className="uppercase tracking-wide text-[10px] mt-0.5">

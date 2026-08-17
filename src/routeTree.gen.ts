@@ -39,6 +39,7 @@ import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSermonsRouteImport } from './routes/admin.sermons'
 import { Route as AdminReviewRouteImport } from './routes/admin.review'
+import { Route as AdminResetPasswordRouteImport } from './routes/admin.reset-password'
 import { Route as AdminPagesRouteImport } from './routes/admin.pages'
 import { Route as AdminNotAuthorizedRouteImport } from './routes/admin.not-authorized'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
@@ -222,6 +223,11 @@ const AdminSermonsRoute = AdminSermonsRouteImport.update({
 const AdminReviewRoute = AdminReviewRouteImport.update({
   id: '/review',
   path: '/review',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminResetPasswordRoute = AdminResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminPagesRoute = AdminPagesRouteImport.update({
@@ -426,6 +432,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/reset-password': typeof AdminResetPasswordRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
@@ -481,6 +488,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/reset-password': typeof AdminResetPasswordRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
@@ -547,6 +555,7 @@ export interface FileRoutesById {
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/reset-password': typeof AdminResetPasswordRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
@@ -615,6 +624,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/pages'
+    | '/admin/reset-password'
     | '/admin/review'
     | '/admin/sermons'
     | '/admin/settings'
@@ -670,6 +680,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/pages'
+    | '/admin/reset-password'
     | '/admin/review'
     | '/admin/settings'
     | '/admin/team'
@@ -735,6 +746,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/pages'
+    | '/admin/reset-password'
     | '/admin/review'
     | '/admin/sermons'
     | '/admin/settings'
@@ -998,6 +1010,13 @@ declare module '@tanstack/react-router' {
       path: '/review'
       fullPath: '/admin/review'
       preLoaderRoute: typeof AdminReviewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reset-password': {
+      id: '/admin/reset-password'
+      path: '/reset-password'
+      fullPath: '/admin/reset-password'
+      preLoaderRoute: typeof AdminResetPasswordRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/pages': {
@@ -1353,6 +1372,7 @@ interface AdminRouteChildren {
   AdminMediaRoute: typeof AdminMediaRoute
   AdminNotAuthorizedRoute: typeof AdminNotAuthorizedRoute
   AdminPagesRoute: typeof AdminPagesRoute
+  AdminResetPasswordRoute: typeof AdminResetPasswordRoute
   AdminReviewRoute: typeof AdminReviewRoute
   AdminSermonsRoute: typeof AdminSermonsRouteWithChildren
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -1377,6 +1397,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMediaRoute: AdminMediaRoute,
   AdminNotAuthorizedRoute: AdminNotAuthorizedRoute,
   AdminPagesRoute: AdminPagesRoute,
+  AdminResetPasswordRoute: AdminResetPasswordRoute,
   AdminReviewRoute: AdminReviewRoute,
   AdminSermonsRoute: AdminSermonsRouteWithChildren,
   AdminSettingsRoute: AdminSettingsRoute,

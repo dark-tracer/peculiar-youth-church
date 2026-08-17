@@ -19,9 +19,12 @@ import {
   FileEdit,
   MessageSquare,
   Bot,
+  KeyRound,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useServerFn } from "@tanstack/react-start";
+import { countPendingResetRequests } from "@/lib/password-reset.functions";
 import { toast } from "sonner";
 
 type NavItem = {
@@ -47,6 +50,7 @@ const allNavItems: NavItem[] = [
   { to: "/admin/media", label: "Media Library", icon: ImageIcon, adminOrSuper: true },
   { to: "/admin/team", label: "Team Members", icon: Users, superAdminOnly: true },
   { to: "/admin/settings", label: "Settings", icon: Settings, superAdminOnly: true },
+  { to: "/admin/password-requests", label: "Password Requests", icon: KeyRound, adminOrSuper: true },
   { to: "/admin/account", label: "My Account", icon: Settings },
 ];
 
@@ -77,6 +81,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const { data: pendingReviewCount = 0 } = useQuery({
     queryKey: ["admin-pending-review-count"],
     queryFn: fetchPendingReviewCount,
+    enabled: role === "super_admin" || role === "admin",
+    refetchInterval: 60_000,
+  });
+
+  const fetchPendingResets = useServerFn(countPendingResetRequests);
+  const { data: pendingResetCount = 0 } = useQuery({
+    queryKey: ["admin-pending-password-requests"],
+    queryFn: () => fetchPendingResets(),
     enabled: role === "super_admin" || role === "admin",
     refetchInterval: 60_000,
   });
@@ -172,6 +184,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                       }`}
                     >
                       {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                    </span>
+                  )}
+                  {item.to === "/admin/password-requests" && pendingResetCount > 0 && (
+                    <span
+                      aria-label={`${pendingResetCount} pending password request${pendingResetCount === 1 ? "" : "s"}`}
+                      className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[10px] font-bold ${
+                        active
+                          ? "bg-[oklch(0.10_0.01_250)] text-[oklch(0.68_0.20_40)]"
+                          : "bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)]"
+                      }`}
+                    >
+                      {pendingResetCount > 99 ? "99+" : pendingResetCount}
                     </span>
                   )}
                 </Link>

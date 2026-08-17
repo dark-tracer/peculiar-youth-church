@@ -552,6 +552,36 @@ export type Database = {
         }
         Relationships: []
       }
+      password_reset_requests: {
+        Row: {
+          created_at: string
+          email: string
+          handled_at: string | null
+          handled_by: string | null
+          id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          handled_at?: string | null
+          handled_by?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          handled_at?: string | null
+          handled_by?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pending_comments: {
         Row: {
           comment_text: string
@@ -923,6 +953,7 @@ export type Database = {
         }
         Returns: number
       }
+      request_password_reset: { Args: { _email: string }; Returns: undefined }
       search_knowledge_snippets: {
         Args: { _query: string }
         Returns: {

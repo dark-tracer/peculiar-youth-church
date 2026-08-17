@@ -134,9 +134,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
       <div className="flex">
         <aside
-          className={`${mobileOpen ? "block" : "hidden"} md:block fixed md:sticky md:top-0 inset-x-0 md:inset-auto top-14 md:top-0 z-30 md:h-screen w-full md:w-64 shrink-0 border-r border-border bg-card md:bg-[oklch(0.18_0.025_260)]`}
+          className={`${mobileOpen ? "flex" : "hidden"} md:flex flex-col fixed md:sticky md:top-0 inset-x-0 md:inset-auto top-14 md:top-0 bottom-0 md:bottom-auto z-30 h-[calc(100vh-3.5rem)] md:h-screen w-full md:w-64 shrink-0 border-r border-border bg-card md:bg-[oklch(0.18_0.025_260)]`}
         >
-          <div className="hidden md:flex h-16 items-center gap-2 border-b border-border px-5">
+          <div className="hidden md:flex h-16 shrink-0 items-center gap-2 border-b border-border px-5">
             <div className="grid h-8 w-8 place-items-center rounded-md bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)] font-bold">
               P
             </div>
@@ -145,7 +145,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Admin Console</div>
             </div>
           </div>
-          <nav className="flex flex-col gap-0.5 p-3">
+          <nav className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-0.5 p-3">
+
             {navItems.map((item) => {
               const active = pathname === item.to || pathname.startsWith(item.to + "/");
               return (

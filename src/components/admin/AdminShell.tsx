@@ -47,6 +47,7 @@ const allNavItems: NavItem[] = [
   { to: "/admin/media", label: "Media Library", icon: ImageIcon, adminOrSuper: true },
   { to: "/admin/team", label: "Team Members", icon: Users, superAdminOnly: true },
   { to: "/admin/settings", label: "Settings", icon: Settings, superAdminOnly: true },
+  { to: "/admin/password-requests", label: "Password Requests", icon: KeyRound, adminOrSuper: true },
   { to: "/admin/account", label: "My Account", icon: Settings },
 ];
 

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/admin/forgot-password")({
 });
 
 const GENERIC =
-  "If that email belongs to an approved console account, a password reset link is on its way.";
+  "If that email belongs to an approved console account, your administrator has been notified and a reset link is on its way.";
 
 function ForgotPassword() {
   const checkApproved = useServerFn(isApprovedConsoleEmail);
@@ -27,6 +27,9 @@ function ForgotPassword() {
     e.preventDefault();
     setBusy(true);
     try {
+      // Notify the super admin/admins in the console (silently ignores unknown emails)
+      await supabase.rpc("request_password_reset", { _email: email.trim().toLowerCase() });
+
       const { approved } = await checkApproved({ data: { email } });
       if (approved) {
         await supabase.auth.resetPasswordForEmail(email.trim(), {

@@ -186,6 +186,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                       {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
                     </span>
                   )}
+                  {item.to === "/admin/password-requests" && pendingResetCount > 0 && (
+                    <span
+                      aria-label={`${pendingResetCount} pending password request${pendingResetCount === 1 ? "" : "s"}`}
+                      className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[10px] font-bold ${
+                        active
+                          ? "bg-[oklch(0.10_0.01_250)] text-[oklch(0.68_0.20_40)]"
+                          : "bg-[oklch(0.68_0.20_40)] text-[oklch(0.10_0.01_250)]"
+                      }`}
+                    >
+                      {pendingResetCount > 99 ? "99+" : pendingResetCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}

@@ -5,7 +5,13 @@ import { isSuperAdminEmail } from "@/lib/super-admin";
 export const Route = createFileRoute("/admin")({
   ssr: false,
   beforeLoad: async ({ location }) => {
-    if (location.pathname === "/admin/login") return;
+    const PUBLIC_ADMIN_PATHS = [
+      "/admin/login",
+      "/admin/forgot-password",
+      "/admin/reset-password",
+    ];
+    if (PUBLIC_ADMIN_PATHS.includes(location.pathname)) return;
+
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       throw redirect({ to: "/admin/login" });

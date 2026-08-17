@@ -39,10 +39,12 @@ import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSermonsRouteImport } from './routes/admin.sermons'
 import { Route as AdminReviewRouteImport } from './routes/admin.review'
+import { Route as AdminResetPasswordRouteImport } from './routes/admin.reset-password'
 import { Route as AdminPagesRouteImport } from './routes/admin.pages'
 import { Route as AdminNotAuthorizedRouteImport } from './routes/admin.not-authorized'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminForgotPasswordRouteImport } from './routes/admin.forgot-password'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminCommentsRouteImport } from './routes/admin.comments'
@@ -223,6 +225,11 @@ const AdminReviewRoute = AdminReviewRouteImport.update({
   path: '/review',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminResetPasswordRoute = AdminResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPagesRoute = AdminPagesRouteImport.update({
   id: '/pages',
   path: '/pages',
@@ -241,6 +248,11 @@ const AdminMediaRoute = AdminMediaRouteImport.update({
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminForgotPasswordRoute = AdminForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminEventsRoute = AdminEventsRouteImport.update({
@@ -415,10 +427,12 @@ export interface FileRoutesByFullPath {
   '/admin/comments': typeof AdminCommentsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
+  '/admin/forgot-password': typeof AdminForgotPasswordRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/reset-password': typeof AdminResetPasswordRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
@@ -469,10 +483,12 @@ export interface FileRoutesByTo {
   '/admin/chatbot': typeof AdminChatbotRoute
   '/admin/comments': typeof AdminCommentsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/forgot-password': typeof AdminForgotPasswordRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/reset-password': typeof AdminResetPasswordRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
@@ -534,10 +550,12 @@ export interface FileRoutesById {
   '/admin/comments': typeof AdminCommentsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/events': typeof AdminEventsRouteWithChildren
+  '/admin/forgot-password': typeof AdminForgotPasswordRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/not-authorized': typeof AdminNotAuthorizedRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/reset-password': typeof AdminResetPasswordRoute
   '/admin/review': typeof AdminReviewRoute
   '/admin/sermons': typeof AdminSermonsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
@@ -601,10 +619,12 @@ export interface FileRouteTypes {
     | '/admin/comments'
     | '/admin/dashboard'
     | '/admin/events'
+    | '/admin/forgot-password'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/pages'
+    | '/admin/reset-password'
     | '/admin/review'
     | '/admin/sermons'
     | '/admin/settings'
@@ -655,10 +675,12 @@ export interface FileRouteTypes {
     | '/admin/chatbot'
     | '/admin/comments'
     | '/admin/dashboard'
+    | '/admin/forgot-password'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/pages'
+    | '/admin/reset-password'
     | '/admin/review'
     | '/admin/settings'
     | '/admin/team'
@@ -719,10 +741,12 @@ export interface FileRouteTypes {
     | '/admin/comments'
     | '/admin/dashboard'
     | '/admin/events'
+    | '/admin/forgot-password'
     | '/admin/login'
     | '/admin/media'
     | '/admin/not-authorized'
     | '/admin/pages'
+    | '/admin/reset-password'
     | '/admin/review'
     | '/admin/sermons'
     | '/admin/settings'
@@ -988,6 +1012,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminReviewRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/reset-password': {
+      id: '/admin/reset-password'
+      path: '/reset-password'
+      fullPath: '/admin/reset-password'
+      preLoaderRoute: typeof AdminResetPasswordRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pages': {
       id: '/admin/pages'
       path: '/pages'
@@ -1014,6 +1045,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/admin/login'
       preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/forgot-password': {
+      id: '/admin/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/admin/forgot-password'
+      preLoaderRoute: typeof AdminForgotPasswordRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/events': {
@@ -1329,10 +1367,12 @@ interface AdminRouteChildren {
   AdminCommentsRoute: typeof AdminCommentsRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEventsRoute: typeof AdminEventsRouteWithChildren
+  AdminForgotPasswordRoute: typeof AdminForgotPasswordRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
   AdminNotAuthorizedRoute: typeof AdminNotAuthorizedRoute
   AdminPagesRoute: typeof AdminPagesRoute
+  AdminResetPasswordRoute: typeof AdminResetPasswordRoute
   AdminReviewRoute: typeof AdminReviewRoute
   AdminSermonsRoute: typeof AdminSermonsRouteWithChildren
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -1352,10 +1392,12 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCommentsRoute: AdminCommentsRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEventsRoute: AdminEventsRouteWithChildren,
+  AdminForgotPasswordRoute: AdminForgotPasswordRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,
   AdminNotAuthorizedRoute: AdminNotAuthorizedRoute,
   AdminPagesRoute: AdminPagesRoute,
+  AdminResetPasswordRoute: AdminResetPasswordRoute,
   AdminReviewRoute: AdminReviewRoute,
   AdminSermonsRoute: AdminSermonsRouteWithChildren,
   AdminSettingsRoute: AdminSettingsRoute,

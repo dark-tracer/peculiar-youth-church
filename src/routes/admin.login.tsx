@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { isSuperAdminEmail } from "@/lib/super-admin";
 import { Button } from "@/components/ui/button";
@@ -178,8 +178,15 @@ function AdminLogin() {
           </Button>
 
           <p className="text-xs text-center text-[oklch(0.70_0.02_250)]">
+            <Link to="/admin/forgot-password" className="underline hover:text-[oklch(0.68_0.20_40)]">
+              Forgot your password?
+            </Link>
+          </p>
+
+          <p className="text-xs text-center text-[oklch(0.70_0.02_250)]">
             Editor accounts are invite-only. Contact your administrator for access.
           </p>
+
         </form>
 
         <p className="mt-6 text-center text-xs text-[oklch(0.70_0.02_250)]">

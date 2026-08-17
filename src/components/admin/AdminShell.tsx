@@ -19,9 +19,12 @@ import {
   FileEdit,
   MessageSquare,
   Bot,
+  KeyRound,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useServerFn } from "@tanstack/react-start";
+import { countPendingResetRequests } from "@/lib/password-reset.functions";
 import { toast } from "sonner";
 
 type NavItem = {
@@ -78,6 +81,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const { data: pendingReviewCount = 0 } = useQuery({
     queryKey: ["admin-pending-review-count"],
     queryFn: fetchPendingReviewCount,
+    enabled: role === "super_admin" || role === "admin",
+    refetchInterval: 60_000,
+  });
+
+  const fetchPendingResets = useServerFn(countPendingResetRequests);
+  const { data: pendingResetCount = 0 } = useQuery({
+    queryKey: ["admin-pending-password-requests"],
+    queryFn: () => fetchPendingResets(),
     enabled: role === "super_admin" || role === "admin",
     refetchInterval: 60_000,
   });

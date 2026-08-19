@@ -111,6 +111,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          id="mcjs"
+          dangerouslySetInnerHTML={{
+            __html:
+              '!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/7fa02db303aaf5cd292bb9fcd/d0ef198ed74fd3ffb856e3447.js");',
+          }}
+        />
       </head>
       <body>
         {children}
